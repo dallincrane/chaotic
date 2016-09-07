@@ -14,17 +14,13 @@ module Chaotic
         return [data, :nils]
       end
 
-      return [data, :empty] if '' == data
+      return [data, :empty] if data == ''
 
       if data.is_a?(Time) # Time
         actual_time = data
       elsif data.is_a?(String)
         begin
-          actual_time = if options[:format]
-                          Time.strptime(data, options[:format])
-                        else
-                          Time.parse(data)
-                        end
+          actual_time = parse(data)
         rescue ArgumentError
           return [nil, :time]
         end
@@ -38,6 +34,12 @@ module Chaotic
       return [nil, :before] if options[:before] && actual_time >= options[:before]
 
       [actual_time, nil]
+    end
+
+    private
+
+    def parse(data)
+      options[:format] ? Time.strptime(data, options[:format]) : Time.parse(data)
     end
   end
 end

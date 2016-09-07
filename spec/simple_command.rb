@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 class SimpleCommand < Chaotic::Command
-
   required do
-    string :name, :max_length => 10
+    string :name, max_length: 10
     string :email
   end
 
@@ -10,13 +10,11 @@ class SimpleCommand < Chaotic::Command
   end
 
   def validate
-    unless email && email.include?('@')
-      add_error(:email, :invalid, 'Email must contain @')
-    end
+    return if email && email.include?('@')
+    add_error(:email, :invalid, 'Email must contain @')
   end
 
   def execute
     inputs
   end
-
 end

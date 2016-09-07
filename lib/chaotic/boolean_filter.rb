@@ -9,9 +9,7 @@ module Chaotic
       'true' => true,
       'false' => false,
       '1' => true,
-      '0' => false,
-      1 => true,
-      0 => false
+      '0' => false
     }.freeze
 
     def filter(data)
@@ -23,6 +21,8 @@ module Chaotic
       return [data, :empty] if data == ''
 
       return [data, nil] if data == true || data == false
+
+      data = data.to_s if data.is_a?(Fixnum)
 
       if data.is_a?(String)
         res = BOOLEAN_MAP[data.downcase]

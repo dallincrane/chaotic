@@ -149,7 +149,7 @@ module Chaotic
     end
 
     def message_list
-      compact.map { |e| e.message_list }.flatten
+      compact.map(&:message_list).flatten
     end
   end
 end

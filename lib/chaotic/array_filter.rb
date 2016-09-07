@@ -20,11 +20,9 @@ module Chaotic
       @name = name
       @element_filter = nil
 
-      if block_given?
-        instance_eval &block
-      end
+      instance_eval(&block) if block_given?
 
-      raise ArgumentError.new("Can't supply both a class and a filter") if @element_filter && self.options[:class]
+      raise(ArgumentError, 'Can\'t supply both a class and a filter') if @element_filter && options[:class]
     end
 
     def hash(options = {}, &block)
@@ -40,7 +38,6 @@ module Chaotic
     end
 
     def filter(data)
-      # Handle nil case
       if data.nil?
         return [data, nil] if options[:nils]
         return [data, :nils]
@@ -52,28 +49,26 @@ module Chaotic
         data = Array(data)
       end
 
-      if data.is_a?(Array)
-        errors = ErrorArray.new
-        filtered_data = []
-        found_error = false
-        data.each_with_index do |el, i|
-          el_filtered, el_error = filter_element(el)
-          el_error = ErrorAtom.new(@name, el_error, :index => i) if el_error.is_a?(Symbol)
-          errors << el_error
-          if el_error
-            found_error = true
-          else
-            filtered_data << el_filtered
-          end
-        end
+      return [data, :array] unless data.is_a?(Array)
 
-        if found_error && !(@element_filter && @element_filter.discard_invalid?)
-          [data, errors]
+      errors = ErrorArray.new
+      filtered_data = []
+      found_error = false
+      data.each_with_index do |el, i|
+        el_filtered, el_error = filter_element(el)
+        el_error = ErrorAtom.new(@name, el_error, index: i) if el_error.is_a?(Symbol)
+        errors << el_error
+        if el_error
+          found_error = true
         else
-          [filtered_data, nil]
+          filtered_data << el_filtered
         end
+      end
+
+      if found_error && !(@element_filter && @element_filter.discard_invalid?)
+        [data, errors]
       else
-        return [data, :array]
+        [filtered_data, nil]
       end
     end
 
@@ -85,10 +80,7 @@ module Chaotic
       elsif options[:class]
         class_const = options[:class]
         class_const = class_const.constantize if class_const.is_a?(String)
-
-        if !data.is_a?(class_const)
-          return [data, :class]
-        end
+        return [data, :class] unless data.is_a?(class_const)
       end
 
       [data, nil]

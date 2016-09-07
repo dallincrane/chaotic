@@ -1,26 +1,26 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
-describe "Chaotic::AdditionalFilter" do
-
-  describe "Additional Filter" do
+describe 'Chaotic::AdditionalFilter' do
+  describe 'Additional Filter' do
     module Chaotic
       class SometestFilter < Chaotic::AdditionalFilter
         @default_options = {
-          :nils => false
+          nils: false
         }
 
         def filter(data)
-          return [data, nil]
+          [data, nil]
         end
       end
 
       class MultiWordTestFilter < Chaotic::AdditionalFilter
         @default_options = {
-          :nils => false
+          nils: false
         }
 
         def filter(data)
-          return [data, nil]
+          [data, nil]
         end
       end
     end
@@ -32,12 +32,12 @@ describe "Chaotic::AdditionalFilter" do
       end
 
       def execute
-        { :first_name => first_name, :last_name => last_name }
+        { first_name: first_name, last_name: last_name }
       end
     end
 
-    it "should recognize additional filters" do
-      outcome = TestCommandUsingAdditionalFilters.run(:first_name => "John", :last_name => "Doe")
+    it 'should recognize additional filters' do
+      outcome = TestCommandUsingAdditionalFilters.run(first_name: 'John', last_name: 'Doe')
       assert outcome.success?
       assert_equal nil, outcome.errors
     end
@@ -50,13 +50,13 @@ describe "Chaotic::AdditionalFilter" do
       end
 
       def execute
-        { :a_hash => a_hash }
+        { a_hash: a_hash }
       end
     end
 
-    it "should be useable in hashes" do
+    it 'should be useable in hashes' do
       outcome = TestCommandUsingAdditionalFiltersInHashes.run(
-        :a_hash => { :first_name => "John" }
+        a_hash: { first_name: 'John' }
       )
 
       assert outcome.success?
@@ -71,13 +71,13 @@ describe "Chaotic::AdditionalFilter" do
       end
 
       def execute
-        { :an_array => an_array }
+        { an_array: an_array }
       end
     end
 
-    it "should be useable in arrays" do
+    it 'should be useable in arrays' do
       outcome = TestCommandUsingAdditionalFiltersInArrays.run(
-        :an_array => [ "John", "Bill" ]
+        an_array: %w(John Bill)
       )
 
       assert outcome.success?
@@ -86,20 +86,16 @@ describe "Chaotic::AdditionalFilter" do
 
     module Chaotic
       class AdditionalWithBlockFilter < Chaotic::AdditionalFilter
-
-        def initialize(opts={}, &block)
+        def initialize(opts = {}, &block)
           super(opts)
-
-          if block_given?
-            instance_eval &block
-          end
+          instance_eval(&block) if block_given?
         end
 
         def should_be_called
           @was_called = true
         end
 
-        def filter(data)
+        def filter(_data)
           if @was_called
             [true, nil]
           else
@@ -121,8 +117,8 @@ describe "Chaotic::AdditionalFilter" do
       end
     end
 
-    it "can have a block constructor" do
-      assert_equal true, TestCommandUsingBlockArgument.run!(:foo => 'bar')
+    it 'can have a block constructor' do
+      assert_equal true, TestCommandUsingBlockArgument.run!(foo: 'bar')
     end
 
     class TestCommandUsingBlockArgumentInAnArray < Chaotic::Command
@@ -139,8 +135,8 @@ describe "Chaotic::AdditionalFilter" do
       end
     end
 
-    it "It can have a block constructor when used in an array" do
-      assert_equal true, TestCommandUsingBlockArgumentInAnArray.run!(:some_array => ['bar'])
+    it 'It can have a block constructor when used in an array' do
+      assert_equal true, TestCommandUsingBlockArgumentInAnArray.run!(some_array: %w(bar))
     end
   end
 end

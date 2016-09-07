@@ -5,7 +5,6 @@ require 'date'
 require 'time'
 require 'bigdecimal'
 
-require 'chaotic/version'
 require 'chaotic/exception'
 require 'chaotic/errors'
 require 'chaotic/input_filter'

@@ -24,9 +24,7 @@ module Chaotic
       @required_inputs = {}
       @current_inputs = @required_inputs
 
-      if block_given?
-        instance_eval &block
-      end
+      instance_eval(&block) if block_given?
     end
 
     def dup
@@ -42,12 +40,12 @@ module Chaotic
 
     def required(&block)
       @current_inputs = @required_inputs
-      instance_eval &block
+      instance_eval(&block)
     end
 
     def optional(&block)
       @current_inputs = @optional_inputs
-      instance_eval &block
+      instance_eval(&block)
     end
 
     def required_keys
@@ -89,7 +87,6 @@ module Chaotic
 
       [[@required_inputs, true], [@optional_inputs, false]].each do |(inputs, is_required)|
         inputs.each_pair do |key, filterer|
-
           # If we are doing wildcards, then record so and move on
           if key == :*
             wildcard_filterer = filterer
@@ -115,12 +112,12 @@ module Chaotic
             end
           end
 
-          unless data.key?(key)
-            if filterer.default?
-              filtered_data[key] = filterer.default
-            elsif is_required
-              errors[key] = ErrorAtom.new(key, :required)
-            end
+          next if data.key?(key)
+
+          if filterer.default?
+            filtered_data[key] = filterer.default
+          elsif is_required
+            errors[key] = ErrorAtom.new(key, :required)
           end
         end
       end

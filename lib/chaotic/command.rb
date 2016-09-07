@@ -3,8 +3,8 @@ module Chaotic
   class Command
     class << self
       def create_attr_methods(meth, &block)
-        self.input_filters.send(meth, &block)
-        keys = self.input_filters.send("#{meth}_keys")
+        input_filters.send(meth, &block)
+        keys = input_filters.send("#{meth}_keys")
         keys.each do |key|
           define_method(key) do
             @inputs[key]
@@ -19,6 +19,7 @@ module Chaotic
           end
         end
       end
+
       private :create_attr_methods
 
       def required(&block)
@@ -44,25 +45,24 @@ module Chaotic
 
       def input_filters
         @input_filters ||= begin
-          if Command == self.superclass
+          if Command == superclass
             HashFilter.new
           else
-            self.superclass.input_filters.dup
+            superclass.input_filters.dup
           end
         end
       end
-
     end
 
     # Instance methods
     def initialize(*args)
       @raw_inputs = args.inject({}.with_indifferent_access) do |h, arg|
-        raise ArgumentError.new("All arguments must be hashes") unless arg.is_a?(Hash)
+        raise(ArgumentError, 'All arguments must be hashes') unless arg.is_a?(Hash)
         h.merge!(arg)
       end
 
       # Do field-level validation / filtering:
-      @inputs, @errors = self.input_filters.filter(@raw_inputs)
+      @inputs, @errors = input_filters.filter(@raw_inputs)
 
       # Run a custom validation method if supplied:
       validate unless errors?
@@ -83,18 +83,15 @@ module Chaotic
 
     def run!
       outcome = run
-      if outcome.success?
-        outcome.result
-      else
-        raise ValidationException.new(outcome.errors)
-      end
+      return outcome.result if outcome.success?
+      raise ValidationException, outcome.errors
     end
 
     def validation_outcome(result = nil)
       Outcome.new(!errors?, errors? ? nil : result, @errors, @inputs)
     end
 
-  protected
+    protected
 
     attr_reader :inputs, :raw_inputs
 
@@ -111,25 +108,23 @@ module Chaotic
     # or, supply a custom message:
     # add_error("name", :too_short, "The name 'blahblahblah' is too short!")
     def add_error(key, kind, message = nil)
-      raise ArgumentError.new("Invalid kind") unless kind.is_a?(Symbol)
+      raise(ArgumentError, 'Invalid kind') unless kind.is_a?(Symbol)
 
       @errors ||= ErrorHash.new
       @errors.tap do |errs|
-        path = key.to_s.split(".")
+        path = key.to_s.split('.')
         last = path.pop
-        inner = path.inject(errs) do |cur_errors,part|
+        inner = path.inject(errs) do |cur_errors, part|
           cur_errors[part.to_sym] ||= ErrorHash.new
         end
-        inner[last] = ErrorAtom.new(key, kind, :message => message)
+        inner[last] = ErrorAtom.new(key, kind, message: message)
       end
     end
 
     def merge_errors(hash)
-      if hash.any?
-        @errors ||= ErrorHash.new
-        @errors.merge!(hash)
-      end
+      return unless hash.any?
+      @errors ||= ErrorHash.new
+      @errors.merge!(hash)
     end
-
   end
 end

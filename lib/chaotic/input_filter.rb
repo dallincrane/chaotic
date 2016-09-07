@@ -2,9 +2,12 @@
 module Chaotic
   class InputFilter
     attr_accessor :options
-    attr_reader :default_options
 
     @default_options = {}
+
+    def self.default_options
+      @default_options
+    end
 
     def initialize(opts = {})
       self.options = (self.class.default_options || {}).merge(opts)

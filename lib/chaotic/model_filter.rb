@@ -25,11 +25,8 @@ module Chaotic
       if data.is_a?(Hash) && options[:builder]
         ret = options[:builder].run(data)
 
-        if ret.success?
-          data = ret.result
-        else
-          return [data, ret.errors]
-        end
+        return [data, ret.errors] unless ret.success?
+        data = ret.result
       end
 
       # We have a winner, someone passed in the correct data type!

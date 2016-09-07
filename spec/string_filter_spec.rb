@@ -1,238 +1,237 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
-describe "Chaotic::StringFilter" do
-
-  it "allows valid strings" do
+describe 'Chaotic::StringFilter' do
+  it 'allows valid strings' do
     sf = Chaotic::StringFilter.new
-    filtered, errors = sf.filter("hello")
-    assert_equal "hello", filtered
+    filtered, errors = sf.filter('hello')
+    assert_equal 'hello', filtered
     assert_equal nil, errors
   end
 
-  it "allows symbols" do
+  it 'allows symbols' do
     sf = Chaotic::StringFilter.new
     filtered, errors = sf.filter(:hello)
-    assert_equal "hello", filtered
+    assert_equal 'hello', filtered
     assert_equal nil, errors
   end
 
-  it "allows fixnums" do
+  it 'allows fixnums' do
     sf = Chaotic::StringFilter.new
     filtered, errors = sf.filter(1)
-    assert_equal "1", filtered
+    assert_equal '1', filtered
     assert_equal nil, errors
   end
 
-  it "disallows non-string" do
+  it 'disallows non-string' do
     sf = Chaotic::StringFilter.new
-    [["foo"], {:a => "1"}, Object.new].each do |thing|
-      filtered, errors = sf.filter(thing)
+    [['foo'], { a: '1' }, Object.new].each do |thing|
+      _filtered, errors = sf.filter(thing)
       assert_equal :string, errors
     end
   end
 
-  it "strips" do
-    sf = Chaotic::StringFilter.new(:strip => true)
-    filtered, errors = sf.filter(" hello ")
-    assert_equal "hello", filtered
+  it 'strips' do
+    sf = Chaotic::StringFilter.new(strip: true)
+    filtered, errors = sf.filter(' hello ')
+    assert_equal 'hello', filtered
     assert_equal nil, errors
   end
 
-  it "doesn't strip" do
-    sf = Chaotic::StringFilter.new(:strip => false)
-    filtered, errors = sf.filter(" hello ")
-    assert_equal " hello ", filtered
+  it 'doesn\'t strip' do
+    sf = Chaotic::StringFilter.new(strip: false)
+    filtered, errors = sf.filter(' hello ')
+    assert_equal ' hello ', filtered
     assert_equal nil, errors
   end
 
-  it "considers nil to be invalid" do
-    sf = Chaotic::StringFilter.new(:nils => false)
+  it 'considers nil to be invalid' do
+    sf = Chaotic::StringFilter.new(nils: false)
     filtered, errors = sf.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
-  it "considers nil to be valid" do
-    sf = Chaotic::StringFilter.new(:nils => true)
+  it 'considers nil to be valid' do
+    sf = Chaotic::StringFilter.new(nils: true)
     filtered, errors = sf.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
-  it "considers empty strings to be invalid" do
-    sf = Chaotic::StringFilter.new(:empty => false)
-    filtered, errors = sf.filter("")
-    assert_equal "", filtered
+  it 'considers empty strings to be invalid' do
+    sf = Chaotic::StringFilter.new(empty: false)
+    filtered, errors = sf.filter('')
+    assert_equal '', filtered
     assert_equal :empty, errors
   end
 
-  it "considers empty strings to be valid" do
-    sf = Chaotic::StringFilter.new(:empty => true)
-    filtered, errors = sf.filter("")
-    assert_equal "", filtered
+  it 'considers empty strings to be valid' do
+    sf = Chaotic::StringFilter.new(empty: true)
+    filtered, errors = sf.filter('')
+    assert_equal '', filtered
     assert_equal nil, errors
   end
 
-  it "considers stripped strings that are empty to be invalid" do
-    sf = Chaotic::StringFilter.new(:empty => false)
-    filtered, errors = sf.filter("   ")
-    assert_equal "", filtered
+  it 'considers stripped strings that are empty to be invalid' do
+    sf = Chaotic::StringFilter.new(empty: false)
+    filtered, errors = sf.filter('   ')
+    assert_equal '', filtered
     assert_equal :empty, errors
   end
 
-  it "considers strings that contain only unprintable characters to be invalid" do
-    sf = Chaotic::StringFilter.new(:empty => false)
+  it 'considers strings that contain only unprintable characters to be invalid' do
+    sf = Chaotic::StringFilter.new(empty: false)
     filtered, errors = sf.filter("\u0000\u0000")
-    assert_equal "", filtered
+    assert_equal '', filtered
     assert_equal :empty, errors
   end
 
-  it "considers long strings to be invalid" do
-    sf = Chaotic::StringFilter.new(:max_length => 5)
-    filtered, errors = sf.filter("123456")
-    assert_equal "123456", filtered
+  it 'considers long strings to be invalid' do
+    sf = Chaotic::StringFilter.new(max_length: 5)
+    filtered, errors = sf.filter('123456')
+    assert_equal '123456', filtered
     assert_equal :max_length, errors
   end
 
-  it "considers long strings to be valid" do
-    sf = Chaotic::StringFilter.new(:max_length => 5)
-    filtered, errors = sf.filter("12345")
-    assert_equal "12345", filtered
+  it 'considers long strings to be valid' do
+    sf = Chaotic::StringFilter.new(max_length: 5)
+    filtered, errors = sf.filter('12345')
+    assert_equal '12345', filtered
     assert_equal nil, errors
   end
 
-  it "considers short strings to be invalid" do
-    sf = Chaotic::StringFilter.new(:min_length => 5)
-    filtered, errors = sf.filter("1234")
-    assert_equal "1234", filtered
+  it 'considers short strings to be invalid' do
+    sf = Chaotic::StringFilter.new(min_length: 5)
+    filtered, errors = sf.filter('1234')
+    assert_equal '1234', filtered
     assert_equal :min_length, errors
   end
 
-  it "considers short strings to be valid" do
-    sf = Chaotic::StringFilter.new(:min_length => 5)
-    filtered, errors = sf.filter("12345")
-    assert_equal "12345", filtered
+  it 'considers short strings to be valid' do
+    sf = Chaotic::StringFilter.new(min_length: 5)
+    filtered, errors = sf.filter('12345')
+    assert_equal '12345', filtered
     assert_equal nil, errors
   end
 
-  it "considers bad matches to be invalid" do
-    sf = Chaotic::StringFilter.new(:matches => /aaa/)
-    filtered, errors = sf.filter("aab")
-    assert_equal "aab", filtered
+  it 'considers bad matches to be invalid' do
+    sf = Chaotic::StringFilter.new(matches: /aaa/)
+    filtered, errors = sf.filter('aab')
+    assert_equal 'aab', filtered
     assert_equal :matches, errors
   end
 
-  it "considers good matches to be valid" do
-    sf = Chaotic::StringFilter.new(:matches => /aaa/)
-    filtered, errors = sf.filter("baaab")
-    assert_equal "baaab", filtered
+  it 'considers good matches to be valid' do
+    sf = Chaotic::StringFilter.new(matches: /aaa/)
+    filtered, errors = sf.filter('baaab')
+    assert_equal 'baaab', filtered
     assert_equal nil, errors
   end
 
-  it "considers non-inclusion to be invalid" do
-    sf = Chaotic::StringFilter.new(:in => %w(red blue green))
-    filtered, errors = sf.filter("orange")
-    assert_equal "orange", filtered
+  it 'considers non-inclusion to be invalid' do
+    sf = Chaotic::StringFilter.new(in: %w(red blue green))
+    filtered, errors = sf.filter('orange')
+    assert_equal 'orange', filtered
     assert_equal :in, errors
   end
 
-  it "considers inclusion to be valid" do
-    sf = Chaotic::StringFilter.new(:in => %w(red blue green))
-    filtered, errors = sf.filter("red")
-    assert_equal "red", filtered
+  it 'considers inclusion to be valid' do
+    sf = Chaotic::StringFilter.new(in: %w(red blue green))
+    filtered, errors = sf.filter('red')
+    assert_equal 'red', filtered
     assert_equal nil, errors
   end
 
-  it "converts symbols to strings" do
-    sf = Chaotic::StringFilter.new(:strict => false)
+  it 'converts symbols to strings' do
+    sf = Chaotic::StringFilter.new(strict: false)
     filtered, errors = sf.filter(:my_sym)
-    assert_equal "my_sym", filtered
+    assert_equal 'my_sym', filtered
     assert_equal nil, errors
   end
 
-  it "converts integers to strings" do
-    sf = Chaotic::StringFilter.new(:strict => false)
+  it 'converts integers to strings' do
+    sf = Chaotic::StringFilter.new(strict: false)
     filtered, errors = sf.filter(1)
-    assert_equal "1", filtered
+    assert_equal '1', filtered
     assert_equal nil, errors
   end
 
-  it "converts bigdecimals to strings" do
-    sf = Chaotic::StringFilter.new(:strict => false)
-    filtered, errors = sf.filter(BigDecimal.new("0.0001"))
-    assert_equal "0.1E-3", filtered
+  it 'converts bigdecimals to strings' do
+    sf = Chaotic::StringFilter.new(strict: false)
+    filtered, errors = sf.filter(BigDecimal.new('0.0001'))
+    assert_equal '0.1E-3', filtered
     assert_equal nil, errors
   end
 
-  it "converts floats to strings" do
-    sf = Chaotic::StringFilter.new(:strict => false)
+  it 'converts floats to strings' do
+    sf = Chaotic::StringFilter.new(strict: false)
     filtered, errors = sf.filter(0.0001)
-    assert_equal "0.0001", filtered
+    assert_equal '0.0001', filtered
     assert_equal nil, errors
   end
 
-  it "converts booleans to strings" do
-    sf = Chaotic::StringFilter.new(:strict => false)
+  it 'converts booleans to strings' do
+    sf = Chaotic::StringFilter.new(strict: false)
     filtered, errors = sf.filter(true)
-    assert_equal "true", filtered
+    assert_equal 'true', filtered
     assert_equal nil, errors
   end
 
-  it "disallows symbols" do
-    sf = Chaotic::StringFilter.new(:strict => true)
+  it 'disallows symbols' do
+    sf = Chaotic::StringFilter.new(strict: true)
     filtered, errors = sf.filter(:my_sym)
     assert_equal :my_sym, filtered
     assert_equal :string, errors
   end
 
-  it "disallows integers" do
-    sf = Chaotic::StringFilter.new(:strict => true)
+  it 'disallows integers' do
+    sf = Chaotic::StringFilter.new(strict: true)
     filtered, errors = sf.filter(1)
     assert_equal 1, filtered
     assert_equal :string, errors
   end
 
-  it "disallows bigdecimals" do
-    sf = Chaotic::StringFilter.new(:strict => true)
-    big_decimal = BigDecimal.new("0.0001")
+  it 'disallows bigdecimals' do
+    sf = Chaotic::StringFilter.new(strict: true)
+    big_decimal = BigDecimal.new('0.0001')
     filtered, errors = sf.filter(big_decimal)
     assert_equal big_decimal, filtered
     assert_equal :string, errors
   end
 
-  it "disallows floats" do
-    sf = Chaotic::StringFilter.new(:strict => true)
+  it 'disallows floats' do
+    sf = Chaotic::StringFilter.new(strict: true)
     filtered, errors = sf.filter(0.0001)
     assert_equal 0.0001, filtered
     assert_equal :string, errors
   end
 
-  it "disallows booleans" do
-    sf = Chaotic::StringFilter.new(:strict => true)
+  it 'disallows booleans' do
+    sf = Chaotic::StringFilter.new(strict: true)
     filtered, errors = sf.filter(true)
     assert_equal true, filtered
     assert_equal :string, errors
   end
 
-  it "removes unprintable characters" do
-    sf = Chaotic::StringFilter.new(:allow_control_characters => false)
+  it 'removes unprintable characters' do
+    sf = Chaotic::StringFilter.new(allow_control_characters: false)
     filtered, errors = sf.filter("Hello\u0000\u0000World!")
-    assert_equal "Hello World!", filtered
+    assert_equal 'Hello World!', filtered
     assert_equal nil, errors
   end
 
   it "doesn't remove unprintable characters" do
-    sf = Chaotic::StringFilter.new(:allow_control_characters => true)
+    sf = Chaotic::StringFilter.new(allow_control_characters: true)
     filtered, errors = sf.filter("Hello\u0000\u0000World!")
     assert_equal "Hello\u0000\u0000World!", filtered
     assert_equal nil, errors
   end
 
   it "doesn't remove tabs, spaces and line breaks" do
-    sf = Chaotic::StringFilter.new(:allow_control_characters => false)
+    sf = Chaotic::StringFilter.new(allow_control_characters: false)
     filtered, errors = sf.filter("Hello,\tWorld !\r\nNew Line")
     assert_equal "Hello,\tWorld !\r\nNew Line", filtered
     assert_equal nil, errors
   end
-
 end

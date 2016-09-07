@@ -20,7 +20,10 @@ module Chaotic
         return [data, :nils]
       end
 
-      data = data.to_s if !options[:strict] && [TrueClass, FalseClass, Fixnum, Float, BigDecimal, Symbol].include?(data.class)
+      if !options[:strict] && [TrueClass, FalseClass, Fixnum, Float, BigDecimal, Symbol].include?(data.class)
+        data = data.to_s
+      end
+
       return [data, :string] unless data.is_a?(String)
 
       data = data.gsub(/[^[:print:]\t\r\n]+/, ' ') unless options[:allow_control_characters]

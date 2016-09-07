@@ -8,7 +8,7 @@ module Chaotic
     end
 
     def to_s
-      self.errors.message_list.join('; ').to_s
+      errors.message_list.join('; ').to_s
     end
   end
 end
