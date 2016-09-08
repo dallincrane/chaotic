@@ -23,6 +23,13 @@ describe 'Chaotic::StringFilter' do
     assert_equal nil, errors
   end
 
+  it 'allows bignums' do
+    sf = Chaotic::StringFilter.new
+    filtered, errors = sf.filter(11_111_111_111_111_111_111)
+    assert_equal '1', filtered
+    assert_equal nil, errors
+  end
+
   it 'disallows non-string' do
     sf = Chaotic::StringFilter.new
     [['foo'], { a: '1' }, Object.new].each do |thing|

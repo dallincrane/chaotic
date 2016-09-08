@@ -1,56 +1,39 @@
 # frozen_string_literal: true
 module Chaotic
-  class Command
-    class << self
-      def create_attr_methods(meth, &block)
-        input_filters.send(meth, &block)
-        keys = input_filters.send("#{meth}_keys")
-        keys.each do |key|
-          define_method(key) do
-            @inputs[key]
-          end
+  module Command
+    extend ActiveSupport::Concern
 
-          define_method("#{key}_present?") do
-            @inputs.key?(key)
-          end
-
-          define_method("#{key}=") do |v|
-            @inputs[key] = v
-          end
+    class_methods do
+      def params(&block)
+        root_filter.params(&block)
+        root_filter.keys.each do |key|
+          define_method(key) { @inputs[key] }
+          define_method("#{key}=") { |v| @inputs[key] = v }
         end
       end
 
-      private :create_attr_methods
-
-      def required(&block)
-        create_attr_methods(:required, &block)
+      def build(*args)
+        new(*args).chaotic_outcome('itself')
       end
 
-      def optional(&block)
-        create_attr_methods(:optional, &block)
+      def build!(*args)
+        instance_outcome = run(*args)
+        return instance_outcome.result if instance_outcome.success?
+        raise Errors::ValidationException, instance_outcome.errors
       end
 
       def run(*args)
-        new(*args).run
+        new(*args).chaotic_outcome('execute')
       end
 
       def run!(*args)
-        new(*args).run!
+        instance_outcome = run(*args)
+        return instance_outcome.result if instance_outcome.success?
+        raise Errors::ValidationException, instance_outcome.errors
       end
 
-      # Validates input, but doesn't call execute. Returns an Outcome with errors anyway.
-      def validate(*args)
-        new(*args).validation_outcome
-      end
-
-      def input_filters
-        @input_filters ||= begin
-          if Command == superclass
-            HashFilter.new
-          else
-            superclass.input_filters.dup
-          end
-        end
+      def root_filter
+        @root_filter ||= superclass.try(:root_filter).try(:dup) || HashFilter.new
       end
     end
 
@@ -58,50 +41,36 @@ module Chaotic
     def initialize(*args)
       @raw_inputs = args.inject({}.with_indifferent_access) do |h, arg|
         raise(ArgumentError, 'All arguments must be hashes') unless arg.is_a?(Hash)
-        h.merge!(arg)
+        h.deep_merge!(arg)
       end
 
       # Do field-level validation / filtering:
-      @inputs, @errors = input_filters.filter(@raw_inputs)
+      @inputs, @errors = self.class.root_filter.filter(@raw_inputs)
 
       # Run a custom validation method if supplied:
-      validate unless errors?
+      try(:validate) if valid?
     end
 
-    def input_filters
-      self.class.input_filters
+    def valid?
+      @errors.nil?
     end
 
-    def errors?
-      !@errors.nil?
-    end
+    def chaotic_outcome(command)
+      unless respond_to?(command)
+        raise NoMethodError, "the #{command} method must be defined"
+      end
 
-    def run
-      return validation_outcome if errors?
-      validation_outcome(execute)
-    end
-
-    def run!
-      outcome = run
-      return outcome.result if outcome.success?
-      raise ValidationException, outcome.errors
-    end
-
-    def validation_outcome(result = nil)
-      Outcome.new(!errors?, errors? ? nil : result, @errors, @inputs)
+      Outcome.new(
+        success: valid?,
+        result: valid? ? send(command) : nil,
+        errors: @errors,
+        inputs: @inputs
+      )
     end
 
     protected
 
     attr_reader :inputs, :raw_inputs
-
-    def validate
-      # Meant to be overridden
-    end
-
-    def execute
-      # Meant to be overridden
-    end
 
     # add_error("name", :too_short)
     # add_error("colors.foreground", :not_a_color) # => to create errors = {colors: {foreground: :not_a_color}}
@@ -111,12 +80,14 @@ module Chaotic
       raise(ArgumentError, 'Invalid kind') unless kind.is_a?(Symbol)
 
       @errors ||= ErrorHash.new
-      @errors.tap do |errs|
+      @errors.tap do |root_error_hash|
         path = key.to_s.split('.')
         last = path.pop
-        inner = path.inject(errs) do |cur_errors, part|
-          cur_errors[part.to_sym] ||= ErrorHash.new
+
+        inner = path.inject(root_error_hash) do |current_error_hash, path_key|
+          current_error_hash[path_key] ||= ErrorHash.new
         end
+
         inner[last] = ErrorAtom.new(key, kind, message: message)
       end
     end
