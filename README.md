@@ -28,10 +28,6 @@ Options
 * **strip**
   * true (default): uses data`.strip`
   * false: does nothing
-* **class(ArrayFilter)**
-  * nil (default): does nothing
-  * String: validates each element has the given`.constantize` class
-  * Constant: validates each element has the given class
 * **class(ModelFilter)**
   * nil (default): uses attribute name`.to_s.camelize.constantize`
   * String: uses given`.constantize`

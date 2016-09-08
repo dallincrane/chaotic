@@ -10,7 +10,6 @@ module Chaotic
 
     @default_options = {
       nils: false,
-      class: nil,
       arrayize: false
     }
 
@@ -21,8 +20,6 @@ module Chaotic
       @element_filter = nil
 
       instance_eval(&block) if block_given?
-
-      raise(ArgumentError, 'Can\'t supply both a class and a filter') if @element_filter && options[:class]
     end
 
     def hash(options = {}, &block)
@@ -74,15 +71,11 @@ module Chaotic
 
     # Returns [filtered, errors]
     def filter_element(data)
-      if @element_filter
-        data, el_errors = @element_filter.filter(data)
-        return [data, el_errors] if el_errors
-      elsif options[:class]
-        class_const = options[:class]
-        class_const = class_const.constantize if class_const.is_a?(String)
-        return [data, :class] unless data.is_a?(class_const)
-      end
+      return [data, nil] unless @element_filter
 
+      data, el_errors = @element_filter.filter(data)
+
+      return [data, el_errors] if el_errors
       [data, nil]
     end
   end

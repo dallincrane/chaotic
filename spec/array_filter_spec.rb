@@ -31,27 +31,6 @@ describe 'Chaotic::ArrayFilter' do
     assert_equal nil, errors
   end
 
-  it 'lets you specify a class, and has valid elements' do
-    f = Chaotic::ArrayFilter.new(:arr, class: Fixnum)
-    filtered, errors = f.filter([1, 2, 3])
-    assert_equal nil, errors
-    assert_equal [1, 2, 3], filtered
-  end
-
-  it 'lets you specify a class as a string, and has valid elements' do
-    f = Chaotic::ArrayFilter.new(:arr, class: 'Fixnum')
-    filtered, errors = f.filter([1, 2, 3])
-    assert_equal nil, errors
-    assert_equal [1, 2, 3], filtered
-  end
-
-  it 'lets you specify a class, and has invalid elements' do
-    f = Chaotic::ArrayFilter.new(:arr, class: Fixnum)
-    filtered, errors = f.filter([1, 'bob'])
-    assert_equal [nil, :class], errors.symbolic
-    assert_equal [1, 'bob'], filtered
-  end
-
   it 'lets you use a block to supply an element filter' do
     f = Chaotic::ArrayFilter.new(:arr) { string }
 
