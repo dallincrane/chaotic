@@ -2,8 +2,8 @@
 module Chaotic
   module Filters
     class HashFilter
-      include Concerns::Filterable
-      include Concerns::Blockable
+      include Chaotic::Concerns::Filterable
+      include Chaotic::Concerns::Blockable
 
       @default_options = {
         nils: false

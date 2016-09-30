@@ -33,7 +33,7 @@ module Chaotic
       end
 
       def root_filter
-        @root_filter ||= superclass.try(:root_filter).try(:dup) || HashFilter.new
+        @root_filter ||= superclass.try(:root_filter).try(:dup) || Filters::HashFilter.new
       end
     end
 

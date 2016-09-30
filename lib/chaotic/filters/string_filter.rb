@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class StringFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {
         nils: false,

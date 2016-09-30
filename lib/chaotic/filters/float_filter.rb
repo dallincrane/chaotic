@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class FloatFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {
         empty_is_nil: false,

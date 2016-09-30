@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class DateFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {
         nils: false,  # true allows an explicit nil to be valid. Overrides any other options

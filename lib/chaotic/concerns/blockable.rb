@@ -11,11 +11,15 @@ module Chaotic
         # NOTE: using ||= here as sub_filters may exist in inhereted params
         @sub_filters ||= {}
 
+        pp name
+        pp Chaotic::Filters.constants
+
         Chaotic::Filters.constants.each do |constant|
           match_data = /^Chaotic::Filters::([A-Z][a-zA-Z]*)Filter$/.match(constant.to_s)
           next unless match_data
           type_name = match_data[1].underscore
-
+          pp 'type_name'
+          pp type_name
           define_method(type_name) do |*args, &block|
             args.unshift(nil) if args[0].is_a?(Hash)
             key, options = args

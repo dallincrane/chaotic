@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class IntegerFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {
         empty_is_nil: false,

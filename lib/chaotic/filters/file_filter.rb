@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module Chaotic
-  class Filters
+  module Filters
     class FileFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {
         nils: false,

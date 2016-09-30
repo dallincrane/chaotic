@@ -1,12 +1,11 @@
 # frozen_string_literal: true
-class SimpleCommand < Chaotic::Command
-  required do
+class SimpleCommand
+  include Chaotic::Command
+
+  params do
     string :name, max_length: 10
     string :email
-  end
-
-  optional do
-    integer :amount
+    integer :amount, required: false
   end
 
   def validate

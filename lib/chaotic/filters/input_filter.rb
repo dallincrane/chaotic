@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class InputFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {}
 

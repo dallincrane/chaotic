@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+# require 'active_support/concern'
+
 module Mutations
   module Filters
     class DecimalFilter
-      include Concerns::Filterable
+      include Chaotic::Concerns::Filterable
 
       @default_options = {
         empty_is_nil: false,

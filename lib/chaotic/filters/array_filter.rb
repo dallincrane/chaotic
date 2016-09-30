@@ -2,8 +2,8 @@
 module Chaotic
   module Filters
     class ArrayFilter
-      include Concerns::Filterable
-      include Concerns::Blockable
+      include Chaotic::Concerns::Filterable
+      include Chaotic::Concerns::Blockable
 
       @default_options = {
         nils: false,

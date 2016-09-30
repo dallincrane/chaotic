@@ -4,14 +4,17 @@ module Chaotic
     module Filterable
       extend ActiveSupport::Concern
 
-      attr_reader :default_options
-      attr_accessor :options
+      included do
+        attr_reader :default_options
+        attr_accessor :options
+      end
 
-      def initialize(name, opts = {}, &block)
+      def initialize(name = nil, opts = {}, &block)
         @params = {}
-
         @name = name
-        self.options = default_options.merge(opts)
+
+        default_options = self.class.instance_variable_get(:@default_options)
+        self.class.instance_variable_set(:@options, default_options.merge(opts))
 
         try(:run_block, &block)
       end
