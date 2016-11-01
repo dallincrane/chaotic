@@ -9,11 +9,6 @@ module Chaotic
         new_records: false
       }.freeze
 
-      def initialize(name, opts = {})
-        super(opts)
-        @name = name
-      end
-
       def filter(data)
         initialize_constants!
 
@@ -22,7 +17,6 @@ module Chaotic
           return [data, :nils]
         end
 
-        # Passing in attributes.  Let's see if we have a builder
         if data.is_a?(Hash) && options[:builder]
           ret = options[:builder].run(data)
 
@@ -30,7 +24,6 @@ module Chaotic
           data = ret.result
         end
 
-        # We have a winner, someone passed in the correct data type!
         if data.is_a?(options[:class])
           return [data, :new_records] if !options[:new_records] && (data.respond_to?(:new_record?) && data.new_record?)
           return [data, nil]
@@ -41,10 +34,9 @@ module Chaotic
 
       private
 
-      # Initialize the model class and builder
       def initialize_constants!
         @initialize_constants ||= begin
-          class_const = options[:class] || @name.to_s.camelize
+          class_const = options[:class] || key.to_s.camelize
           class_const = class_const.constantize if class_const.is_a?(String)
           options[:class] = class_const
 

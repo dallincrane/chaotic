@@ -58,7 +58,7 @@ describe 'Chaotic - errors' do
 
   it 'titleizes keys' do
     atom = Chaotic::Errors::ErrorAtom.new(:newsletter_subscription, :boolean)
-    assert_equal 'Newsletter Subscription isn\'t a boolean', atom.message
+    assert_equal 'Newsletter Subscription must be a boolean', atom.message
   end
 
   describe 'Bunch o errors' do
@@ -82,14 +82,14 @@ describe 'Chaotic - errors' do
 
     it 'gives messages' do
       expected = {
-        'str1' => 'Str1 can\'t be blank',
-        'str2' => 'Str2 isn\'t an option',
-        'int1' => 'Int1 isn\'t an integer',
+        'str1' => 'Str1 cannot be empty',
+        'str2' => 'Str2 is not an available option',
+        'int1' => 'Int1 must be an integer',
         'hash1' => {
-          'bool1' => 'Bool1 isn\'t a boolean',
+          'bool1' => 'Bool1 must be a boolean',
           'bool2' => 'Bool2 is required'
         },
-        'arr1' => ['Arr1[0] isn\'t an integer', nil, 'Arr1[2] isn\'t an integer']
+        'arr1' => ['Arr1[0] must be an integer', nil, 'Arr1[2] must be an integer']
       }
 
       assert_equal expected, @outcome.errors.message
@@ -97,13 +97,13 @@ describe 'Chaotic - errors' do
 
     it 'can flatten those messages' do
       expected = [
-        'Str1 can\'t be blank',
-        'Str2 isn\'t an option',
-        'Int1 isn\'t an integer',
-        'Bool1 isn\'t a boolean',
+        'Str1 cannot be empty',
+        'Str2 is not an available option',
+        'Int1 must be an integer',
+        'Bool1 must be a boolean',
         'Bool2 is required',
-        'Arr1[0] isn\'t an integer',
-        'Arr1[2] isn\'t an integer'
+        'Arr1[0] must be an integer',
+        'Arr1[2] must be an integer'
       ]
 
       assert_equal expected.size, @outcome.errors.message_list.size

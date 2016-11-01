@@ -4,39 +4,31 @@ module Chaotic
     class DefaultErrorMessageCreator
       MESSAGES = Hash.new('is invalid').tap do |h|
         h.merge!(
-          # General
-          nils: 'can\'t be nil',
+          nils: 'cannot be nil',
           required: 'is required',
 
-          # Datatypes
-          string: 'isn\'t a string',
-          integer: 'isn\'t an integer',
-          boolean: 'isn\'t a boolean',
-          hash: 'isn\'t a hash',
-          array: 'isn\'t an array',
-          model: 'isn\'t the right class',
+          string: 'must be a string',
+          integer: 'must be an integer',
+          decimal: 'must be a number',
+          boolean: 'must be a boolean',
+          hash: 'must be a hash',
+          array: 'must be an array',
+          model: 'must be the right class',
 
-          # Date
-          date: 'date doesn\'t exist',
-          before: 'isn\'t before given date',
-          after: 'isn\'t after given date',
+          date: 'date does non exist',
+          before: 'must be before given date',
+          after: 'must be after given date',
 
-          # String
-          empty: 'can\'t be blank',
+          empty: 'cannot be empty',
           max_length: 'is too long',
           min_length: 'is too short',
-          matches: 'isn\'t in the right format',
-          in: 'isn\'t an option',
+          matches: 'has an incorrect format',
+          in: 'is not an available option',
 
-          # Array
-          class: 'isn\'t the right class',
-
-          # Integer
           min: 'is too small',
           max: 'is too big',
 
-          # Model
-          new_records: 'isn\'t a saved model'
+          new_records: 'model must be saved'
         )
       end
 
