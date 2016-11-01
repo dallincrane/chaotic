@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class BooleanFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class BooleanFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false
-      }
+      }.freeze
 
       BOOLEAN_MAP = {
         'true' => true,

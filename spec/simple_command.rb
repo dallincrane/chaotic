@@ -9,7 +9,7 @@ class SimpleCommand
   end
 
   def validate
-    return if email && email.include?('@')
+    return if email&.include?('@')
     add_error(:email, :invalid, 'Email must contain @')
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::ModelFilter' do
+describe 'Chaotic::Filters::ModelFilter' do
   class SimpleModel; end
   class AlwaysNew
     def new_record?
@@ -16,7 +16,7 @@ describe 'Chaotic::ModelFilter' do
   end
 
   it 'allows models' do
-    f = Chaotic::ModelFilter.new(:simple_model)
+    f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
     filtered, errors = f.filter(m)
     assert_equal m, filtered
@@ -24,35 +24,35 @@ describe 'Chaotic::ModelFilter' do
   end
 
   it 'raises an exception during filtering if constantization fails' do
-    f = Chaotic::ModelFilter.new(:complex_model)
+    f = Chaotic::Filters::ModelFilter.new(:complex_model)
     assert_raises NameError do
       f.filter(nil)
     end
   end
 
   it 'raises an exception during filtering if constantization of class fails' do
-    f = Chaotic::ModelFilter.new(:simple_model, class: 'ComplexModel')
+    f = Chaotic::Filters::ModelFilter.new(:simple_model, class: 'ComplexModel')
     assert_raises NameError do
       f.filter(nil)
     end
   end
 
   it 'raises an exception during filtering if constantization of builder fails' do
-    f = Chaotic::ModelFilter.new(:simple_model, builder: 'ComplexModel')
+    f = Chaotic::Filters::ModelFilter.new(:simple_model, builder: 'ComplexModel')
     assert_raises NameError do
       f.filter(nil)
     end
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::ModelFilter.new(:simple_model, nils: false)
+    f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::ModelFilter.new(:simple_model, nils: true)
+    f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
@@ -61,7 +61,7 @@ describe 'Chaotic::ModelFilter' do
   it 'will re-constantize if cache_constants is false' do
     was = Chaotic.cache_constants?
     Chaotic.cache_constants = false
-    f = Chaotic::ModelFilter.new(:simple_model)
+    f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
     filtered, errors = f.filter(m)
     assert_equal m, filtered

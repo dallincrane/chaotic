@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class IntegerFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class IntegerFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         empty_is_nil: false,
         nils: false,
         remove_characters: ',',
         min: nil,
         max: nil,
         in: nil
-      }
+      }.freeze
 
       def filter(data)
         data = nil if options[:empty_is_nil] && data == ''

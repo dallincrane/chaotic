@@ -39,19 +39,18 @@ describe 'Command' do
     end
 
     it 'should do standalone validation' do
-      outcome = SimpleCommand.validate(name: 'JohnLong', email: 'john@gmail.com')
+      outcome = SimpleCommand.build(name: 'JohnLong', email: 'john@gmail.com')
       assert outcome.success?
-      assert_nil outcome.result
       assert_nil outcome.errors
 
-      outcome = SimpleCommand.validate(name: 'JohnTooLong', email: 'john@gmail.com')
+      outcome = SimpleCommand.build(name: 'JohnTooLong', email: 'john@gmail.com')
       assert !outcome.success?
       assert_nil outcome.result
       assert_equal :max_length, outcome.errors.symbolic[:name]
     end
 
     it 'should execute a custom validate method' do
-      outcome = SimpleCommand.validate(name: 'JohnLong', email: 'xxxx')
+      outcome = SimpleCommand.build(name: 'JohnLong', email: 'xxxx')
 
       assert !outcome.success?
       assert_equal :invalid, outcome.errors.symbolic[:email]
@@ -66,7 +65,7 @@ describe 'Command' do
     end
 
     it 'should execute custom validate method only if regular validations succeed' do
-      outcome = SimpleCommand.validate(name: 'JohnTooLong', email: 'xxxx')
+      outcome = SimpleCommand.build(name: 'JohnTooLong', email: 'xxxx')
 
       assert !outcome.success?
       assert_equal :max_length, outcome.errors.symbolic[:name]
@@ -112,9 +111,12 @@ describe 'Command' do
   end
 
   describe 'EigenCommand' do
-    class EigenCommand < Chaotic::Command
-      required { string :name }
-      optional { string :email }
+    class EigenCommand
+      include Chaotic::Command
+      params do
+        string :name
+        string :email, required: false
+      end
 
       def execute
         { name: name, email: email }
@@ -128,9 +130,12 @@ describe 'Command' do
   end
 
   describe 'MutatatedCommand' do
-    class MutatatedCommand < Chaotic::Command
-      required { string :name }
-      optional { string :email }
+    class MutatatedCommand
+      include Chaotic::Command
+      params do
+        string :name
+        string :email, required: false
+      end
 
       def execute
         self.name = 'bob'
@@ -146,9 +151,12 @@ describe 'Command' do
   end
 
   describe 'ErrorfulCommand' do
-    class ErrorfulCommand < Chaotic::Command
-      required { string :name }
-      optional { string :email }
+    class ErrorfulCommand
+      include Chaotic::Command
+      params do
+        string :name
+        string :email, required: false
+      end
 
       def execute
         add_error('bob', :is_a_bob)
@@ -160,15 +168,18 @@ describe 'Command' do
       outcome = ErrorfulCommand.run(name: 'John', email: 'john@gmail.com')
 
       assert !outcome.success?
-      assert_nil outcome.result
+      assert 1, outcome.result
       assert :is_a_bob, outcome.errors.symbolic[:bob]
     end
   end
 
   describe 'NestingErrorfulCommand' do
-    class NestingErrorfulCommand < Chaotic::Command
-      required { string :name }
-      optional { string :email }
+    class NestingErrorfulCommand
+      include Chaotic::Command
+      params do
+        string :name
+        string :email, required: false
+      end
 
       def execute
         add_error('people.bob', :is_a_bob)
@@ -180,20 +191,23 @@ describe 'Command' do
       outcome = NestingErrorfulCommand.run(name: 'John', email: 'john@gmail.com')
 
       assert !outcome.success?
-      assert_nil outcome.result
+      assert 1, outcome.result
       assert :is_a_bob, outcome.errors[:people].symbolic[:bob]
     end
   end
 
   describe 'MultiErrorCommand' do
-    class ErrorfulCommand < Chaotic::Command
-      required { string :name }
-      optional { string :email }
+    class MultiErrorCommand
+      include Chaotic::Command
+      params do
+        string :name
+        string :email, required: false
+      end
 
       def execute
-        moar_errors = Chaotic::ErrorHash.new
-        moar_errors[:bob] = Chaotic::ErrorAtom.new(:bob, :is_short)
-        moar_errors[:sally] = Chaotic::ErrorAtom.new(:sally, :is_fat)
+        moar_errors = Chaotic::Errors::ErrorHash.new
+        moar_errors[:bob] = Chaotic::Errors::ErrorAtom.new(:bob, :is_short)
+        moar_errors[:sally] = Chaotic::Errors::ErrorAtom.new(:sally, :is_fat)
 
         merge_errors(moar_errors)
         1
@@ -204,38 +218,16 @@ describe 'Command' do
       outcome = ErrorfulCommand.run(name: 'John', email: 'john@gmail.com')
 
       assert !outcome.success?
-      assert_nil outcome.result
+      assert 1, outcome.result
       assert :is_short, outcome.errors.symbolic[:bob]
       assert :is_fat, outcome.errors.symbolic[:sally]
     end
   end
 
-  describe 'PresentCommand' do
-    class PresentCommand < Chaotic::Command
-      optional do
-        string :email
-        string :name
-      end
-
-      def execute
-        return 1 if name_present? && email_present?
-        return 2 if !name_present? && email_present?
-        return 3 if name_present? && !email_present?
-        4
-      end
-    end
-
-    it 'should handle *_present? methods' do
-      assert_equal 1, PresentCommand.run!(name: 'John', email: 'john@gmail.com')
-      assert_equal 2, PresentCommand.run!(email: 'john@gmail.com')
-      assert_equal 3, PresentCommand.run!(name: 'John')
-      assert_equal 4, PresentCommand.run!
-    end
-  end
-
   describe 'RawInputsCommand' do
-    class RawInputsCommand < Chaotic::Command
-      required do
+    class RawInputsCommand
+      include Chaotic::Command
+      params do
         string :name
       end
 

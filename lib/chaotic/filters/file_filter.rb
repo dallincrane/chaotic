@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class FileFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class FileFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false,
         upload: false,
         size: nil
-      }
+      }.freeze
 
       def filter(data)
         if data.nil?

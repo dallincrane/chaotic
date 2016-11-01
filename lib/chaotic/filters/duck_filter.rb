@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class DuckFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class DuckFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false,
         methods: nil
-      }
+      }.freeze
 
       def filter(data)
         if data.nil?

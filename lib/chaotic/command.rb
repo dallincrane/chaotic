@@ -3,6 +3,10 @@ module Chaotic
   module Command
     extend ActiveSupport::Concern
 
+    included do
+      attr_reader :inputs, :raw_inputs
+    end
+
     class_methods do
       def params(&block)
         root_filter.params(&block)
@@ -12,6 +16,10 @@ module Chaotic
         end
       end
 
+      def root_filter
+        @root_filter ||= superclass.try(:root_filter).try(:dup) || Chaotic::Filters::HashFilter.new
+      end
+
       def build(*args)
         new(*args).chaotic_outcome('itself')
       end
@@ -19,7 +27,7 @@ module Chaotic
       def build!(*args)
         instance_outcome = run(*args)
         return instance_outcome.result if instance_outcome.success?
-        raise Errors::ValidationException, instance_outcome.errors
+        raise Chaotic::Errors::ValidationException, instance_outcome.errors
       end
 
       def run(*args)
@@ -29,11 +37,7 @@ module Chaotic
       def run!(*args)
         instance_outcome = run(*args)
         return instance_outcome.result if instance_outcome.success?
-        raise Errors::ValidationException, instance_outcome.errors
-      end
-
-      def root_filter
-        @root_filter ||= superclass.try(:root_filter).try(:dup) || Filters::HashFilter.new
+        raise Chaotic::Errors::ValidationException, instance_outcome.errors
       end
     end
 
@@ -60,17 +64,17 @@ module Chaotic
         raise NoMethodError, "the #{command} method must be defined"
       end
 
-      Outcome.new(
+      result = valid? ? send(command) : nil
+
+      Chaotic::Outcome.new(
         success: valid?,
-        result: valid? ? send(command) : nil,
+        result: result,
         errors: @errors,
         inputs: @inputs
       )
     end
 
     protected
-
-    attr_reader :inputs, :raw_inputs
 
     # add_error("name", :too_short)
     # add_error("colors.foreground", :not_a_color) # => to create errors = {colors: {foreground: :not_a_color}}
@@ -79,22 +83,22 @@ module Chaotic
     def add_error(key, kind, message = nil)
       raise(ArgumentError, 'Invalid kind') unless kind.is_a?(Symbol)
 
-      @errors ||= ErrorHash.new
+      @errors ||= Chaotic::Errors::ErrorHash.new
       @errors.tap do |root_error_hash|
         path = key.to_s.split('.')
         last = path.pop
 
         inner = path.inject(root_error_hash) do |current_error_hash, path_key|
-          current_error_hash[path_key] ||= ErrorHash.new
+          current_error_hash[path_key] ||= Chaotic::Errors::ErrorHash.new
         end
 
-        inner[last] = ErrorAtom.new(key, kind, message: message)
+        inner[last] = Chaotic::Errors::ErrorAtom.new(key, kind, message: message)
       end
     end
 
     def merge_errors(hash)
       return unless hash.any?
-      @errors ||= ErrorHash.new
+      @errors ||= Chaotic::Errors::ErrorHash.new
       @errors.merge!(hash)
     end
   end

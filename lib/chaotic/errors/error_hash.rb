@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Chaotic
   module Errors
-    class ErrorHash < Hash
+    class ErrorHash < HashWithIndifferentAccess
       # chaotic.errors is an ErrorHash instance like this:
       # {
       #   email: ErrorAtom(:matches),

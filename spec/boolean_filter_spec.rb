@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::BooleanFilter' do
+describe 'Chaotic::Filters::BooleanFilter' do
   it 'allows booleans' do
-    f = Chaotic::BooleanFilter.new
+    f = Chaotic::Filters::BooleanFilter.new
     filtered, errors = f.filter(true)
     assert_equal true, filtered
     assert_equal nil, errors
@@ -14,7 +14,7 @@ describe 'Chaotic::BooleanFilter' do
   end
 
   it 'considers non-booleans to be invalid' do
-    f = Chaotic::BooleanFilter.new
+    f = Chaotic::Filters::BooleanFilter.new
     [[true], { a: '1' }, Object.new].each do |thing|
       _filtered, errors = f.filter(thing)
       assert_equal :boolean, errors
@@ -22,21 +22,21 @@ describe 'Chaotic::BooleanFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::BooleanFilter.new(nils: false)
+    f = Chaotic::Filters::BooleanFilter.new(nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::BooleanFilter.new(nils: true)
+    f = Chaotic::Filters::BooleanFilter.new(nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
   it 'considers certain strings to be valid booleans' do
-    f = Chaotic::BooleanFilter.new
+    f = Chaotic::Filters::BooleanFilter.new
     [['true', true], ['TRUE', true], ['TrUe', true], ['1', true], ['false', false], ['FALSE', false], ['FalSe', false], ['0', false], [0, false], [1, true]].each do |(str, v)|
       filtered, errors = f.filter(str)
       assert_equal v, filtered
@@ -45,13 +45,13 @@ describe 'Chaotic::BooleanFilter' do
   end
 
   it 'considers empty strings to be empty' do
-    f = Chaotic::BooleanFilter.new
+    f = Chaotic::Filters::BooleanFilter.new
     _filtered, errors = f.filter('')
     assert_equal :empty, errors
   end
 
   it 'considers other string to be invalid' do
-    f = Chaotic::BooleanFilter.new
+    f = Chaotic::Filters::BooleanFilter.new
     ['truely', '2'].each do |str|
       filtered, errors = f.filter(str)
       assert_equal str, filtered

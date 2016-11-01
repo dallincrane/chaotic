@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class TimeFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class TimeFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false,
         format: nil,
         after: nil,
         before: nil
-      }
+      }.freeze
 
       def filter(data)
         if data.nil?

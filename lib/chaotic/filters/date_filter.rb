@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class DateFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class DateFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false,  # true allows an explicit nil to be valid. Overrides any other options
         format: nil,  # If nil, Date.parse will be used for coercion. If something like "%Y-%m-%d", Date.strptime is used
         after: nil,   # A date object, representing the minimum date allowed, inclusive
         before: nil   # A date object, representing the maximum date allowed, inclusive
-      }
+      }.freeze
 
       def filter(data)
         if data.nil?
@@ -26,16 +24,16 @@ module Chaotic
           begin
             actual_date = parse(data)
           rescue ArgumentError
-            return [nil, :date]
+            return [data, :date]
           end
         elsif data.respond_to?(:to_date) # Time
           actual_date = data.to_date
         else
-          return [nil, :date]
+          return [data, :date]
         end
 
-        return [nil, :after] if options[:after] && actual_date <= options[:after]
-        return [nil, :before] if options[:before] && actual_date >= options[:before]
+        return [data, :after] if options[:after] && actual_date <= options[:after]
+        return [data, :before] if options[:before] && actual_date >= options[:before]
 
         [actual_date, nil]
       end

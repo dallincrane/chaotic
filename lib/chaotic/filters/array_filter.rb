@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class ArrayFilter
-      include Chaotic::Concerns::Filterable
-      include Chaotic::Concerns::Blockable
-
-      @default_options = {
+    class ArrayFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false,
         arrayize: false
-      }
+      }.freeze
 
       def filter(data)
         if data.nil?
@@ -16,12 +13,16 @@ module Chaotic
           return [data, :nils]
         end
 
-        data = Array(data) if options[:arrayize] && !data.is_a?(Array)
+        data = Array.wrap(data) if options[:arrayize]
 
         return [data, :array] unless data.is_a?(Array)
 
-        errors = ErrorArray.new
+        errors = Chaotic::Errors::ErrorArray.new
         filtered_data = []
+
+        sub_filter = sub_filters.first
+
+        index_shift = 0
 
         data.each_with_index do |sub_data, index|
           sub_data, sub_error = sub_filter.filter(sub_data)
@@ -32,15 +33,42 @@ module Chaotic
             if sub_filter.default?
               filtered_data << sub_filter.default
             else
-              errors << ErrorAtom.new(key, :required)
+              index_shift += 1
             end
           else
-            errors << ErrorAtom.new(@name, sub_error, index: index)
+            relative_index = index - index_shift
+            errors[relative_index] = create_index_error(relative_index, sub_error)
+            filtered_data << sub_data
           end
+
+          # sub_data, sub_error = key_filter.filter(data_element)
+          #
+          # if sub_error.nil?
+          #   filtered_data[key] = sub_data
+          # elsif discardable?(sub_error, key_filter)
+          #   data.delete(key)
+          # else
+          #   errors[key] = create_key_error(key, sub_error)
+          # end
+          #
+          # next if data.key?(key)
+          #
+          # if key_filter.default?
+          #   filtered_data[key] = key_filter.default
+          # elsif key_filter.required? && !discardable?(sub_error, key_filter)
+          #   errors[key] = create_key_error(key, :required)
+          # end
         end
 
         return [filtered_data, errors] if errors.any?
         [filtered_data, nil]
+      end
+
+      def create_index_error(index, sub_error)
+        return sub_error if sub_error.is_a?(Chaotic::Errors::ErrorHash)
+        return sub_error if sub_error.is_a?(Chaotic::Errors::ErrorArray)
+
+        Chaotic::Errors::ErrorAtom.new(key, sub_error, index: index)
       end
     end
   end

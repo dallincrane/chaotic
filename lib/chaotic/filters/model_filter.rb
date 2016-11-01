@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class ModelFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class ModelFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         nils: false,
         class: nil,
         builder: nil,
         new_records: false
-      }
+      }.freeze
 
       def initialize(name, opts = {})
         super(opts)

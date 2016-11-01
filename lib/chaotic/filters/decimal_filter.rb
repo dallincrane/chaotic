@@ -1,19 +1,15 @@
 # frozen_string_literal: true
-# require 'active_support/concern'
-
-module Mutations
+module Chaotic
   module Filters
-    class DecimalFilter
-      include Chaotic::Concerns::Filterable
-
-      @default_options = {
+    class DecimalFilter < Chaotic::Filter
+      DEFAULT_OPTIONS = {
         empty_is_nil: false,
         nils: false,
         remove_characters: ',',
         min: nil,
         max: nil,
         scale: nil
-      }
+      }.freeze
 
       def filter(data)
         data = nil if options[:empty_is_nil] && data == ''
