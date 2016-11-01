@@ -66,10 +66,10 @@ describe 'Chaotic::Filters::FloatFilter' do
     assert_equal nil, errors
   end
 
-  it 'considers empty strings to be empty' do
+  it 'considers empty strings invalid' do
     f = Chaotic::Filters::FloatFilter.new
     _filtered, errors = f.filter('')
-    assert_equal :empty, errors
+    assert_equal :float, errors
   end
 
   it 'considers low numbers invalid' do
