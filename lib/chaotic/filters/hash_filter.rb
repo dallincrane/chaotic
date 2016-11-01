@@ -6,13 +6,6 @@ module Chaotic
         nils: false
       }.freeze
 
-      # TODO: make this go deeper than one level
-      # def dup
-      #   dupped = HashFilter.new
-      #   sub_filters.each_pair { |k, v| dupped.sub_filters[k] = v }
-      #   dupped
-      # end
-
       def params(&block)
         instance_eval(&block)
       end
@@ -42,7 +35,7 @@ module Chaotic
 
             if sub_error.nil?
               filtered_data[key] = sub_data
-            elsif discardable?(sub_error, key_filter)
+            elsif key_filter.discardable?(sub_error)
               data.delete(key)
             else
               errors[key] = create_key_error(key, sub_error)
@@ -53,7 +46,7 @@ module Chaotic
 
           if key_filter.default?
             filtered_data[key] = key_filter.default
-          elsif key_filter.required? && !discardable?(sub_error, key_filter)
+          elsif key_filter.required? && !key_filter.discardable?(sub_error)
             errors[key] = create_key_error(key, :required)
           end
         end

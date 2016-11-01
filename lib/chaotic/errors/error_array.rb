@@ -3,11 +3,11 @@ module Chaotic
   module Errors
     class ErrorArray < Array
       def symbolic
-        map { |e| e && e.symbolic }
+        map { |e| e&.symbolic }
       end
 
       def message
-        map { |e| e && e.message }
+        map { |e| e&.message }
       end
 
       def message_list

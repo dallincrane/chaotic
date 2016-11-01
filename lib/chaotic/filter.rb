@@ -55,10 +55,10 @@ module Chaotic
       options[:default]
     end
 
-    def discardable?(sub_error, given_filter)
-      return true if given_filter.discard_invalid?
-      return true if given_filter.discard_empty? && sub_error == :empty
-      return true if given_filter.discard_nils? && sub_error == :nil
+    def discardable?(sub_error)
+      return true if discard_invalid?
+      return true if discard_empty? && sub_error == :empty
+      return true if discard_nils? && sub_error == :nil
 
       false
     end

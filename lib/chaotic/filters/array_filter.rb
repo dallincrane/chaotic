@@ -29,7 +29,7 @@ module Chaotic
 
           if sub_error.nil?
             filtered_data << sub_data
-          elsif discardable?(sub_error, sub_filter)
+          elsif sub_filter.discardable?(sub_error)
             if sub_filter.default?
               filtered_data << sub_filter.default
             else
@@ -40,24 +40,6 @@ module Chaotic
             errors[relative_index] = create_index_error(relative_index, sub_error)
             filtered_data << sub_data
           end
-
-          # sub_data, sub_error = key_filter.filter(data_element)
-          #
-          # if sub_error.nil?
-          #   filtered_data[key] = sub_data
-          # elsif discardable?(sub_error, key_filter)
-          #   data.delete(key)
-          # else
-          #   errors[key] = create_key_error(key, sub_error)
-          # end
-          #
-          # next if data.key?(key)
-          #
-          # if key_filter.default?
-          #   filtered_data[key] = key_filter.default
-          # elsif key_filter.required? && !discardable?(sub_error, key_filter)
-          #   errors[key] = create_key_error(key, :required)
-          # end
         end
 
         return [filtered_data, errors] if errors.any?
