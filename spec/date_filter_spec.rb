@@ -33,7 +33,7 @@ describe 'Chaotic::Filters::DateFilter' do
   it 'checks if the given date is after a certain date' do
     date = Date.new(2005, 1, 1)
     after_date = Date.new(2000, 1, 1)
-    f = Chaotic::Filters::DateFilter.new(after: after_date)
+    f = Chaotic::Filters::DateFilter.new(:d1, after: after_date)
     filtered, errors = f.filter(date)
 
     assert_equal date, filtered
@@ -43,17 +43,17 @@ describe 'Chaotic::Filters::DateFilter' do
   it 'gives errors when the given date is before the after date' do
     date = Date.new(1995, 1, 1)
     after_date = Date.new(2000, 1, 1)
-    f = Chaotic::Filters::DateFilter.new(after: after_date)
+    f = Chaotic::Filters::DateFilter.new(:d1, after: after_date)
     filtered, errors = f.filter(date)
 
-    assert_equal nil, filtered
+    assert_equal date, filtered
     assert_equal :after, errors
   end
 
   it 'checks if the given date is before a certain date' do
     date = Date.new(1995, 1, 1)
     after_date = Date.new(2000, 1, 1)
-    f = Chaotic::Filters::DateFilter.new(before: after_date)
+    f = Chaotic::Filters::DateFilter.new(:d1, before: after_date)
     filtered, errors = f.filter(date)
 
     assert_equal date, filtered
@@ -63,10 +63,10 @@ describe 'Chaotic::Filters::DateFilter' do
   it 'gives errors when the given date is after the before date' do
     date = Date.new(2005, 1, 1)
     before_date = Date.new(2000, 1, 1)
-    f = Chaotic::Filters::DateFilter.new(before: before_date)
+    f = Chaotic::Filters::DateFilter.new(:d1, before: before_date)
     filtered, errors = f.filter(date)
 
-    assert_equal nil, filtered
+    assert_equal date, filtered
     assert_equal :before, errors
   end
 
@@ -74,7 +74,7 @@ describe 'Chaotic::Filters::DateFilter' do
     date = Date.new(2005, 1, 1)
     after_date = Date.new(2000, 1, 1)
     before_date = Date.new(2010, 1, 1)
-    f = Chaotic::Filters::DateFilter.new(after: after_date, before: before_date)
+    f = Chaotic::Filters::DateFilter.new(:d1, after: after_date, before: before_date)
     filtered, errors = f.filter(date)
 
     assert_equal date, filtered
@@ -104,14 +104,14 @@ describe 'Chaotic::Filters::DateFilter' do
   it 'should be able to handle date formatting' do
     date_string = '2000-1-2'
     date = Date.new(2000, 1, 2)
-    f = Chaotic::Filters::DateFilter.new(format: '%Y-%m-%d')
+    f = Chaotic::Filters::DateFilter.new(:d1, format: '%Y-%m-%d')
     filtered, errors = f.filter(date_string)
 
     assert_equal date, filtered
     assert_equal nil, errors
 
     date_string = '1, 2, 2000'
-    f = Chaotic::Filters::DateFilter.new(format: '%m, %d, %Y')
+    f = Chaotic::Filters::DateFilter.new(:d1, format: '%m, %d, %Y')
     filtered, errors = f.filter(date_string)
 
     assert_equal date, filtered
@@ -134,19 +134,19 @@ describe 'Chaotic::Filters::DateFilter' do
   end
 
   it 'allows the use of nil when specified' do
-    f = Chaotic::Filters::DateFilter.new(nils: true)
+    f = Chaotic::Filters::DateFilter.new(:d1, nils: true)
     filtered, errors = f.filter(nil)
 
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
-  it 'doesn\'t allow non-existing dates' do
+  it 'does not allow non-existing dates' do
     date_string = '1, 20, 2013'
     f = Chaotic::Filters::DateFilter.new
     filtered, errors = f.filter(date_string)
 
-    assert_equal nil, filtered
+    assert_equal '1, 20, 2013', filtered
     assert_equal :date, errors
   end
 end

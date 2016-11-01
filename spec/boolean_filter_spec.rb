@@ -22,14 +22,14 @@ describe 'Chaotic::Filters::BooleanFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::Filters::BooleanFilter.new(nils: false)
+    f = Chaotic::Filters::BooleanFilter.new(:bool, nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::Filters::BooleanFilter.new(nils: true)
+    f = Chaotic::Filters::BooleanFilter.new(:bool, nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors

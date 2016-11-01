@@ -21,7 +21,7 @@ module Chaotic
       @given_options = opts
       @sub_filters ||= []
 
-      try(:run_block, &block)
+      instance_eval(&block) if block_given?
     end
 
     def options
@@ -53,10 +53,6 @@ module Chaotic
 
     def default
       options[:default]
-    end
-
-    def run_block(&block)
-      instance_eval(&block) if block_given?
     end
 
     def discardable?(sub_error, given_filter)

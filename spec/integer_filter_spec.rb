@@ -32,14 +32,14 @@ describe 'Chaotic::Filters::IntegerFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::Filters::IntegerFilter.new(nils: false)
+    f = Chaotic::Filters::IntegerFilter.new(:i, nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::Filters::IntegerFilter.new(nils: true)
+    f = Chaotic::Filters::IntegerFilter.new(:i, nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
@@ -52,55 +52,55 @@ describe 'Chaotic::Filters::IntegerFilter' do
   end
 
   it 'considers empty strings to be nil if empty_is_nil option is used' do
-    f = Chaotic::Filters::IntegerFilter.new(empty_is_nil: true)
+    f = Chaotic::Filters::IntegerFilter.new(:i, empty_is_nil: true)
     _filtered, errors = f.filter('')
     assert_equal :nils, errors
   end
 
   it 'returns empty strings as nil if empty_is_nil option is used' do
-    f = Chaotic::Filters::IntegerFilter.new(empty_is_nil: true, nils: true)
+    f = Chaotic::Filters::IntegerFilter.new(:i, empty_is_nil: true, nils: true)
     filtered, errors = f.filter('')
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
   it 'considers low numbers invalid' do
-    f = Chaotic::Filters::IntegerFilter.new(min: 10)
+    f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     filtered, errors = f.filter(3)
     assert_equal 3, filtered
     assert_equal :min, errors
   end
 
   it 'considers low numbers valid' do
-    f = Chaotic::Filters::IntegerFilter.new(min: 10)
+    f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     filtered, errors = f.filter(31)
     assert_equal 31, filtered
     assert_equal nil, errors
   end
 
   it 'considers high numbers invalid' do
-    f = Chaotic::Filters::IntegerFilter.new(max: 10)
+    f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
     filtered, errors = f.filter(31)
     assert_equal 31, filtered
     assert_equal :max, errors
   end
 
   it 'considers high numbers vaild' do
-    f = Chaotic::Filters::IntegerFilter.new(max: 10)
+    f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
     filtered, errors = f.filter(3)
     assert_equal 3, filtered
     assert_equal nil, errors
   end
 
   it 'considers not matching numbers to be invalid' do
-    f = Chaotic::Filters::IntegerFilter.new(in: [3, 4, 5])
+    f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
     filtered, errors = f.filter(6)
     assert_equal 6, filtered
     assert_equal :in, errors
   end
 
   it 'considers matching numbers to be valid' do
-    f = Chaotic::Filters::IntegerFilter.new(in: [3, 4, 5])
+    f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
     filtered, errors = f.filter(3)
     assert_equal 3, filtered
     assert_nil errors
