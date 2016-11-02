@@ -89,7 +89,7 @@ describe 'Chaotic - errors' do
           'bool1' => 'Bool1 must be a boolean',
           'bool2' => 'Bool2 is required'
         },
-        'arr1' => ['Arr1[0] must be an integer', nil, 'Arr1[2] must be an integer']
+        'arr1' => ['1st Arr1 must be an integer', nil, '3rd Arr1 must be an integer']
       }
 
       assert_equal expected, @outcome.errors.message
@@ -102,8 +102,8 @@ describe 'Chaotic - errors' do
         'Int1 must be an integer',
         'Bool1 must be a boolean',
         'Bool2 is required',
-        'Arr1[0] must be an integer',
-        'Arr1[2] must be an integer'
+        '1st Arr1 must be an integer',
+        '3rd Arr1 must be an integer'
       ]
 
       assert_equal expected.size, @outcome.errors.message_list.size

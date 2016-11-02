@@ -32,16 +32,20 @@ module Chaotic
         )
       end
 
-      # key: the name of the field, eg, :email. Could be nil if it's an array element
-      # error_symbol: the validation symbol, eg, :matches or :required
-      # options:
-      #  :index -- index of error if it's in an array
       def message(key, error_symbol, options = {})
-        if options[:index]
-          "#{(key || 'array').to_s.titleize}[#{options[:index]}] #{MESSAGES[error_symbol]}"
-        else
-          "#{key.to_s.titleize} #{MESSAGES[error_symbol]}"
-        end
+        [
+          options[:index]&.+(1)&.ordinalize,
+          key_display_name(key),
+          MESSAGES[error_symbol]
+        ]
+          .compact
+          .join(' ')
+      end
+
+      private
+
+      def key_display_name(key)
+        (key || 'item').to_s.titleize
       end
     end
   end

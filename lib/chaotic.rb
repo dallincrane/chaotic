@@ -11,6 +11,7 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/hash/deep_merge'
 require 'active_support/core_ext/array/wrap'
 require 'active_support/core_ext/string/inflections'
+require 'active_support/core_ext/integer/inflections'
 
 require 'chaotic/errors/validation_exception'
 require 'chaotic/errors/error_atom'
