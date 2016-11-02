@@ -11,6 +11,15 @@ describe 'Chaotic::Filters::DecimalFilter' do
     assert_equal nil, errors
   end
 
+  it 'allows integers' do
+    f = Chaotic::Filters::DecimalFilter.new
+    filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(BigDecimal)
+    assert_equal 3, filtered
+    assert_equal nil, errors
+  end
+
   it 'allows floats' do
     f = Chaotic::Filters::DecimalFilter.new
     filtered, errors = f.filter(3.1415926)

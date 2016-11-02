@@ -5,6 +5,26 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'allows integers' do
     f = Chaotic::Filters::IntegerFilter.new
     filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Integer)
+    assert_equal 3, filtered
+    assert_equal nil, errors
+  end
+
+  it 'allows floats' do
+    f = Chaotic::Filters::IntegerFilter.new
+    filtered, errors = f.filter(3.0)
+
+    assert filtered.is_a?(Integer)
+    assert_equal 3, filtered
+    assert_equal nil, errors
+  end
+
+  it 'allows bigdecimals' do
+    f = Chaotic::Filters::IntegerFilter.new
+    filtered, errors = f.filter(BigDecimal.new('3'))
+
+    assert filtered.is_a?(Integer)
     assert_equal 3, filtered
     assert_equal nil, errors
   end
@@ -12,6 +32,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'allows strings that start with a digit' do
     f = Chaotic::Filters::IntegerFilter.new
     filtered, errors = f.filter('3')
+
+    assert filtered.is_a?(Integer)
     assert_equal 3, filtered
     assert_equal nil, errors
   end
@@ -19,6 +41,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'allows negative strings' do
     f = Chaotic::Filters::IntegerFilter.new
     filtered, errors = f.filter('-3')
+
+    assert filtered.is_a?(Integer)
     assert_equal(-3, filtered)
     assert_equal nil, errors
   end
@@ -67,6 +91,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers low numbers invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Integer)
     assert_equal 3, filtered
     assert_equal :min, errors
   end
@@ -74,6 +100,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers low numbers valid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     filtered, errors = f.filter(31)
+
+    assert filtered.is_a?(Integer)
     assert_equal 31, filtered
     assert_equal nil, errors
   end
@@ -81,6 +109,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers high numbers invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
     filtered, errors = f.filter(31)
+
+    assert filtered.is_a?(Integer)
     assert_equal 31, filtered
     assert_equal :max, errors
   end
@@ -88,6 +118,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers high numbers vaild' do
     f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
     filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Integer)
     assert_equal 3, filtered
     assert_equal nil, errors
   end
@@ -95,6 +127,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers not matching numbers to be invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
     filtered, errors = f.filter(6)
+
+    assert filtered.is_a?(Integer)
     assert_equal 6, filtered
     assert_equal :in, errors
   end
@@ -102,6 +136,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers matching numbers to be valid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
     filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Integer)
     assert_equal 3, filtered
     assert_nil errors
   end
