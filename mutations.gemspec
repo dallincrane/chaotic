@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description = 'incremental strong params and validations for paranoid developers'
   s.authors     = ['Dallin Crane']
   s.email       = 'dallin@objectiveinc.com'
-  s.homepage    = 'https://bitbucket.org/agencyfusion/chaotic'
+  s.homepage    = 'https://github.com/dallincrane/chaotic'
 
   s.files         = Dir['lib/**/*'].keep_if { |file| File.file?(file) }
   s.test_files    = Dir['spec/**/*']
