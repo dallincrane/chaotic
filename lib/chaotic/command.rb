@@ -25,9 +25,9 @@ module Chaotic
       end
 
       def build!(*args)
-        instance_outcome = run(*args)
+        instance_outcome = build(*args)
         return instance_outcome.result if instance_outcome.success?
-        raise Chaotic::Errors::ValidationException, instance_outcome.errors
+        raise Chaotic::ValidationError, instance_outcome.errors
       end
 
       def run(*args)
@@ -37,7 +37,7 @@ module Chaotic
       def run!(*args)
         instance_outcome = run(*args)
         return instance_outcome.result if instance_outcome.success?
-        raise Chaotic::Errors::ValidationException, instance_outcome.errors
+        raise Chaotic::ValidationError, instance_outcome.errors
       end
     end
 
@@ -100,6 +100,18 @@ module Chaotic
       return unless hash.any?
       @errors ||= Chaotic::Errors::ErrorHash.new
       @errors.merge!(hash)
+    end
+  end
+
+  class ValidationError < StandardError
+    attr_accessor :errors
+
+    def initialize(errors)
+      self.errors = errors
+    end
+
+    def to_s
+      errors.message_list.join('; ').to_s
     end
   end
 end

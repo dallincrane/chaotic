@@ -13,7 +13,6 @@ require 'active_support/core_ext/array/wrap'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/integer/inflections'
 
-require 'chaotic/errors/validation_exception'
 require 'chaotic/errors/error_atom'
 require 'chaotic/errors/error_hash'
 require 'chaotic/errors/error_array'

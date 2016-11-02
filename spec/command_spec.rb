@@ -33,7 +33,7 @@ describe 'Command' do
     end
 
     it 'should throw an exception with run!' do
-      assert_raises Chaotic::Errors::ValidationException do
+      assert_raises Chaotic::ValidationError do
         SimpleCommand.run!(name: 'John', email: 'john@gmail.com', amount: 'bob')
       end
     end
