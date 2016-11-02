@@ -3,8 +3,9 @@ require 'spec_helper'
 require 'simple_command'
 
 describe 'Chaotic - defaults' do
-  class DefaultCommand < Chaotic::Command
-    required do
+  class DefaultCommand
+    include Chaotic::Command
+    params do
       string :name, default: 'Bob Jones'
     end
 

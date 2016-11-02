@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'stringio'
 require 'tempfile'
 
-describe 'Chaotic::FileFilter' do
+describe 'Chaotic::Filters::FileFilter' do
   class UploadedStringIO < StringIO
     attr_accessor :content_type, :original_filename
   end
@@ -11,7 +11,7 @@ describe 'Chaotic::FileFilter' do
   if File.new('README.md').respond_to?(:size)
     it 'allows files - file class' do
       file = File.new('README.md')
-      f = Chaotic::FileFilter.new
+      f = Chaotic::Filters::FileFilter.new
       filtered, errors = f.filter(file)
       assert_equal file, filtered
       assert_equal nil, errors
@@ -20,7 +20,7 @@ describe 'Chaotic::FileFilter' do
 
   it 'allows files - stringio class' do
     file = StringIO.new('bob')
-    f = Chaotic::FileFilter.new
+    f = Chaotic::Filters::FileFilter.new
     filtered, errors = f.filter(file)
     assert_equal file, filtered
     assert_equal nil, errors
@@ -28,14 +28,14 @@ describe 'Chaotic::FileFilter' do
 
   it 'allows files - tempfile' do
     file = Tempfile.new('bob')
-    f = Chaotic::FileFilter.new
+    f = Chaotic::Filters::FileFilter.new
     filtered, errors = f.filter(file)
     assert filtered.is_a?(Tempfile)
     assert_equal nil, errors
   end
 
   it 'doesn\'t allow non-files' do
-    f = Chaotic::FileFilter.new
+    f = Chaotic::Filters::FileFilter.new
     filtered, errors = f.filter('string')
     assert_equal 'string', filtered
     assert_equal :file, errors
@@ -46,28 +46,28 @@ describe 'Chaotic::FileFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::FileFilter.new(nils: false)
+    f = Chaotic::Filters::FileFilter.new(:clippy, nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::FileFilter.new(nils: true)
+    f = Chaotic::Filters::FileFilter.new(:clippy, nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
   it 'considers empty strings to be empty' do
-    f = Chaotic::FileFilter.new
+    f = Chaotic::Filters::FileFilter.new
     _filtered, errors = f.filter('')
     assert_equal :empty, errors
   end
 
   it 'should allow small files' do
     file = StringIO.new('bob')
-    f = Chaotic::FileFilter.new(size: 4)
+    f = Chaotic::Filters::FileFilter.new(:clippy, size: 4)
     filtered, errors = f.filter(file)
     assert_equal file, filtered
     assert_equal nil, errors
@@ -75,7 +75,7 @@ describe 'Chaotic::FileFilter' do
 
   it 'shouldn\'t allow big files' do
     file = StringIO.new('bob')
-    f = Chaotic::FileFilter.new(size: 2)
+    f = Chaotic::Filters::FileFilter.new(:clippy, size: 2)
     filtered, errors = f.filter(file)
     assert_equal file, filtered
     assert_equal :size, errors
@@ -83,7 +83,7 @@ describe 'Chaotic::FileFilter' do
 
   it 'should require extra methods if uploaded file: accept' do
     file = UploadedStringIO.new('bob')
-    f = Chaotic::FileFilter.new(upload: true)
+    f = Chaotic::Filters::FileFilter.new(:clippy, upload: true)
     filtered, errors = f.filter(file)
     assert_equal file, filtered
     assert_equal nil, errors
@@ -91,7 +91,7 @@ describe 'Chaotic::FileFilter' do
 
   it 'should require extra methods if uploaded file: deny' do
     file = StringIO.new('bob')
-    f = Chaotic::FileFilter.new(upload: true)
+    f = Chaotic::Filters::FileFilter.new(:clippy, upload: true)
     filtered, errors = f.filter(file)
     assert_equal file, filtered
     assert_equal :file, errors

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::DuckFilter' do
+describe 'Chaotic::Filters::DuckFilter' do
   it 'allows objects that respond to a single specified method' do
-    f = Chaotic::DuckFilter.new(methods: [:length])
+    f = Chaotic::Filters::DuckFilter.new(:quack, methods: [:length])
     filtered, errors = f.filter('test')
     assert_equal 'test', filtered
     assert_equal nil, errors
@@ -13,8 +13,8 @@ describe 'Chaotic::DuckFilter' do
     assert_equal nil, errors
   end
 
-  it 'doesn\'t allow objects that respond to a single specified method' do
-    f = Chaotic::DuckFilter.new(methods: [:length])
+  it 'does not allow objects that respond to a single specified method' do
+    f = Chaotic::Filters::DuckFilter.new(:quack, methods: [:length])
     filtered, errors = f.filter(true)
     assert_equal true, filtered
     assert_equal :duck, errors
@@ -25,21 +25,21 @@ describe 'Chaotic::DuckFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::DuckFilter.new(nils: false)
+    f = Chaotic::Filters::DuckFilter.new(:quack, nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::DuckFilter.new(nils: true)
+    f = Chaotic::Filters::DuckFilter.new(:quack, nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
   it 'Allows anything if no methods are specified' do
-    f = Chaotic::DuckFilter.new
+    f = Chaotic::Filters::DuckFilter.new
     [true, 'hi', 1, [1, 2, 3]].each do |v|
       filtered, errors = f.filter(v)
       assert_equal v, filtered

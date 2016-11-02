@@ -1,51 +1,81 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::FloatFilter' do
+describe 'Chaotic::Filters::FloatFilter' do
   it 'allows floats' do
-    f = Chaotic::FloatFilter.new
+    f = Chaotic::Filters::FloatFilter.new
     filtered, errors = f.filter(3.1415926)
+
+    assert filtered.is_a?(Float)
     assert_equal 3.1415926, filtered
     assert_equal nil, errors
   end
 
+  it 'allows integers' do
+    f = Chaotic::Filters::FloatFilter.new
+    filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Float)
+    assert_equal 3, filtered
+    assert_equal nil, errors
+  end
+
+  it 'allows bigdecimals' do
+    f = Chaotic::Filters::FloatFilter.new
+    filtered, errors = f.filter(BigDecimal.new('3'))
+
+    assert filtered.is_a?(Float)
+    assert_equal 3, filtered
+    assert_equal nil, errors
+  end
+
   it 'allows strings that start with a digit' do
-    f = Chaotic::FloatFilter.new
+    f = Chaotic::Filters::FloatFilter.new
     filtered, errors = f.filter('3')
+
+    assert filtered.is_a?(Float)
     assert_equal 3.0, filtered
     assert_equal nil, errors
   end
 
   it 'allows string representation of float' do
-    f = Chaotic::FloatFilter.new
+    f = Chaotic::Filters::FloatFilter.new
     filtered, errors = f.filter('3.14')
+
+    assert filtered.is_a?(Float)
     assert_equal 3.14, filtered
     assert_equal nil, errors
   end
 
   it 'allows string representation of float without a number before dot' do
-    f = Chaotic::FloatFilter.new
+    f = Chaotic::Filters::FloatFilter.new
     filtered, errors = f.filter('.14')
+
+    assert filtered.is_a?(Float)
     assert_equal 0.14, filtered
     assert_equal nil, errors
   end
 
   it 'allows negative strings' do
-    f = Chaotic::FloatFilter.new
+    f = Chaotic::Filters::FloatFilter.new
     filtered, errors = f.filter('-.14')
+
+    assert filtered.is_a?(Float)
     assert_equal(-0.14, filtered)
     assert_equal nil, errors
   end
 
   it 'allows strings with a positive sign' do
-    f = Chaotic::FloatFilter.new
+    f = Chaotic::Filters::FloatFilter.new
     filtered, errors = f.filter('+.14')
+
+    assert filtered.is_a?(Float)
     assert_equal 0.14, filtered
     assert_equal nil, errors
   end
 
-  it 'doesnt\'t allow other strings, nor does it allow random objects or symbols' do
-    f = Chaotic::FloatFilter.new
+  it 'does not allow other strings, nor does it allow random objects or symbols' do
+    f = Chaotic::Filters::FloatFilter.new
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
       _filtered, errors = f.filter(thing)
       assert_equal :float, errors
@@ -53,49 +83,57 @@ describe 'Chaotic::FloatFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::FloatFilter.new(nils: false)
+    f = Chaotic::Filters::FloatFilter.new(:x, nils: false)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::FloatFilter.new(nils: true)
+    f = Chaotic::Filters::FloatFilter.new(:x, nils: true)
     filtered, errors = f.filter(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
 
-  it 'considers empty strings to be empty' do
-    f = Chaotic::FloatFilter.new
+  it 'considers empty strings invalid' do
+    f = Chaotic::Filters::FloatFilter.new
     _filtered, errors = f.filter('')
-    assert_equal :empty, errors
+    assert_equal :float, errors
   end
 
   it 'considers low numbers invalid' do
-    f = Chaotic::FloatFilter.new(min: 10)
+    f = Chaotic::Filters::FloatFilter.new(:x, min: 10)
     filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Float)
     assert_equal 3, filtered
     assert_equal :min, errors
   end
 
   it 'considers low numbers valid' do
-    f = Chaotic::FloatFilter.new(min: 10)
+    f = Chaotic::Filters::FloatFilter.new(:x, min: 10)
     filtered, errors = f.filter(31)
+
+    assert filtered.is_a?(Float)
     assert_equal 31, filtered
     assert_equal nil, errors
   end
 
   it 'considers high numbers invalid' do
-    f = Chaotic::FloatFilter.new(max: 10)
+    f = Chaotic::Filters::FloatFilter.new(:x, max: 10)
     filtered, errors = f.filter(31)
+
+    assert filtered.is_a?(Float)
     assert_equal 31, filtered
     assert_equal :max, errors
   end
 
   it 'considers high numbers vaild' do
-    f = Chaotic::FloatFilter.new(max: 10)
+    f = Chaotic::Filters::FloatFilter.new(:x, max: 10)
     filtered, errors = f.filter(3)
+
+    assert filtered.is_a?(Float)
     assert_equal 3, filtered
     assert_equal nil, errors
   end
