@@ -11,7 +11,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     assert_equal nil, errors
   end
 
-  it 'allows floats' do
+  it 'allows floats equivalent to an integer' do
     f = Chaotic::Filters::IntegerFilter.new
     filtered, errors = f.filter(3.0)
 
@@ -20,13 +20,29 @@ describe 'Chaotic::Filters::IntegerFilter' do
     assert_equal nil, errors
   end
 
-  it 'allows bigdecimals' do
+  it 'does not allows floats with partial units' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.filter(BigDecimal.new('3'))
+    filtered, errors = f.filter(3.1)
+
+    assert_equal 3.1, filtered
+    assert_equal :integer, errors
+  end
+
+  it 'allows bigdecimals equivalent to an integer' do
+    f = Chaotic::Filters::IntegerFilter.new
+    filtered, errors = f.filter(BigDecimal.new('3.000000'))
 
     assert filtered.is_a?(Integer)
     assert_equal 3, filtered
     assert_equal nil, errors
+  end
+
+  it 'does not allows floats with partial units' do
+    f = Chaotic::Filters::IntegerFilter.new
+    filtered, errors = f.filter(BigDecimal.new('3.111111'))
+
+    assert_equal BigDecimal.new('3.111111'), filtered
+    assert_equal :integer, errors
   end
 
   it 'allows strings that start with a digit' do
@@ -47,7 +63,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     assert_equal nil, errors
   end
 
-  it 'doesnt\'t allow other strings, nor does it allow random objects or symbols' do
+  it 'does not allow other strings, nor does it allow random objects or symbols' do
     f = Chaotic::Filters::IntegerFilter.new
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
       _filtered, errors = f.filter(thing)
@@ -58,6 +74,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, nils: false)
     filtered, errors = f.filter(nil)
+
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
@@ -65,6 +82,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers nil to be valid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, nils: true)
     filtered, errors = f.filter(nil)
+
     assert_equal nil, filtered
     assert_equal nil, errors
   end
@@ -72,18 +90,21 @@ describe 'Chaotic::Filters::IntegerFilter' do
   it 'considers empty strings to be empty' do
     f = Chaotic::Filters::IntegerFilter.new
     _filtered, errors = f.filter('')
-    assert_equal :empty, errors
+
+    assert_equal :integer, errors
   end
 
   it 'considers empty strings to be nil if empty_is_nil option is used' do
     f = Chaotic::Filters::IntegerFilter.new(:i, empty_is_nil: true)
     _filtered, errors = f.filter('')
+
     assert_equal :nils, errors
   end
 
   it 'returns empty strings as nil if empty_is_nil option is used' do
     f = Chaotic::Filters::IntegerFilter.new(:i, empty_is_nil: true, nils: true)
     filtered, errors = f.filter('')
+
     assert_equal nil, filtered
     assert_equal nil, errors
   end
