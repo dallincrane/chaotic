@@ -14,8 +14,8 @@ module Chaotic
           hash: 'must be a hash',
           array: 'must be an array',
           model: 'must be the right class',
-
           date: 'date does non exist',
+
           before: 'must be before given date',
           after: 'must be after given date',
 
@@ -32,20 +32,14 @@ module Chaotic
         )
       end
 
-      def message(key, error_symbol, options = {})
+      def message(error_atom)
         [
-          options[:index]&.+(1)&.ordinalize,
-          key_display_name(key),
-          MESSAGES[error_symbol]
+          error_atom.index_ordinal,
+          (error_atom.key || 'item').to_s.titleize,
+          MESSAGES[error_atom.symbolic]
         ]
           .compact
           .join(' ')
-      end
-
-      private
-
-      def key_display_name(key)
-        (key || 'item').to_s.titleize
       end
     end
   end
