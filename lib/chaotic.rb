@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+require 'ostruct'
 require 'date'
 require 'time'
 require 'bigdecimal'
 require 'bigdecimal/util'
 
 require 'active_support/concern'
+require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/object/try'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/indifferent_access'
@@ -37,17 +39,13 @@ require 'chaotic/outcome'
 require 'chaotic/command'
 
 module Chaotic
-  class << self
-    attr_writer :error_message_creator, :cache_constants
+  mattr_accessor :error_message_creator
+  self.error_message_creator = Errors::DefaultErrorMessageCreator.new
 
-    def error_message_creator
-      @error_message_creator ||= Errors::DefaultErrorMessageCreator.new
-    end
+  mattr_accessor :cache_constants
+  self.cache_constants = true
 
-    def cache_constants?
-      @cache_constants
-    end
+  def self.config
+    yield self
   end
 end
-
-Chaotic.cache_constants = true

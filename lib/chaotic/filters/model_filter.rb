@@ -47,7 +47,7 @@ module Chaotic
           true
         end
 
-        unless Chaotic.cache_constants?
+        unless Chaotic.cache_constants
           options[:class] = options[:class].to_s.constantize if options[:class]
           options[:builder] = options[:builder].to_s.constantize if options[:builder]
         end

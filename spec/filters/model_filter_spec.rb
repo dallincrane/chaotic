@@ -59,7 +59,7 @@ describe 'Chaotic::Filters::ModelFilter' do
   end
 
   it 'will re-constantize if cache_constants is false' do
-    was = Chaotic.cache_constants?
+    was = Chaotic.cache_constants
     Chaotic.cache_constants = false
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
