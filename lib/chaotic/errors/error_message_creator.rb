@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Chaotic
   module Errors
-    class DefaultErrorMessageCreator
+    class ErrorMessageCreator
       MESSAGES = Hash.new('is invalid').tap do |h|
         h.merge!(
           nils: 'cannot be nil',

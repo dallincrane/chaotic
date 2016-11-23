@@ -18,7 +18,7 @@ require 'active_support/core_ext/integer/inflections'
 require 'chaotic/errors/error_atom'
 require 'chaotic/errors/error_hash'
 require 'chaotic/errors/error_array'
-require 'chaotic/errors/default_error_message_creator'
+require 'chaotic/errors/error_message_creator'
 
 require 'chaotic/filter'
 require 'chaotic/filters/array_filter'
@@ -40,7 +40,7 @@ require 'chaotic/command'
 
 module Chaotic
   mattr_accessor :error_message_creator
-  self.error_message_creator = Errors::DefaultErrorMessageCreator.new
+  self.error_message_creator = Errors::ErrorMessageCreator.new
 
   mattr_accessor :cache_constants
   self.cache_constants = true
