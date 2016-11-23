@@ -2,10 +2,10 @@
 module Chaotic
   module Filters
     class ArrayFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false,
         arrayize: false
-      }.freeze
+      )
 
       def filter(data)
         if data.nil?

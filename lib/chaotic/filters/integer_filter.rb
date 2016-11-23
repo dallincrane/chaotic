@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class IntegerFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         empty_is_nil: false,
         nils: false,
         delimiter: ', ',
@@ -11,7 +11,7 @@ module Chaotic
         max: nil,
         scale: nil,
         in: nil
-      }.freeze
+      )
 
       def filter(given)
         flipped = flip(given)

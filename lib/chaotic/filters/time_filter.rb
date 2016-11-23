@@ -2,12 +2,12 @@
 module Chaotic
   module Filters
     class TimeFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false,
         format: nil,
         after: nil,
         before: nil
-      }.freeze
+      )
 
       def filter(data)
         if data.nil?

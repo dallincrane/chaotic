@@ -2,11 +2,11 @@
 module Chaotic
   module Filters
     class FileFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false,
         upload: false,
         size: nil
-      }.freeze
+      )
 
       def filter(data)
         if data.nil?

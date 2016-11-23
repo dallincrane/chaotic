@@ -2,12 +2,12 @@
 module Chaotic
   module Filters
     class ModelFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false,
         class: nil,
         builder: nil,
         new_records: false
-      }.freeze
+      )
 
       def filter(data)
         initialize_constants!
@@ -47,10 +47,9 @@ module Chaotic
           true
         end
 
-        unless Chaotic.cache_constants
-          options[:class] = options[:class].to_s.constantize if options[:class]
-          options[:builder] = options[:builder].to_s.constantize if options[:builder]
-        end
+        return if Chaotic.cache_constants
+        options[:class] = options[:class].to_s.constantize if options[:class]
+        options[:builder] = options[:builder].to_s.constantize if options[:builder]
       end
     end
   end

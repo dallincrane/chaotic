@@ -2,10 +2,10 @@
 module Chaotic
   module Filters
     class DuckFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false,
         methods: nil
-      }.freeze
+      )
 
       def filter(data)
         if data.nil?

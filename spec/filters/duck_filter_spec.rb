@@ -40,7 +40,7 @@ describe 'Chaotic::Filters::DuckFilter' do
 
   it 'Allows anything if no methods are specified' do
     f = Chaotic::Filters::DuckFilter.new
-    [true, 'hi', 1, [1, 2, 3]].each do |v|
+    [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3].each do |v|
       filtered, errors = f.filter(v)
       assert_equal v, filtered
       assert_equal nil, errors

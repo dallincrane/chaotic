@@ -2,9 +2,9 @@
 module Chaotic
   module Filters
     class HashFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false
-      }.freeze
+      )
 
       def params(&block)
         instance_eval(&block)

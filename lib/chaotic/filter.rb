@@ -1,16 +1,31 @@
 # frozen_string_literal: true
 module Chaotic
   class Filter
-    def self.inherited(child_class)
-      filter_name_match = child_class.name.match(/\AChaotic::Filters::(.*)Filter\z/)
-      raise 'filename error in filters folder' unless filter_name_match
+    Options = OpenStruct.new
 
-      filter_name = filter_name_match[1].underscore
-      define_method(filter_name) do |*args, &block|
+    def self.config
+      yield Options
+    end
+
+    def self.inherited(child_class)
+      method_name = filter_name(child_class)
+
+      define_method(method_name) do |*args, &block|
         args.unshift(nil) if args[0].is_a?(Hash)
         new_filter = child_class.new(*args, &block)
         sub_filters.push(new_filter)
       end
+    end
+
+    def self.default_options(given)
+      child_class_options = Options[filter_name] ||= OpenStruct.new
+      given.each_pair { |key, value| child_class_options[key] = value }
+    end
+
+    def self.filter_name(klass = self)
+      filter_name = klass.name.match(/\AChaotic::Filters::(.*)Filter\z/)&.[](1)&.underscore
+      raise 'filename error in filters folder' unless filter_name
+      filter_name
     end
 
     attr_reader :key
@@ -25,7 +40,11 @@ module Chaotic
     end
 
     def options
-      @options ||= self.class::DEFAULT_OPTIONS.merge(@given_options)
+      @options ||= OpenStruct.new(type_specific_options_hash.merge(@given_options))
+    end
+
+    def type_specific_options_hash
+      Options[self.class.filter_name].to_h
     end
 
     def sub_filters_hash
@@ -40,39 +59,27 @@ module Chaotic
     end
 
     def required?
-      options[:required] == false ? false : true
+      !optional?
     end
 
     def optional?
-      !required?
+      options.required == false
     end
 
     def default?
-      options.key?(:default)
+      options.respond_to?(:default)
     end
 
     def default
-      options[:default]
+      options.default
     end
 
     def discardable?(sub_error)
-      return true if discard_invalid?
-      return true if discard_empty? && sub_error == :empty
-      return true if discard_nils? && sub_error == :nil
+      return true if options.discard_invalid
+      return true if options.discard_empty && sub_error == :empty
+      return true if options.discard_nils && sub_error == :nil
 
       false
-    end
-
-    def discard_nils?
-      options[:discard_nils]
-    end
-
-    def discard_empty?
-      options[:discard_empty]
-    end
-
-    def discard_invalid?
-      options[:discard_invalid]
     end
   end
 end

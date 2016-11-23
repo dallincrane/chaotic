@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class FloatFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         empty_is_nil: false,
         nils: false,
         delimiter: ', ',
@@ -10,7 +10,7 @@ module Chaotic
         min: nil,
         max: nil,
         scale: nil
-      }.freeze
+      )
 
       def filter(given)
         flipped = flip(given)

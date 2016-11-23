@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class StringFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false,
         strict: false,
         allow_control_characters: false,
@@ -12,7 +12,7 @@ module Chaotic
         max_length: nil,
         in: nil,
         matches: nil
-      }.freeze
+      )
 
       def filter(data)
         if data.nil?

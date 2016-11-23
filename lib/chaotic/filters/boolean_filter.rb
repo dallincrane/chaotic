@@ -2,9 +2,9 @@
 module Chaotic
   module Filters
     class BooleanFilter < Chaotic::Filter
-      DEFAULT_OPTIONS = {
+      default_options(
         nils: false
-      }.freeze
+      )
 
       BOOLEAN_MAP = {
         'true' => true,
