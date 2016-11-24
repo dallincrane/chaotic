@@ -111,11 +111,9 @@ describe 'Chaotic::Filters::ArrayFilter' do
   it 'lets you pass hashes in arrays' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) do
       hash do
-        params do
-          string :foo
-          integer :bar
-          boolean :baz, required: false
-        end
+        string :foo
+        integer :bar
+        boolean :baz, required: false
       end
     end
 

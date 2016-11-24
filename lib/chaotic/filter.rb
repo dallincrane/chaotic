@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Chaotic
   class Filter
+    Result = Struct.new(:result_data, :error_symbol, :raw_data)
     Options = OpenStruct.new
 
     def self.config

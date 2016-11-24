@@ -1,40 +1,37 @@
 # frozen_string_literal: true
 module Chaotic
   module Filters
-    class HashFilter < Chaotic::Filter
-      default_options(
-        nils: false
-      )
+    class RootFilter < Chaotic::Filter
+      def params(&block)
+        instance_eval(&block)
+      end
 
-      def filter(data)
-        if data.nil?
-          return [data, nil] if options[:nils]
-          return [data, :nils]
-        end
+      def keys
+        sub_filters.map(&:key)
+      end
 
-        return [data, :hash] unless data.is_a?(Hash)
-
-        data = data.with_indifferent_access
+      def filter(*given)
+        coerced = coerce(given)
 
         errors = Chaotic::Errors::ErrorHash.new
-        filtered_data = HashWithIndifferentAccess.new
+        filtered_data = OpenStruct.new
 
         sub_filters_hash.each_pair do |key, key_filter|
-          data_element = data[key]
+          data_element = coerced[key]
 
-          if data.key?(key)
+          if coerced.respond_to?(key)
             sub_data, sub_error = key_filter.filter(data_element)
 
             if sub_error.nil?
               filtered_data[key] = sub_data
             elsif key_filter.discardable?(sub_error)
-              data.delete(key)
+              coerced.delete_field(key)
             else
               errors[key] = create_key_error(key, sub_error)
             end
           end
 
-          next if data.key?(key)
+          next if coerced.respond_to?(key)
 
           if key_filter.default?
             filtered_data[key] = key_filter.default
@@ -43,8 +40,19 @@ module Chaotic
           end
         end
 
-        return [data, errors] if errors.any?
-        [filtered_data, nil]
+        return Result.new(coerced, errors, coerced) if errors.any?
+        Result.new(filtered_data, nil, coerced)
+      end
+
+      def coerce(given)
+        given.each_with_object(OpenStruct.new) do |datum, result|
+          raise_argument_error unless datum.respond_to?(:each_pair)
+          datum.each_pair { |key, value| result[key] = value }
+        end
+      end
+
+      def raise_argument_error
+        raise(ArgumentError, 'All Chaotic arguments must be a Hash or OpenStruct')
       end
 
       def create_key_error(key, sub_error)

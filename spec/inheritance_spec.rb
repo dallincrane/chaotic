@@ -9,29 +9,28 @@ describe 'Chaotic - inheritance' do
     end
 
     def execute
-      inputs
     end
   end
 
   it 'should filter with inherited command' do
     outcome = SimpleInherited.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
-    assert outcome.success?
-    assert_equal HashWithIndifferentAccess.new(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22), outcome.result
+    assert outcome.success
+    assert_equal OpenStruct.new(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22), outcome.inputs
   end
 
   it 'should filter with original command' do
     outcome = SimpleCommand.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
-    assert outcome.success?
-    assert_equal HashWithIndifferentAccess.new(name: 'bob', email: 'jon@jones.com', amount: 22), outcome.result
+    assert outcome.success
+    assert_equal OpenStruct.new(name: 'bob', email: 'jon@jones.com', amount: 22), outcome.inputs
   end
 
   it 'shouldnt collide' do
     outcome = SimpleInherited.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
-    assert outcome.success?
-    assert_equal HashWithIndifferentAccess.new(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22), outcome.result
+    assert outcome.success
+    assert_equal OpenStruct.new(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22), outcome.inputs
 
     outcome = SimpleCommand.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
-    assert outcome.success?
-    assert_equal HashWithIndifferentAccess.new(name: 'bob', email: 'jon@jones.com', amount: 22), outcome.result
+    assert outcome.success
+    assert_equal OpenStruct.new(name: 'bob', email: 'jon@jones.com', amount: 22), outcome.inputs
   end
 end

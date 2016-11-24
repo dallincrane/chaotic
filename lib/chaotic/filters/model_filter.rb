@@ -21,7 +21,7 @@ module Chaotic
         if data.is_a?(Hash) && options[:builder]
           ret = builder_constant.run(data)
 
-          return [data, ret.errors] unless ret.success?
+          return [data, ret.errors] unless ret.success
           data = ret.result
         end
 

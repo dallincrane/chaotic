@@ -32,6 +32,7 @@ require 'chaotic/filters/hash_filter'
 require 'chaotic/filters/input_filter'
 require 'chaotic/filters/integer_filter'
 require 'chaotic/filters/model_filter'
+require 'chaotic/filters/root_filter'
 require 'chaotic/filters/string_filter'
 require 'chaotic/filters/time_filter'
 

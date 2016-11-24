@@ -14,6 +14,5 @@ class SimpleCommand
   end
 
   def execute
-    inputs
   end
 end

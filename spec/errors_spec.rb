@@ -26,7 +26,7 @@ describe 'Chaotic - errors' do
 
   it 'returns an ErrorHash as the top level error object, and ErrorAtom\'s inside' do
     o = GivesErrors.run(hash1: 1, arr1: 'bob')
-    assert !o.success?
+    assert !o.success
     assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
     assert o.errors[:str1].is_a?(Chaotic::Errors::ErrorAtom)
     assert o.errors[:str2].is_a?(Chaotic::Errors::ErrorAtom)
@@ -38,7 +38,7 @@ describe 'Chaotic - errors' do
   it 'returns an ErrorHash for nested hashes' do
     o = GivesErrors.run(hash1: { bool1: 'ooooo' })
 
-    assert !o.success?
+    assert !o.success
     assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
     assert o.errors[:hash1].is_a?(Chaotic::Errors::ErrorHash)
     assert o.errors[:hash1][:bool1].is_a?(Chaotic::Errors::ErrorAtom)
@@ -48,7 +48,7 @@ describe 'Chaotic - errors' do
   it 'returns an ErrorArray for errors in arrays' do
     o = GivesErrors.run(str1: 'a', str2: 'opt1', arr1: ['bob', 1, 'sally'])
 
-    assert !o.success?
+    assert !o.success
     assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
     assert o.errors[:arr1].is_a?(Chaotic::Errors::ErrorArray)
     assert o.errors[:arr1][0].is_a?(Chaotic::Errors::ErrorAtom)

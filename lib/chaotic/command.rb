@@ -17,7 +17,7 @@ module Chaotic
       end
 
       def root_filter
-        @root_filter ||= superclass.try(:root_filter).try(:dup) || Chaotic::Filters::HashFilter.new
+        @root_filter ||= superclass.try(:root_filter).try(:dup) || Chaotic::Filters::RootFilter.new
       end
 
       def build(*args)
@@ -26,7 +26,7 @@ module Chaotic
 
       def build!(*args)
         instance_outcome = build(*args)
-        return instance_outcome.result if instance_outcome.success?
+        return instance_outcome.result if instance_outcome.success
         raise Chaotic::ValidationError, instance_outcome.errors
       end
 
@@ -36,22 +36,13 @@ module Chaotic
 
       def run!(*args)
         instance_outcome = run(*args)
-        return instance_outcome.result if instance_outcome.success?
+        return instance_outcome.result if instance_outcome.success
         raise Chaotic::ValidationError, instance_outcome.errors
       end
     end
 
-    # Instance methods
     def initialize(*args)
-      @raw_inputs = args.inject({}.with_indifferent_access) do |h, arg|
-        raise(ArgumentError, 'All arguments must be hashes') unless arg.is_a?(Hash)
-        h.deep_merge!(arg)
-      end
-
-      # Do field-level validation / filtering:
-      @inputs, @errors = self.class.root_filter.filter(@raw_inputs)
-
-      # Run a custom validation method if supplied:
+      @inputs, @errors, @raw_inputs = self.class.root_filter.filter(*args).values
       try(:validate) if valid?
     end
 
