@@ -6,7 +6,8 @@ module Chaotic
         nils: false,
         class: nil,
         builder: nil,
-        new_records: false
+        new_records: false,
+        cache_constants: true
       )
 
       def filter(data)
@@ -18,13 +19,13 @@ module Chaotic
         end
 
         if data.is_a?(Hash) && options[:builder]
-          ret = options[:builder].run(data)
+          ret = builder_constant.run(data)
 
           return [data, ret.errors] unless ret.success?
           data = ret.result
         end
 
-        if data.is_a?(options[:class])
+        if data.is_a?(class_constant)
           return [data, :new_records] if !options[:new_records] && (data.respond_to?(:new_record?) && data.new_record?)
           return [data, nil]
         end
@@ -35,21 +36,38 @@ module Chaotic
       private
 
       def initialize_constants!
-        @initialize_constants ||= begin
-          class_const = options[:class] || key.to_s.camelize
-          class_const = class_const.constantize if class_const.is_a?(String)
-          options[:class] = class_const
+        class_constant
+        builder_constant
+      end
 
-          if options[:builder]
-            options[:builder] = options[:builder].constantize if options[:builder].is_a?(String)
-          end
+      def class_constant
+        @class_constant ||= nil
+        return @class_constant if @class_constant
+        result = deduce_class_constant
+        @class_constant = result if options.cache_constants
+        result
+      end
 
-          true
-        end
+      def deduce_class_constant
+        klass = options[:class]
+        return key.to_s.camelize.constantize if klass.nil?
+        return klass if klass.instance_of? Class
+        klass.to_s.constantize
+      end
 
-        return if Chaotic.cache_constants
-        options[:class] = options[:class].to_s.constantize if options[:class]
-        options[:builder] = options[:builder].to_s.constantize if options[:builder]
+      def builder_constant
+        return unless options[:builder]
+        @builder_constant ||= nil
+        return @builder_constant if @builder_constant
+        result = deduce_builder_constant
+        @builder_constant = result if options.cache_constants
+        result
+      end
+
+      def deduce_builder_constant
+        builder = options[:builder]
+        return builder if builder.instance_of? Class
+        builder.to_s.constantize
       end
     end
   end

@@ -42,9 +42,6 @@ module Chaotic
   mattr_accessor :error_message_creator
   self.error_message_creator = Errors::ErrorMessageCreator.new
 
-  mattr_accessor :cache_constants
-  self.cache_constants = true
-
   def self.config
     yield self
   end

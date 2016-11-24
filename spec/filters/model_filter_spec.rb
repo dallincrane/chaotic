@@ -58,17 +58,44 @@ describe 'Chaotic::Filters::ModelFilter' do
     assert_equal nil, errors
   end
 
-  it 'will re-constantize if cache_constants is false' do
-    was = Chaotic.cache_constants
-    Chaotic.cache_constants = false
+  it 'has a cache_constants default value of true' do
+    assert_equal Chaotic::Filter::Options.model.cache_constants, true
+  end
+
+  it 'it will not re-constantize if cache_constants is true' do
+    was = Chaotic::Filter::Options.model.cache_constants
+    Chaotic::Filter::Options.model.cache_constants = true
+
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
+
     filtered, errors = f.filter(m)
     assert_equal m, filtered
     assert_equal nil, errors
 
     Object.send(:remove_const, 'SimpleModel')
+    class SimpleModel; end
 
+    m = SimpleModel.new
+    filtered, errors = f.filter(m)
+    assert_equal m, filtered
+    assert_equal :model, errors
+
+    Chaotic::Filter::Options.model.cache_constants = was
+  end
+
+  it 'will re-constantize if cache_constants is false' do
+    was = Chaotic::Filter::Options.model.cache_constants
+    Chaotic::Filter.config { |c| c.model.cache_constants = false }
+
+    f = Chaotic::Filters::ModelFilter.new(:simple_model)
+    m = SimpleModel.new
+
+    filtered, errors = f.filter(m)
+    assert_equal m, filtered
+    assert_equal nil, errors
+
+    Object.send(:remove_const, 'SimpleModel')
     class SimpleModel; end
 
     m = SimpleModel.new
@@ -76,7 +103,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     assert_equal m, filtered
     assert_equal nil, errors
 
-    Chaotic.cache_constants = was
+    Chaotic::Filter.config { |c| c.model.cache_constants = was }
   end
 
   # it "disallows different types of models" do
