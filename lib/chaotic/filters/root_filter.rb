@@ -12,7 +12,7 @@ module Chaotic
 
       def feed(*given)
         coerced = coerce(given)
-        filtered = OpenStruct.new
+        inputs = OpenStruct.new
         errors = Chaotic::Errors::ErrorHash.new
 
         sub_filters_hash.each_pair do |key, key_filter|
@@ -22,7 +22,7 @@ module Chaotic
             sub_data, sub_error = key_filter.feed(data_element)
 
             if sub_error.nil?
-              filtered[key] = sub_data
+              inputs[key] = sub_data
             elsif key_filter.discardable?(sub_error)
               coerced.delete_field(key)
             else
@@ -33,7 +33,7 @@ module Chaotic
           next if coerced.respond_to?(key)
 
           if key_filter.default?
-            filtered[key] = key_filter.default
+            inputs[key] = key_filter.default
           elsif key_filter.required? && !key_filter.discardable?(sub_error)
             errors[key] = create_key_error(key, :required)
           end
@@ -41,7 +41,7 @@ module Chaotic
 
         OpenStruct.new(
           coerced: coerced,
-          inputs: filtered,
+          inputs: inputs,
           errors: errors.present? ? errors : nil
         )
       end
