@@ -7,7 +7,7 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       string :foo
     end
-    filtered, errors = hf.filter(foo: 'bar')
+    filtered, errors = hf.feed(foo: 'bar')
     assert_equal ({ 'foo' => 'bar' }), filtered
     assert_equal nil, errors
   end
@@ -16,7 +16,7 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       string :foo
     end
-    _filtered, errors = hf.filter('bar')
+    _filtered, errors = hf.feed('bar')
     assert_equal :hash, errors
   end
 
@@ -24,7 +24,7 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       float :foo
     end
-    filtered, errors = hf.filter(foo: 3.14)
+    filtered, errors = hf.feed(foo: 3.14)
     assert_equal ({ 'foo' => 3.14 }), filtered
     assert_equal nil, errors
   end
@@ -33,7 +33,7 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       duck :foo, methods: [:length]
     end
-    filtered, errors = hf.filter(foo: '123')
+    filtered, errors = hf.feed(foo: '123')
     assert_equal ({ 'foo' => '123' }), filtered
     assert_equal nil, errors
   end
@@ -42,7 +42,7 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       date :foo, format: '%d-%m-%Y'
     end
-    filtered, errors = hf.filter(foo: '1-1-2000')
+    filtered, errors = hf.feed(foo: '1-1-2000')
     assert_equal Date.new(2000, 1, 1), filtered[:foo]
     assert_equal nil, errors
   end
@@ -52,7 +52,7 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       file :foo
     end
-    filtered, errors = hf.filter(foo: sio)
+    filtered, errors = hf.feed(foo: sio)
     assert_equal ({ 'foo' => sio }), filtered
     assert_equal nil, errors
   end

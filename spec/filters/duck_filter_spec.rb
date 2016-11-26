@@ -4,36 +4,36 @@ require 'spec_helper'
 describe 'Chaotic::Filters::DuckFilter' do
   it 'allows objects that respond to a single specified method' do
     f = Chaotic::Filters::DuckFilter.new(:quack, methods: [:length])
-    filtered, errors = f.filter('test')
+    filtered, errors = f.feed('test')
     assert_equal 'test', filtered
     assert_equal nil, errors
 
-    filtered, errors = f.filter([1, 2])
+    filtered, errors = f.feed([1, 2])
     assert_equal [1, 2], filtered
     assert_equal nil, errors
   end
 
   it 'does not allow objects that respond to a single specified method' do
     f = Chaotic::Filters::DuckFilter.new(:quack, methods: [:length])
-    filtered, errors = f.filter(true)
+    filtered, errors = f.feed(true)
     assert_equal true, filtered
     assert_equal :duck, errors
 
-    filtered, errors = f.filter(12)
+    filtered, errors = f.feed(12)
     assert_equal 12, filtered
     assert_equal :duck, errors
   end
 
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::DuckFilter.new(:quack, nils: false)
-    filtered, errors = f.filter(nil)
+    filtered, errors = f.feed(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::DuckFilter.new(:quack, nils: true)
-    filtered, errors = f.filter(nil)
+    filtered, errors = f.feed(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
@@ -41,7 +41,7 @@ describe 'Chaotic::Filters::DuckFilter' do
   it 'Allows anything if no methods are specified' do
     f = Chaotic::Filters::DuckFilter.new
     [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3].each do |v|
-      filtered, errors = f.filter(v)
+      filtered, errors = f.feed(v)
       assert_equal v, filtered
       assert_equal nil, errors
     end

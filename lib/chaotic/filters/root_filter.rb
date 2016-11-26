@@ -10,7 +10,7 @@ module Chaotic
         sub_filters.map(&:key)
       end
 
-      def filter(*given)
+      def feed(*given)
         coerced = coerce(given)
 
         errors = Chaotic::Errors::ErrorHash.new
@@ -20,7 +20,7 @@ module Chaotic
           data_element = coerced[key]
 
           if coerced.respond_to?(key)
-            sub_data, sub_error = key_filter.filter(data_element)
+            sub_data, sub_error = key_filter.feed(data_element)
 
             if sub_error.nil?
               filtered_data[key] = sub_data

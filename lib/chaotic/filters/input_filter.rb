@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class InputFilter < Chaotic::Filter
-      def filter(data)
+      def feed(data)
         [data, nil]
       end
     end

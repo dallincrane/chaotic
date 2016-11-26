@@ -12,7 +12,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar').values
+      filtered, errors = hf.feed(foo: 'bar').values
       assert_equal OpenStruct.new(foo: 'bar'), filtered
       assert_equal nil, errors
     end
@@ -25,7 +25,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar', bar: nil).values
+      filtered, errors = hf.feed(foo: 'bar', bar: nil).values
       assert_equal OpenStruct.new(foo: 'bar', bar: nil), filtered
       assert_equal :nils, errors.symbolic[:bar]
     end
@@ -38,7 +38,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar', bar: nil).values
+      filtered, errors = hf.feed(foo: 'bar', bar: nil).values
       assert_equal OpenStruct.new(foo: 'bar', bar: nil), filtered
       assert_equal nil, errors
     end
@@ -53,7 +53,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar', bar: '').values
+      filtered, errors = hf.feed(foo: 'bar', bar: '').values
       assert_equal OpenStruct.new(foo: 'bar'), filtered
       assert_equal nil, errors
     end
@@ -66,7 +66,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar', bar: ' ').values
+      filtered, errors = hf.feed(foo: 'bar', bar: ' ').values
       assert_equal OpenStruct.new(foo: 'bar'), filtered
       assert_equal nil, errors
     end
@@ -79,7 +79,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar', bar: ' ').values
+      filtered, errors = hf.feed(foo: 'bar', bar: ' ').values
       assert_equal OpenStruct.new(foo: 'bar', bar: ' '), filtered
       assert_equal nil, errors
     end
@@ -92,7 +92,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      _filtered, errors = hf.filter(foo: 'bar', bar: '').values
+      _filtered, errors = hf.feed(foo: 'bar', bar: '').values
       assert_equal({ 'bar' => :empty }, errors.symbolic)
     end
   end
@@ -106,7 +106,7 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.filter(foo: 'bar', bar: 'baz').values
+      filtered, errors = hf.feed(foo: 'bar', bar: 'baz').values
       assert_equal OpenStruct.new(foo: 'bar'), filtered
       assert_equal nil, errors
     end

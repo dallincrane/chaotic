@@ -7,7 +7,7 @@ module Chaotic
         methods: nil
       )
 
-      def filter(data)
+      def feed(data)
         if data.nil?
           return [data, nil] if options[:nils]
           return [data, :nils]

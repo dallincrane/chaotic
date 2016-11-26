@@ -7,7 +7,7 @@ module Chaotic
         arrayize: false
       )
 
-      def filter(data)
+      def feed(data)
         if data.nil?
           return [data, nil] if options[:nils]
           return [data, :nils]
@@ -25,7 +25,7 @@ module Chaotic
         index_shift = 0
 
         data.each_with_index do |sub_data, index|
-          sub_data, sub_error = sub_filter.filter(sub_data)
+          sub_data, sub_error = sub_filter.feed(sub_data)
 
           if sub_error.nil?
             filtered_data << sub_data

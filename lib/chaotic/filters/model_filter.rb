@@ -10,7 +10,7 @@ module Chaotic
         cache_constants: true
       )
 
-      def filter(data)
+      def feed(data)
         initialize_constants!
 
         if data.nil?

@@ -6,7 +6,7 @@ module Chaotic
         nils: false
       )
 
-      def filter(data)
+      def feed(data)
         if data.nil?
           return [data, nil] if options[:nils]
           return [data, :nils]
@@ -23,7 +23,7 @@ module Chaotic
           data_element = data[key]
 
           if data.key?(key)
-            sub_data, sub_error = key_filter.filter(data_element)
+            sub_data, sub_error = key_filter.feed(data_element)
 
             if sub_error.nil?
               filtered_data[key] = sub_data

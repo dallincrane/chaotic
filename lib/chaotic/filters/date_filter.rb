@@ -9,7 +9,7 @@ module Chaotic
         before: nil   # A date object, representing the maximum date allowed, inclusive
       )
 
-      def filter(data)
+      def feed(data)
         if data.nil?
           return [data, nil] if options[:nils]
           return [data, :nils]

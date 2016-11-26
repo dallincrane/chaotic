@@ -13,7 +13,7 @@ module Chaotic
         in: nil
       )
 
-      def filter(given)
+      def feed(given)
         flipped = flip(given)
         coerced = coerce(flipped)
 

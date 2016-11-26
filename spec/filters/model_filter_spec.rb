@@ -18,7 +18,7 @@ describe 'Chaotic::Filters::ModelFilter' do
   it 'allows models' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
-    filtered, errors = f.filter(m)
+    filtered, errors = f.feed(m)
     assert_equal m, filtered
     assert_equal nil, errors
   end
@@ -26,34 +26,34 @@ describe 'Chaotic::Filters::ModelFilter' do
   it 'raises an exception during filtering if constantization fails' do
     f = Chaotic::Filters::ModelFilter.new(:complex_model)
     assert_raises NameError do
-      f.filter(nil)
+      f.feed(nil)
     end
   end
 
   it 'raises an exception during filtering if constantization of class fails' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, class: 'ComplexModel')
     assert_raises NameError do
-      f.filter(nil)
+      f.feed(nil)
     end
   end
 
   it 'raises an exception during filtering if constantization of builder fails' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, builder: 'ComplexModel')
     assert_raises NameError do
-      f.filter(nil)
+      f.feed(nil)
     end
   end
 
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: false)
-    filtered, errors = f.filter(nil)
+    filtered, errors = f.feed(nil)
     assert_equal nil, filtered
     assert_equal :nils, errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: true)
-    filtered, errors = f.filter(nil)
+    filtered, errors = f.feed(nil)
     assert_equal nil, filtered
     assert_equal nil, errors
   end
@@ -69,7 +69,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
 
-    filtered, errors = f.filter(m)
+    filtered, errors = f.feed(m)
     assert_equal m, filtered
     assert_equal nil, errors
 
@@ -77,7 +77,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     class SimpleModel; end
 
     m = SimpleModel.new
-    filtered, errors = f.filter(m)
+    filtered, errors = f.feed(m)
     assert_equal m, filtered
     assert_equal :model, errors
 
@@ -91,7 +91,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
 
-    filtered, errors = f.filter(m)
+    filtered, errors = f.feed(m)
     assert_equal m, filtered
     assert_equal nil, errors
 
@@ -99,7 +99,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     class SimpleModel; end
 
     m = SimpleModel.new
-    filtered, errors = f.filter(m)
+    filtered, errors = f.feed(m)
     assert_equal m, filtered
     assert_equal nil, errors
 
