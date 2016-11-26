@@ -126,13 +126,6 @@ describe 'Chaotic::Filters::DateFilter' do
     assert_equal :nils, errors
   end
 
-  it 'considers empty strings to be empty' do
-    f = Chaotic::Filters::DateFilter.new
-    filtered, errors = f.feed('')
-    assert_equal '', filtered
-    assert_equal :empty, errors
-  end
-
   it 'allows the use of nil when specified' do
     f = Chaotic::Filters::DateFilter.new(:d1, nils: true)
     filtered, errors = f.feed(nil)
