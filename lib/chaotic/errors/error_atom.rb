@@ -32,7 +32,7 @@ module Chaotic
       end
 
       def message_list
-        Array(message)
+        Array.wrap(message)
       end
     end
   end
