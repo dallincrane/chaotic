@@ -38,7 +38,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, after: time + 1)
     filtered, errors = f.feed(time)
-    assert_equal nil, filtered
+    assert_equal time, filtered
     assert_equal :after, errors
   end
 
@@ -54,7 +54,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, before: time - 1)
     filtered, errors = f.feed(time)
-    assert_equal nil, filtered
+    assert_equal time, filtered
     assert_equal :before, errors
   end
 
@@ -113,18 +113,11 @@ describe 'Chaotic::Filters::TimeFilter' do
     assert_equal nil, errors
   end
 
-  it 'considers empty strings to be empty' do
-    f = Chaotic::Filters::TimeFilter.new
-    filtered, errors = f.feed('')
-    assert_equal '', filtered
-    assert_equal :empty, errors
-  end
-
   it 'doesn\'t allow non-existing times' do
     invalid_time_string = '1, 20, 2013 25:13'
     f = Chaotic::Filters::TimeFilter.new
     filtered, errors = f.feed(invalid_time_string)
-    assert_equal nil, filtered
+    assert_equal '1, 20, 2013 25:13', filtered
     assert_equal :time, errors
   end
 end
