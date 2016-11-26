@@ -19,6 +19,7 @@ require 'chaotic/errors/error_atom'
 require 'chaotic/errors/error_hash'
 require 'chaotic/errors/error_array'
 require 'chaotic/errors/error_message_creator'
+require 'chaotic/errors/validation_error'
 
 require 'chaotic/filter'
 require 'chaotic/filters/array_filter'
@@ -38,7 +39,6 @@ require 'chaotic/filters/time_filter'
 
 require 'chaotic/command'
 require 'chaotic/outcome'
-require 'chaotic/validation_error'
 
 module Chaotic
   mattr_accessor :error_message_creator
