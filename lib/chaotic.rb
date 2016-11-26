@@ -44,6 +44,14 @@ module Chaotic
   mattr_accessor :error_message_creator
   self.error_message_creator = Errors::ErrorMessageCreator.new
 
+  mattr_accessor :boolean_map
+  self.boolean_map = {
+    'true' => true,
+    'false' => false,
+    '1' => true,
+    '0' => false
+  }.freeze
+
   def self.config
     yield self
   end
