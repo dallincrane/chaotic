@@ -4,7 +4,7 @@ require 'stringio'
 
 describe 'Chaotic::Filters::ArrayFilter' do
   it 'allows arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { input }
+    f = Chaotic::Filters::ArrayFilter.new(:arr) { any }
 
     filtered, errors = f.feed([1])
     assert_equal [1], filtered
@@ -12,7 +12,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'considers non-arrays to be invalid' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { input }
+    f = Chaotic::Filters::ArrayFilter.new(:arr) { any }
 
     ['hi', true, 1, { a: '1' }, Object.new].each do |thing|
       _filtered, errors = f.feed(thing)
@@ -21,7 +21,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr, nils: false) { input }
+    f = Chaotic::Filters::ArrayFilter.new(:arr, nils: false) { any }
 
     filtered, errors = f.feed(nil)
     assert_equal nil, filtered
@@ -29,7 +29,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr, nils: true) { input }
+    f = Chaotic::Filters::ArrayFilter.new(:arr, nils: true) { any }
 
     _filtered, errors = f.feed(nil)
     assert_equal nil, errors
