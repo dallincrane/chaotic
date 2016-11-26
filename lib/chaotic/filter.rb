@@ -83,5 +83,9 @@ module Chaotic
     def handle_nil
       options.nils ? [nil, nil] : [nil, :nils]
     end
+
+    def handle_empty(datum)
+      options.empty ? [datum, nil] : [datum, :empty]
+    end
   end
 end

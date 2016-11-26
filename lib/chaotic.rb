@@ -52,6 +52,16 @@ module Chaotic
     '0' => false
   }.freeze
 
+  mattr_accessor :coerce_to_string
+  self.coerce_to_string = [
+    Symbol,
+    TrueClass,
+    FalseClass,
+    Integer,
+    Float,
+    BigDecimal
+  ].freeze
+
   def self.config
     yield self
   end

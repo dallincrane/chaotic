@@ -14,28 +14,39 @@ module Chaotic
         matches: nil
       )
 
-      def feed(data)
-        return handle_nil if data.nil?
+      def feed(given)
+        return handle_nil if given.nil?
 
-        if !options.strict && [TrueClass, FalseClass, Fixnum, Bignum, Float, BigDecimal, Symbol].include?(data.class)
-          data = data.to_s
-        end
+        coerced = coerce(given)
+        return [given, :string] unless coerced.is_a?(String)
 
-        return [data, :string] unless data.is_a?(String)
+        coerced = strip_chars(coerced)
+        return handle_empty(coerced) if coerced.empty?
 
-        data = data.gsub(/[^[:print:]\t\r\n]+/, ' ') unless options.allow_control_characters
-        data = data.strip if options.strip
+        error = validate_datum(coerced)
+        return [coerced, error] if error
 
-        if data == ''
-          return [data, nil] if options.empty
-          return [data, :empty]
-        end
+        [coerced, nil]
+      end
 
-        return [data, :min_length] if options.min_length && data.length < options.min_length
-        return [data, :max_length] if options.max_length && data.length > options.max_length
-        return [data, :in] if options.in && !options.in.include?(data)
-        return [data, :matches] if options.matches && (options.matches !~ data)
-        [data, nil]
+      def coerce(given)
+        return given if given.is_a?(String)
+        return given if options.strict
+        given.to_s if Chaotic.coerce_to_string.map { |klass| given.is_a?(klass) }.any?
+      end
+
+      def strip_chars(coerced)
+        result = coerced
+        result = result.gsub(/[^[:print:]\t\r\n]+/, ' ') unless options.allow_control_characters
+        result = result.strip if options.strip
+        result
+      end
+
+      def validate_datum(coerced)
+        return :min_length if options.min_length && coerced.length < options.min_length
+        return :max_length if options.max_length && coerced.length > options.max_length
+        return :in if options.in && !options.in.include?(coerced)
+        return :matches if options.matches && (options.matches !~ coerced)
       end
     end
   end
