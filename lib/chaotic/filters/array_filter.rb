@@ -9,11 +9,11 @@ module Chaotic
 
       def feed(data)
         if data.nil?
-          return [data, nil] if options[:nils]
+          return [data, nil] if options.nils
           return [data, :nils]
         end
 
-        data = Array.wrap(data) if options[:arrayize]
+        data = Array.wrap(data) if options.arrayize
 
         return [data, :array] unless data.is_a?(Array)
 

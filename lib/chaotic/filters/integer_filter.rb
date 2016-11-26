@@ -26,7 +26,7 @@ module Chaotic
       private
 
       def flip(datum)
-        return datum unless options[:empty_is_nil] == true
+        return datum unless options.empty_is_nil == true
         datum.try(:empty?) ? nil : datum
       end
 
@@ -44,13 +44,13 @@ module Chaotic
 
         return datum unless datum_str
 
-        clean_str = datum_str.tr(options[:delimiter], '').tr(options[:decimal_mark], '.')
+        clean_str = datum_str.tr(options.delimiter, '').tr(options.decimal_mark, '.')
         return datum unless clean_str =~ /\A[-+]?\d*\.?0*\z/
         clean_str.to_i
       end
 
       def validate_datum(datum)
-        return options[:nils] ? nil : :nils if datum.nil?
+        return options.nils ? nil : :nils if datum.nil?
         return :integer unless datum.is_a?(Integer)
         return :in unless included?(datum)
         return :min unless above_min?(datum)
@@ -59,23 +59,23 @@ module Chaotic
       end
 
       def included?(datum)
-        return true if options[:in].nil?
-        options[:in].include?(datum)
+        return true if options.in.nil?
+        options.in.include?(datum)
       end
 
       def above_min?(datum)
-        return true if options[:min].nil?
-        datum >= options[:min]
+        return true if options.min.nil?
+        datum >= options.min
       end
 
       def below_max?(datum)
-        return true if options[:max].nil?
-        datum <= options[:max]
+        return true if options.max.nil?
+        datum <= options.max
       end
 
       def within_scale?(datum)
-        return true if options[:scale].nil?
-        (datum - datum.round(options[:scale])).zero?
+        return true if options.scale.nil?
+        (datum - datum.round(options.scale)).zero?
       end
     end
   end

@@ -3,15 +3,15 @@ module Chaotic
   module Filters
     class DateFilter < Chaotic::Filter
       default_options(
-        nils: false,  # true allows an explicit nil to be valid. Overrides any other options
-        format: nil,  # If nil, Date.parse will be used for coercion. If something like "%Y-%m-%d", Date.strptime is used
-        after: nil,   # A date object, representing the minimum date allowed, inclusive
-        before: nil   # A date object, representing the maximum date allowed, inclusive
+        nils: false, # true allows an explicit nil to be valid. Overrides any other options
+        format: nil, # If nil, Date.parse will be used for coercion. If something like "%Y-%m-%d", Date.strptime is used
+        after: nil,  # A date object, representing the minimum date allowed, inclusive
+        before: nil  # A date object, representing the maximum date allowed, inclusive
       )
 
       def feed(data)
         if data.nil?
-          return [data, nil] if options[:nils]
+          return [data, nil] if options.nils
           return [data, :nils]
         end
 
@@ -32,8 +32,8 @@ module Chaotic
           return [data, :date]
         end
 
-        return [data, :after] if options[:after] && actual_date <= options[:after]
-        return [data, :before] if options[:before] && actual_date >= options[:before]
+        return [data, :after] if options.after && actual_date <= options.after
+        return [data, :before] if options.before && actual_date >= options.before
 
         [actual_date, nil]
       end
@@ -41,7 +41,7 @@ module Chaotic
       private
 
       def parse(data)
-        options[:format] ? Date.strptime(data, options[:format]) : Date.parse(data)
+        options.format ? Date.strptime(data, options.format) : Date.parse(data)
       end
     end
   end

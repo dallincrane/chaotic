@@ -14,11 +14,11 @@ module Chaotic
         initialize_constants!
 
         if data.nil?
-          return [data, nil] if options[:nils]
+          return [data, nil] if options.nils
           return [data, :nils]
         end
 
-        if data.is_a?(Hash) && options[:builder]
+        if data.is_a?(Hash) && options.builder
           ret = builder_constant.run(data)
 
           return [data, ret.errors] unless ret.success
@@ -26,7 +26,7 @@ module Chaotic
         end
 
         if data.is_a?(class_constant)
-          return [data, :new_records] if !options[:new_records] && (data.respond_to?(:new_record?) && data.new_record?)
+          return [data, :new_records] if !options.new_records && (data.respond_to?(:new_record?) && data.new_record?)
           return [data, nil]
         end
 
@@ -56,7 +56,7 @@ module Chaotic
       end
 
       def builder_constant
-        return unless options[:builder]
+        return unless options.builder
         @builder_constant ||= nil
         return @builder_constant if @builder_constant
         result = deduce_builder_constant
@@ -65,7 +65,7 @@ module Chaotic
       end
 
       def deduce_builder_constant
-        builder = options[:builder]
+        builder = options.builder
         return builder if builder.instance_of? Class
         builder.to_s.constantize
       end

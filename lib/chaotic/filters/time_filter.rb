@@ -11,7 +11,7 @@ module Chaotic
 
       def feed(data)
         if data.nil?
-          return [data, nil] if options[:nils]
+          return [data, nil] if options.nils
           return [data, :nils]
         end
 
@@ -31,8 +31,8 @@ module Chaotic
           return [nil, :time]
         end
 
-        return [nil, :after] if options[:after] && actual_time <= options[:after]
-        return [nil, :before] if options[:before] && actual_time >= options[:before]
+        return [nil, :after] if options.after && actual_time <= options.after
+        return [nil, :before] if options.before && actual_time >= options.before
 
         [actual_time, nil]
       end
@@ -40,7 +40,7 @@ module Chaotic
       private
 
       def parse(data)
-        options[:format] ? Time.strptime(data, options[:format]) : Time.parse(data)
+        options.format ? Time.strptime(data, options.format) : Time.parse(data)
       end
     end
   end
