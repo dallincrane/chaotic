@@ -15,10 +15,7 @@ module Chaotic
       )
 
       def feed(data)
-        if data.nil?
-          return [data, nil] if options.nils
-          return [data, :nils]
-        end
+        return handle_nil if data.nil?
 
         if !options.strict && [TrueClass, FalseClass, Fixnum, Bignum, Float, BigDecimal, Symbol].include?(data.class)
           data = data.to_s

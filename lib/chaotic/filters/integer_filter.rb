@@ -3,7 +3,6 @@ module Chaotic
   module Filters
     class IntegerFilter < Chaotic::Filter
       default_options(
-        empty_is_nil: false,
         nils: false,
         delimiter: ', ',
         decimal_mark: '.',
@@ -14,8 +13,9 @@ module Chaotic
       )
 
       def feed(given)
-        flipped = flip(given)
-        coerced = coerce(flipped)
+        return handle_nil if given.nil?
+
+        coerced = coerce(given)
 
         error = validate_datum(coerced)
         return [coerced, error] if error
@@ -24,11 +24,6 @@ module Chaotic
       end
 
       private
-
-      def flip(datum)
-        return datum unless options.empty_is_nil == true
-        datum.try(:empty?) ? nil : datum
-      end
 
       def coerce(datum)
         return datum if datum.blank?

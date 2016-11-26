@@ -79,5 +79,9 @@ module Chaotic
         (options.discard_empty == true && sub_error == :empty) ||
         (options.discard_nils == true && sub_error == :nil)
     end
+
+    def handle_nil
+      options.nils ? [nil, nil] : [nil, :nils]
+    end
   end
 end

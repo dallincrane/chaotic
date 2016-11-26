@@ -94,21 +94,6 @@ describe 'Chaotic::Filters::IntegerFilter' do
     assert_equal :integer, errors
   end
 
-  it 'considers empty strings to be nil if empty_is_nil option is used' do
-    f = Chaotic::Filters::IntegerFilter.new(:i, empty_is_nil: true)
-    _filtered, errors = f.feed('')
-
-    assert_equal :nils, errors
-  end
-
-  it 'returns empty strings as nil if empty_is_nil option is used' do
-    f = Chaotic::Filters::IntegerFilter.new(:i, empty_is_nil: true, nils: true)
-    filtered, errors = f.feed('')
-
-    assert_equal nil, filtered
-    assert_equal nil, errors
-  end
-
   it 'considers low numbers invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     filtered, errors = f.feed(3)

@@ -7,10 +7,7 @@ module Chaotic
       )
 
       def feed(data)
-        if data.nil?
-          return [nil, nil] if options.nils
-          return [nil, :nils]
-        end
+        return handle_nil if data.nil?
 
         [data, nil]
       end

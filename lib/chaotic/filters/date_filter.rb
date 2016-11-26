@@ -10,10 +10,7 @@ module Chaotic
       )
 
       def feed(data)
-        if data.nil?
-          return [data, nil] if options.nils
-          return [data, :nils]
-        end
+        return handle_nil if data.nil?
 
         # Now check if it's empty:
         return [data, :empty] if data == ''

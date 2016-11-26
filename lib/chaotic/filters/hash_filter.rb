@@ -7,10 +7,7 @@ module Chaotic
       )
 
       def feed(data)
-        if data.nil?
-          return [data, nil] if options.nils
-          return [data, :nils]
-        end
+        return handle_nil if data.nil?
 
         return [data, :hash] unless data.is_a?(Hash)
 

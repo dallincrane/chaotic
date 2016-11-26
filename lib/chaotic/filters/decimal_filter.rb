@@ -3,7 +3,6 @@ module Chaotic
   module Filters
     class DecimalFilter < Chaotic::Filter
       default_options(
-        empty_is_nil: false,
         nils: false,
         delimiter: ', ',
         decimal_mark: '.',
@@ -13,8 +12,9 @@ module Chaotic
       )
 
       def feed(given)
-        flipped = flip(given)
-        coerced = coerce(flipped)
+        return handle_nil if given.nil?
+
+        coerced = coerce(given)
 
         error = validate_datum(coerced)
         return [coerced, error] if error
@@ -23,11 +23,6 @@ module Chaotic
       end
 
       private
-
-      def flip(datum)
-        return datum unless options.empty_is_nil == true
-        datum.try(:empty?) ? nil : datum
-      end
 
       # TODO: the Rational class should be coerced - it requires a precision argument
       def coerce(datum)
@@ -43,7 +38,6 @@ module Chaotic
       end
 
       def validate_datum(datum)
-        return options.nils ? nil : :nils if datum.nil?
         return :decimal unless datum.is_a?(BigDecimal)
         return :min unless above_min?(datum)
         return :max unless below_max?(datum)

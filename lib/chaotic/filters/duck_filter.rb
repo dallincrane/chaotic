@@ -8,10 +8,7 @@ module Chaotic
       )
 
       def feed(data)
-        if data.nil?
-          return [data, nil] if options.nils
-          return [data, :nils]
-        end
+        return handle_nil if data.nil?
 
         Array(options[:methods]).each do |method|
           return [data, :duck] unless data.respond_to?(method)

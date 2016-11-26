@@ -13,10 +13,7 @@ module Chaotic
       def feed(data)
         initialize_constants!
 
-        if data.nil?
-          return [data, nil] if options.nils
-          return [data, :nils]
-        end
+        return handle_nil if data.nil?
 
         if data.is_a?(Hash) && options.builder
           ret = builder_constant.run(data)

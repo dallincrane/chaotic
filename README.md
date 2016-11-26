@@ -10,9 +10,6 @@ Optional Options
 * **discard_invalid**
 
 Options
-* **empty_is_nil**
-  * false (default): does nothing
-  * true: treats `''` data as if it were `nil`
 * **nils**
   * false (default): invalid when data is nil
   * true: allows nil data to be valid

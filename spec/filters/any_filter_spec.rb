@@ -19,4 +19,12 @@ describe 'Chaotic::Filters::AnyFilter' do
     assert_equal nil, filtered
     assert_equal nil, errors
   end
+
+  it 'Does not allow nils if set to false' do
+    f = Chaotic::Filters::AnyFilter.new(:a1, nils: false)
+
+    filtered, errors = f.feed(nil)
+    assert_equal nil, filtered
+    assert_equal :nils, errors
+  end
 end
