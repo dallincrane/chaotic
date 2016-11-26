@@ -59,12 +59,6 @@ describe 'Chaotic::Filters::FileFilter' do
     assert_equal nil, errors
   end
 
-  it 'considers empty strings to be empty' do
-    f = Chaotic::Filters::FileFilter.new
-    _filtered, errors = f.feed('')
-    assert_equal :empty, errors
-  end
-
   it 'should allow small files' do
     file = StringIO.new('bob')
     f = Chaotic::Filters::FileFilter.new(:clippy, size: 4)

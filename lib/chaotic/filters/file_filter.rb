@@ -8,20 +8,30 @@ module Chaotic
         size: nil
       )
 
-      def feed(data)
-        return handle_nil if data.nil?
+      def feed(given)
+        return handle_nil if given.nil?
 
-        return [data, :empty] if data == ''
+        coerced = coerce(given)
+        return [given, :file] unless respond_to_all?(coerced)
 
-        methods = [:read, :size]
-        methods.concat([:original_filename, :content_type]) if options.upload
-        methods.each do |method|
-          return [data, :file] unless data.respond_to?(method)
-        end
+        error = validate(coerced)
+        return [coerced, error] if error
 
-        return [data, :size] if options.size && data.size > options.size
+        [coerced, nil]
+      end
 
-        [data, nil]
+      def coerce(given)
+        given
+      end
+
+      def respond_to_all?(coerced)
+        methods = %i(read size)
+        methods.concat(%i(original_filename content_type)) if options.upload
+        methods.map { |method| coerced.respond_to?(method) }.all?
+      end
+
+      def validate(coerced)
+        return :size if options.size && coerced.size > options.size
       end
     end
   end
