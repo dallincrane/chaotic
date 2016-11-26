@@ -5,7 +5,7 @@ require 'simple_command'
 describe 'Chaotic - defaults' do
   class DefaultCommand
     include Chaotic::Command
-    params do
+    filter do
       string :name, default: 'Bob Jones'
     end
 

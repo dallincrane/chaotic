@@ -2,7 +2,7 @@
 class SimpleCommand
   include Chaotic::Command
 
-  params do
+  filter do
     string :name, max_length: 10
     string :email
     integer :amount, required: false

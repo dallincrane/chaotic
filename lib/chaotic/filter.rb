@@ -49,13 +49,13 @@ module Chaotic
     end
 
     def sub_filters_hash
-      sub_filters.each_with_object({}) { |filter, result| result[filter.key] = filter }
+      sub_filters.each_with_object({}) { |sf, result| result[sf.key] = sf }
     end
 
     # TODO: make this go deeper than one level
     def dup
       dupped = self.class.new
-      sub_filters.each { |filter| dupped.sub_filters.push(filter) }
+      sub_filters.each { |sf| dupped.sub_filters.push(sf) }
       dupped
     end
 

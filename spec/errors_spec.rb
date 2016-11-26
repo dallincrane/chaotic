@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'Chaotic - errors' do
   class GivesErrors
     include Chaotic::Command
-    params do
+    filter do
       string :str1
       string :str2, in: %w(opt1 opt2 opt3)
       integer :int1, required: false

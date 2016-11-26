@@ -12,7 +12,7 @@ describe 'Command' do
       assert_equal nil, outcome.errors
     end
 
-    it 'should filter out spurious params' do
+    it 'should filter out extra inputs' do
       outcome = SimpleCommand.run(name: 'John', email: 'john@gmail.com', amount: 5, buggers: true)
 
       assert outcome.success
@@ -113,7 +113,7 @@ describe 'Command' do
   describe 'EigenCommand' do
     class EigenCommand
       include Chaotic::Command
-      params do
+      filter do
         string :name
         string :email, required: false
       end
@@ -123,7 +123,7 @@ describe 'Command' do
       end
     end
 
-    it 'should define methods for params' do
+    it 'should define methods for input keys' do
       outcome = EigenCommand.run(name: 'John', email: 'john@gmail.com')
       assert_equal({ name: 'John', email: 'john@gmail.com' }, outcome.result)
     end
@@ -132,7 +132,7 @@ describe 'Command' do
   describe 'MutatatedCommand' do
     class MutatatedCommand
       include Chaotic::Command
-      params do
+      filter do
         string :name
         string :email, required: false
       end
@@ -153,7 +153,7 @@ describe 'Command' do
   describe 'ErrorfulCommand' do
     class ErrorfulCommand
       include Chaotic::Command
-      params do
+      filter do
         string :name
         string :email, required: false
       end
@@ -176,7 +176,7 @@ describe 'Command' do
   describe 'NestingErrorfulCommand' do
     class NestingErrorfulCommand
       include Chaotic::Command
-      params do
+      filter do
         string :name
         string :email, required: false
       end
@@ -199,7 +199,7 @@ describe 'Command' do
   describe 'MultiErrorCommand' do
     class MultiErrorCommand
       include Chaotic::Command
-      params do
+      filter do
         string :name
         string :email, required: false
       end
@@ -227,7 +227,7 @@ describe 'Command' do
   describe 'RawInputsCommand' do
     class RawInputsCommand
       include Chaotic::Command
-      params do
+      filter do
         string :name
       end
 

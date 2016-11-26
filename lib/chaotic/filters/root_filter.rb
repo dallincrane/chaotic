@@ -2,7 +2,7 @@
 module Chaotic
   module Filters
     class RootFilter < Chaotic::Filter
-      def params(&block)
+      def filter(&block)
         instance_eval(&block)
       end
 

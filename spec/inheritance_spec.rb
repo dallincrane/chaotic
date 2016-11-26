@@ -4,7 +4,7 @@ require 'simple_command'
 
 describe 'Chaotic - inheritance' do
   class SimpleInherited < SimpleCommand
-    params do
+    filter do
       integer :age
     end
 

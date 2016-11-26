@@ -8,8 +8,8 @@ module Chaotic
     end
 
     class_methods do
-      def params(&block)
-        root_filter.params(&block)
+      def filter(&block)
+        root_filter.filter(&block)
         root_filter.keys.each do |key|
           define_method(key) { inputs[key] }
         end
