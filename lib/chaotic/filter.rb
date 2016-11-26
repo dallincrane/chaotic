@@ -30,7 +30,7 @@ module Chaotic
     end
 
     attr_reader :key
-    attr_accessor :sub_filters
+    attr_reader :sub_filters
 
     def initialize(key = nil, opts = {}, &block)
       @key = key

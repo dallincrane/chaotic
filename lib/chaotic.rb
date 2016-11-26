@@ -36,8 +36,9 @@ require 'chaotic/filters/root_filter'
 require 'chaotic/filters/string_filter'
 require 'chaotic/filters/time_filter'
 
-require 'chaotic/outcome'
 require 'chaotic/command'
+require 'chaotic/outcome'
+require 'chaotic/validation_error'
 
 module Chaotic
   mattr_accessor :error_message_creator

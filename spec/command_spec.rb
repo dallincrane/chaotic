@@ -123,7 +123,7 @@ describe 'Command' do
       end
     end
 
-    it 'should define getter methods on params' do
+    it 'should define methods for params' do
       outcome = EigenCommand.run(name: 'John', email: 'john@gmail.com')
       assert_equal({ name: 'John', email: 'john@gmail.com' }, outcome.result)
     end
@@ -138,13 +138,13 @@ describe 'Command' do
       end
 
       def execute
-        self.name = 'bob'
-        self.email = 'bob@jones.com'
+        inputs.name = 'bob'
+        inputs.email = 'bob@jones.com'
         { name: inputs[:name], email: inputs[:email] }
       end
     end
 
-    it 'should define setter methods on params' do
+    it 'should allow inputs to be changed' do
       outcome = MutatatedCommand.run(name: 'John', email: 'john@gmail.com')
       assert_equal({ name: 'bob', email: 'bob@jones.com' }, outcome.result)
     end

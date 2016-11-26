@@ -4,73 +4,74 @@ module Chaotic
     extend ActiveSupport::Concern
 
     included do
-      attr_reader :inputs, :raw_inputs
+      attr_reader :inputs, :raw_inputs, :built
     end
 
     class_methods do
       def params(&block)
         root_filter.params(&block)
         root_filter.keys.each do |key|
-          define_method(key) { @inputs[key] }
-          define_method("#{key}=") { |v| @inputs[key] = v }
+          define_method(key) { inputs[key] }
         end
       end
 
       def root_filter
-        @root_filter ||= superclass.try(:root_filter).try(:dup) || Chaotic::Filters::RootFilter.new
+        @root_filter ||=
+          superclass.try(:root_filter).try(:dup) ||
+          Chaotic::Filters::RootFilter.new
       end
 
       def build(*args)
-        new(*args).chaotic_outcome('itself')
+        new.build(*args)
       end
 
       def build!(*args)
-        instance_outcome = build(*args)
-        return instance_outcome.result if instance_outcome.success
-        raise Chaotic::ValidationError, instance_outcome.errors
+        outcome = build(*args)
+        return outcome.result if outcome.success
+        raise Chaotic::ValidationError, outcome.errors
       end
 
       def run(*args)
-        new(*args).chaotic_outcome('execute')
+        new.run(*args)
       end
 
       def run!(*args)
-        instance_outcome = run(*args)
-        return instance_outcome.result if instance_outcome.success
-        raise Chaotic::ValidationError, instance_outcome.errors
+        outcome = run(*args)
+        return outcome.result if outcome.success
+        raise Chaotic::ValidationError, outcome.errors
       end
     end
 
-    def initialize(*args)
+    # INSTANCE METHODS
+
+    def build(*args)
       @inputs, @errors, @raw_inputs = self.class.root_filter.filter(*args).values
-      try(:validate) if valid?
+      @built = true
+      try('validate') if valid?
+      outcome
+    end
+
+    def run(*args)
+      build(*args) unless built
+      result = valid? ? try('execute') : nil
+      outcome(result)
     end
 
     def valid?
       @errors.nil?
     end
 
-    def chaotic_outcome(command)
-      unless respond_to?(command)
-        raise NoMethodError, "the #{command} method must be defined"
-      end
-
-      result = valid? ? send(command) : nil
-
+    def outcome(result = nil)
       Chaotic::Outcome.new(
         success: valid?,
         result: result,
         errors: @errors,
-        inputs: @inputs
+        inputs: inputs
       )
     end
 
     protected
 
-    # add_error("name", :too_short)
-    # add_error("colors.foreground", :not_a_color) # => to create errors = {colors: {foreground: :not_a_color}}
-    # or, supply a custom message:
-    # add_error("name", :too_short, "The name 'blahblahblah' is too short!")
     def add_error(key, kind, message = nil)
       raise(ArgumentError, 'Invalid kind') unless kind.is_a?(Symbol)
 
@@ -91,18 +92,6 @@ module Chaotic
       return unless hash.any?
       @errors ||= Chaotic::Errors::ErrorHash.new
       @errors.merge!(hash)
-    end
-  end
-
-  class ValidationError < StandardError
-    attr_accessor :errors
-
-    def initialize(errors)
-      self.errors = errors
-    end
-
-    def to_s
-      errors.message_list.join('; ').to_s
     end
   end
 end
