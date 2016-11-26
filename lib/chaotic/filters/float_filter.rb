@@ -37,7 +37,6 @@ module Chaotic
       end
 
       def validate_datum(datum)
-        return options.nils ? nil : :nils if datum.nil?
         return :float unless datum.is_a?(Float)
         return :min unless above_min?(datum)
         return :max unless below_max?(datum)
