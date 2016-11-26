@@ -7,14 +7,14 @@ describe 'Chaotic - errors' do
     filter do
       string :str1
       string :str2, in: %w(opt1 opt2 opt3)
-      integer :int1, required: false
+      integer :int1, discard_nils: true
 
-      hash :hash1, required: false do
+      hash :hash1, discard_nils: true do
         boolean :bool1
         boolean :bool2
       end
 
-      array :arr1, required: false do
+      array :arr1, discard_nils: true do
         integer
       end
     end

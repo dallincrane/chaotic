@@ -5,7 +5,7 @@ class SimpleCommand
   filter do
     string :name, max_length: 10
     string :email
-    integer :amount, required: false
+    integer :amount, discard_nils: true
   end
 
   def validate

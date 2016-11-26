@@ -7,7 +7,7 @@ describe 'Chaotic::Filters::RootFilter' do
       hf = Chaotic::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, required: false
+          string :bar, discard_nils: true
         end
       end
 
@@ -20,7 +20,7 @@ describe 'Chaotic::Filters::RootFilter' do
       hf = Chaotic::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, required: false
+          string :bar, discard_nils: true
         end
       end
 
@@ -33,7 +33,7 @@ describe 'Chaotic::Filters::RootFilter' do
       hf = Chaotic::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, nils: true, required: false
+          string :bar, nils: true, discard_nils: true
         end
       end
 

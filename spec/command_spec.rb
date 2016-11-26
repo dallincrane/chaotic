@@ -115,7 +115,7 @@ describe 'Command' do
       include Chaotic::Command
       filter do
         string :name
-        string :email, required: false
+        string :email, discard_nils: true
       end
 
       def execute
@@ -134,7 +134,7 @@ describe 'Command' do
       include Chaotic::Command
       filter do
         string :name
-        string :email, required: false
+        string :email, discard_nils: true
       end
 
       def execute
@@ -155,7 +155,7 @@ describe 'Command' do
       include Chaotic::Command
       filter do
         string :name
-        string :email, required: false
+        string :email, discard_nils: true
       end
 
       def execute
@@ -178,7 +178,7 @@ describe 'Command' do
       include Chaotic::Command
       filter do
         string :name
-        string :email, required: false
+        string :email, discard_nils: true
       end
 
       def execute
@@ -201,7 +201,7 @@ describe 'Command' do
       include Chaotic::Command
       filter do
         string :name
-        string :email, required: false
+        string :email, discard_nils: true
       end
 
       def execute

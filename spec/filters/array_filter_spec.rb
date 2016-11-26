@@ -113,7 +113,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
       hash do
         string :foo
         integer :bar
-        boolean :baz, required: false
+        boolean :baz, discard_nils: true
       end
     end
 

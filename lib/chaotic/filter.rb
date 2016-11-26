@@ -52,7 +52,6 @@ module Chaotic
       sub_filters.each_with_object({}) { |sf, result| result[sf.key] = sf }
     end
 
-    # TODO: make this go deeper than one level
     def dup
       dupped = self.class.new
       sub_filters.each { |sf| dupped.sub_filters.push(sf) }
@@ -64,7 +63,7 @@ module Chaotic
     end
 
     def optional?
-      options.required == false
+      options.discard_nils || options.discard_empty || options.discard_invalid
     end
 
     def default?
@@ -76,11 +75,9 @@ module Chaotic
     end
 
     def discardable?(sub_error)
-      return true if options.discard_invalid
-      return true if options.discard_empty && sub_error == :empty
-      return true if options.discard_nils && sub_error == :nil
-
-      false
+      options.discard_invalid == true ||
+        (options.discard_empty == true && sub_error == :empty) ||
+        (options.discard_nils == true && sub_error == :nil)
     end
   end
 end
