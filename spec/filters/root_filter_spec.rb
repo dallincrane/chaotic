@@ -11,12 +11,12 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar').values
-      assert_equal OpenStruct.new(foo: 'bar'), filtered
-      assert_equal nil, errors
+      outcome = hf.feed(foo: 'bar')
+      assert_equal OpenStruct.new(foo: 'bar'), outcome.inputs
+      assert_equal nil, outcome.errors
     end
 
-    it 'bar is optional -- it does not work if nil is passed' do
+    it 'bar is optional -- it works if nil is passed' do
       hf = Chaotic::Filters::RootFilter.new do
         filter do
           string :foo
@@ -24,9 +24,9 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar', bar: nil).values
-      assert_equal OpenStruct.new(foo: 'bar', bar: nil), filtered
-      assert_equal :nils, errors.symbolic[:bar]
+      outcome = hf.feed(foo: 'bar', bar: nil)
+      assert_equal OpenStruct.new(foo: 'bar'), outcome.inputs
+      assert_equal :nils, outcome.errors.symbolic[:bar]
     end
 
     it 'bar is optional -- it works if nil is passed and nils are allowed' do
@@ -37,9 +37,9 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar', bar: nil).values
-      assert_equal OpenStruct.new(foo: 'bar', bar: nil), filtered
-      assert_equal nil, errors
+      outcome = hf.feed(foo: 'bar', bar: nil)
+      assert_equal OpenStruct.new(foo: 'bar', bar: nil), outcome.inputs
+      assert_equal nil, outcome.errors
     end
   end
 
@@ -52,9 +52,9 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar', bar: '').values
-      assert_equal OpenStruct.new(foo: 'bar'), filtered
-      assert_equal nil, errors
+      outcome = hf.feed(foo: 'bar', bar: '')
+      assert_equal OpenStruct.new(foo: 'bar'), outcome.inputs
+      assert_equal nil, outcome.errors
     end
 
     it 'bar is optional -- discards empty if it needs to be stripped' do
@@ -65,9 +65,9 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar', bar: ' ').values
-      assert_equal OpenStruct.new(foo: 'bar'), filtered
-      assert_equal nil, errors
+      outcome = hf.feed(foo: 'bar', bar: ' ')
+      assert_equal OpenStruct.new(foo: 'bar'), outcome.inputs
+      assert_equal nil, outcome.errors
     end
 
     it "bar is optional -- don't discard empty if it's spaces but stripping is off" do
@@ -78,9 +78,9 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar', bar: ' ').values
-      assert_equal OpenStruct.new(foo: 'bar', bar: ' '), filtered
-      assert_equal nil, errors
+      outcome = hf.feed(foo: 'bar', bar: ' ')
+      assert_equal OpenStruct.new(foo: 'bar', bar: ' '), outcome.inputs
+      assert_equal nil, outcome.errors
     end
 
     it 'bar is optional -- errors if discard_empty is false and value is blank' do
@@ -91,8 +91,8 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      _filtered, errors = hf.feed(foo: 'bar', bar: '').values
-      assert_equal({ 'bar' => :empty }, errors.symbolic)
+      outcome = hf.feed(foo: 'bar', bar: '')
+      assert_equal({ 'bar' => :empty }, outcome.errors.symbolic)
     end
   end
 
@@ -105,9 +105,9 @@ describe 'Chaotic::Filters::RootFilter' do
         end
       end
 
-      filtered, errors = hf.feed(foo: 'bar', bar: 'baz').values
-      assert_equal OpenStruct.new(foo: 'bar'), filtered
-      assert_equal nil, errors
+      outcome = hf.feed(foo: 'bar', bar: 'baz')
+      assert_equal OpenStruct.new(foo: 'bar'), outcome.inputs
+      assert_equal nil, outcome.errors
     end
   end
 end
