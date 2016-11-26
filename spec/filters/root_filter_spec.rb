@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'spec_helper'
-require 'stringio'
 
 describe 'Chaotic::Filters::RootFilter' do
   describe 'optional filters and nils' do
