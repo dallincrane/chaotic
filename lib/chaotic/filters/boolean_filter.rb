@@ -6,21 +6,23 @@ module Chaotic
         nils: false
       )
 
-      def feed(data)
-        return handle_nil if data.nil?
+      def feed(given)
+        return handle_nil if given.nil?
 
-        return [data, :empty] if data == ''
+        coerced = coerce(given)
+        return [given, :boolean] unless boolean?(coerced)
 
-        return [data, nil] if data == true || data == false
+        [coerced, nil]
+      end
 
-        data = data.to_s if data.is_a?(Integer)
+      def coerce(given)
+        return given if options.strict
+        return given if boolean?(given)
+        Chaotic.boolean_map[given.to_s.downcase] if given.respond_to?(:to_s)
+      end
 
-        if data.is_a?(String)
-          res = Chaotic.boolean_map[data.downcase]
-          return [res, nil] unless res.nil?
-        end
-
-        [data, :boolean]
+      def boolean?(datum)
+        datum == true || datum == false
       end
     end
   end

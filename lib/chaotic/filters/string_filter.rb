@@ -30,8 +30,8 @@ module Chaotic
       end
 
       def coerce(given)
-        return given if given.is_a?(String)
         return given if options.strict
+        return given if given.is_a?(String)
         given.to_s if Chaotic.coerce_to_string.map { |klass| given.is_a?(klass) }.any?
       end
 

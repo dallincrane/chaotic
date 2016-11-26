@@ -44,12 +44,6 @@ describe 'Chaotic::Filters::BooleanFilter' do
     end
   end
 
-  it 'considers empty strings to be empty' do
-    f = Chaotic::Filters::BooleanFilter.new
-    _filtered, errors = f.feed('')
-    assert_equal :empty, errors
-  end
-
   it 'considers other string to be invalid' do
     f = Chaotic::Filters::BooleanFilter.new
     ['truely', '2'].each do |str|
