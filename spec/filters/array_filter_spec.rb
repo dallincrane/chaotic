@@ -43,7 +43,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     assert_equal :string, result.error[1].symbolic
   end
 
-  it 'lets you array-ize everything' do
+  it 'lets you wrap everything' do
     f = Chaotic::Filters::ArrayFilter.new(:arr, wrap: true) { any }
 
     [
