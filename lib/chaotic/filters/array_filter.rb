@@ -4,7 +4,7 @@ module Chaotic
     class ArrayFilter < Chaotic::Filter
       default_options(
         nils: false,
-        arrayize: false
+        wrap: false
       )
 
       def feed(raw)
@@ -45,7 +45,7 @@ module Chaotic
       end
 
       def coerce(raw)
-        return Array.wrap(raw) if options.arrayize
+        return Array.wrap(raw) if options.wrap
         raw
       end
 

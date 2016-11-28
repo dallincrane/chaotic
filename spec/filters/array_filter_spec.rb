@@ -44,7 +44,21 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you array-ize everything' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr, arrayize: true) { string }
+    f = Chaotic::Filters::ArrayFilter.new(:arr, wrap: true) { any }
+
+    [
+      [true, [true]],
+      ['hi', ['hi']],
+      ['', ['']],
+      [1, [1]],
+      [[1, 2, 3], [1, 2, 3]],
+      [{ one: 1 }, [{ one: 1 }]],
+      [1..3, [1..3]]
+    ].each do |(given, expected)|
+      result = f.feed(given)
+      assert_equal expected, result.inputs
+      assert_equal nil, result.error
+    end
 
     result = f.feed('foo')
     assert_equal ['foo'], result.inputs

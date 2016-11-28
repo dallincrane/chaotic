@@ -1,14 +1,10 @@
 TODO
 * change internal options back into a hash?
-* create test for `['']`
 * make multiple errors per key possible
 * create atom errors inside of key filter rather than collection filter
 * allow errors on collections with "base" errors
 * add block to model filter to check methods of a passed model
 * create builder filter
-
-Issues
-* arrayize converts `''` into `[]` rather than `['']` - otherwise there is no way to get `['']`
 
 Optional Options
 * **discard_nil**
@@ -40,9 +36,9 @@ Options
 * **new_records**
   * false (default): `#new_record?` must return true if the model responds to it
   * true: unsaved models are valid
-* **arrayize(ArrayFilter)**
+* **wrap(ArrayFilter)**
   * false (default): does nothing
-  * true: uses `Array(`data`)`
+  * true: uses `Array.wrap(`data`)`
 * **min**
   * nil (default): does nothing
   * self: given must be >= value
