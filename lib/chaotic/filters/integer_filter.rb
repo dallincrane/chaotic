@@ -39,11 +39,11 @@ module Chaotic
         return :integer unless coerced.is_a?(Integer)
       end
 
-      def validate(input)
-        return :in unless included?(input)
-        return :min unless above_min?(input)
-        return :max unless below_max?(input)
-        return :scale unless within_scale?(input)
+      def validate(coerced)
+        return :in unless included?(coerced)
+        return :min unless above_min?(coerced)
+        return :max unless below_max?(coerced)
+        return :scale unless within_scale?(coerced)
       end
 
       def included?(datum)

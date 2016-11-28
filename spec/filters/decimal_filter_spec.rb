@@ -6,8 +6,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed(BigDecimal.new('0.99999999999999999'))
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal '0.99999999999999999', result.input.to_s('F')
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal '0.99999999999999999', result.inputs.to_s('F')
     assert_equal nil, result.error
   end
 
@@ -15,8 +15,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed(3)
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -24,8 +24,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed(3.1415926)
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 3.1415926, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3.1415926, result.inputs
     assert_equal nil, result.error
   end
 
@@ -33,8 +33,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed('3')
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 3.0, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3.0, result.inputs
     assert_equal nil, result.error
   end
 
@@ -42,8 +42,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed('3.14')
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 3.14, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3.14, result.inputs
     assert_equal nil, result.error
   end
 
@@ -51,8 +51,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed('.14')
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 0.14, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 0.14, result.inputs
     assert_equal nil, result.error
   end
 
@@ -60,8 +60,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed('-.14')
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal(-0.14, result.input)
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal(-0.14, result.inputs)
     assert_equal nil, result.error
   end
 
@@ -69,8 +69,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed('+.14')
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 0.14, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 0.14, result.inputs
     assert_equal nil, result.error
   end
 
@@ -88,7 +88,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new(:x, nils: false)
     result = f.feed(nil)
 
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
@@ -96,7 +96,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new(:x, nils: true)
     result = f.feed(nil)
 
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal nil, result.error
   end
 
@@ -111,8 +111,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new(:x, min: 10)
     result = f.feed(3)
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3, result.inputs
     assert_equal :min, result.error
   end
 
@@ -120,8 +120,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new(:x, min: 10)
     result = f.feed(31)
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 31, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 31, result.inputs
     assert_equal nil, result.error
   end
 
@@ -129,8 +129,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new(:x, max: 10)
     result = f.feed(31)
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 31, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 31, result.inputs
     assert_equal :max, result.error
   end
 
@@ -138,8 +138,8 @@ describe 'Chaotic::Filters::DecimalFilter' do
     f = Chaotic::Filters::DecimalFilter.new(:x, max: 10)
     result = f.feed(3)
 
-    assert result.input.is_a?(BigDecimal)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 end

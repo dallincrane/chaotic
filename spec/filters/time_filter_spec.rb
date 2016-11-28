@@ -6,7 +6,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(time)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -14,7 +14,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     date = Date.new
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(date)
-    assert_equal date.to_time, result.input
+    assert_equal date.to_time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -22,7 +22,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     date = DateTime.new
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(date)
-    assert_equal date.to_time, result.input
+    assert_equal date.to_time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -30,7 +30,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, after: time - 1)
     result = f.feed(time)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -38,7 +38,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, after: time + 1)
     result = f.feed(time)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal :after, result.error
   end
 
@@ -46,7 +46,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, before: time + 1)
     result = f.feed(time)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -54,7 +54,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, before: time - 1)
     result = f.feed(time)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal :before, result.error
   end
 
@@ -62,7 +62,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.now
     f = Chaotic::Filters::TimeFilter.new(:t, after: time - 1, before: time + 1)
     result = f.feed(time)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -71,7 +71,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     date = Date.new(2000, 1, 2)
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(date_string)
-    assert_equal date.to_time, result.input
+    assert_equal date.to_time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -80,7 +80,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     date = Date.new(2000, 1, 2)
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(date_string)
-    assert_equal date.to_time, result.input
+    assert_equal date.to_time, result.inputs
     assert_equal nil, result.error
   end
 
@@ -89,27 +89,27 @@ describe 'Chaotic::Filters::TimeFilter' do
     time = Time.new(2000, 1, 2, 12, 13, 14)
     f = Chaotic::Filters::TimeFilter.new(:t, format: '%Y-%m-%d %H:%M:%S')
     result = f.feed(time_string)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal nil, result.error
 
     time_string = '1, 2, 2000, 121314'
     f = Chaotic::Filters::TimeFilter.new(:t, format: '%m, %d, %Y, %H%M%S')
     result = f.feed(time_string)
-    assert_equal time, result.input
+    assert_equal time, result.inputs
     assert_equal nil, result.error
   end
 
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
   it 'allows the use of nil when specified' do
     f = Chaotic::Filters::TimeFilter.new(:t, nils: true)
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal nil, result.error
   end
 
@@ -117,7 +117,7 @@ describe 'Chaotic::Filters::TimeFilter' do
     invalid_time_string = '1, 20, 2013 25:13'
     f = Chaotic::Filters::TimeFilter.new
     result = f.feed(invalid_time_string)
-    assert_equal '1, 20, 2013 25:13', result.input
+    assert_equal '1, 20, 2013 25:13', result.inputs
     assert_equal :time, result.error
   end
 end

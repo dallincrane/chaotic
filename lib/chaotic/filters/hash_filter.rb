@@ -8,10 +8,10 @@ module Chaotic
 
       def feed(raw)
         result = super(raw)
-        return result if result.error || result.input.nil?
+        return result if result.error || result.inputs.nil?
 
         error = Chaotic::Errors::ErrorHash.new
-        input = HashWithIndifferentAccess.new
+        inputs = HashWithIndifferentAccess.new
 
         data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
@@ -19,11 +19,11 @@ module Chaotic
 
           if data.key?(key)
             key_filter_result = key_filter.feed(data_element)
-            sub_data = key_filter_result.input
+            sub_data = key_filter_result.inputs
             sub_error = key_filter_result.error
 
             if sub_error.nil?
-              input[key] = sub_data
+              inputs[key] = sub_data
             elsif key_filter.discardable?(sub_error)
               data.delete(key)
             else
@@ -34,13 +34,13 @@ module Chaotic
           next if data.key?(key)
 
           if key_filter.default?
-            input[key] = key_filter.default
+            inputs[key] = key_filter.default
           elsif key_filter.required? && !key_filter.discardable?(sub_error)
             error[key] = create_key_error(key, :required)
           end
         end
 
-        result.input = input
+        result.inputs = inputs
         result.error = error.present? ? error : nil
         result
       end

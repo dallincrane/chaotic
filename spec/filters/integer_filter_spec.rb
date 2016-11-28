@@ -6,8 +6,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed(3)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -15,8 +15,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed(3.0)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -24,7 +24,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed(3.1)
 
-    assert_equal 3.1, result.input
+    assert_equal 3.1, result.inputs
     assert_equal :integer, result.error
   end
 
@@ -32,8 +32,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed(BigDecimal.new('3.000000'))
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -41,7 +41,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed(BigDecimal.new('3.111111'))
 
-    assert_equal BigDecimal.new('3.111111'), result.input
+    assert_equal BigDecimal.new('3.111111'), result.inputs
     assert_equal :integer, result.error
   end
 
@@ -49,8 +49,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed('3')
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -58,8 +58,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed('-3')
 
-    assert result.input.is_a?(Integer)
-    assert_equal(-3, result.input)
+    assert result.inputs.is_a?(Integer)
+    assert_equal(-3, result.inputs)
     assert_equal nil, result.error
   end
 
@@ -75,7 +75,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, nils: false)
     result = f.feed(nil)
 
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
@@ -83,7 +83,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, nils: true)
     result = f.feed(nil)
 
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal nil, result.error
   end
 
@@ -98,8 +98,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     result = f.feed(3)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_equal :min, result.error
   end
 
@@ -107,8 +107,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
     result = f.feed(31)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 31, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 31, result.inputs
     assert_equal nil, result.error
   end
 
@@ -116,8 +116,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
     result = f.feed(31)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 31, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 31, result.inputs
     assert_equal :max, result.error
   end
 
@@ -125,8 +125,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
     result = f.feed(3)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -134,8 +134,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
     result = f.feed(6)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 6, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 6, result.inputs
     assert_equal :in, result.error
   end
 
@@ -143,8 +143,8 @@ describe 'Chaotic::Filters::IntegerFilter' do
     f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
     result = f.feed(3)
 
-    assert result.input.is_a?(Integer)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
     assert_nil result.error
   end
 end

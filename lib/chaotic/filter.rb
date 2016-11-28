@@ -84,14 +84,14 @@ module Chaotic
 
       result.raw = raw
       result.coerced = raw
-      result.input = raw
+      result.inputs = raw
 
       result.error = :nils if raw.nil? && !options.nils
       return result if raw.nil?
 
       coerced = coerce(raw)
       result.coerced = coerced unless coerced.nil?
-      result.input = coerced unless coerced.nil?
+      result.inputs = coerced unless coerced.nil?
 
       result.error = coerce_error(coerced)
       return result if result.error

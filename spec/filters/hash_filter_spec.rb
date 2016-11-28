@@ -9,7 +9,7 @@ describe 'Chaotic::Filters::HashFilter' do
     end
 
     result = hf.feed(foo: 'bar')
-    assert_equal ({ 'foo' => 'bar' }), result.input
+    assert_equal ({ 'foo' => 'bar' }), result.inputs
     assert_equal nil, result.error
   end
 
@@ -28,7 +28,7 @@ describe 'Chaotic::Filters::HashFilter' do
     end
 
     result = hf.feed(foo: 3.14)
-    assert_equal ({ 'foo' => 3.14 }), result.input
+    assert_equal ({ 'foo' => 3.14 }), result.inputs
     assert_equal nil, result.error
   end
 
@@ -38,7 +38,7 @@ describe 'Chaotic::Filters::HashFilter' do
     end
 
     result = hf.feed(foo: '123')
-    assert_equal ({ 'foo' => '123' }), result.input
+    assert_equal ({ 'foo' => '123' }), result.inputs
     assert_equal nil, result.error
   end
 
@@ -48,7 +48,7 @@ describe 'Chaotic::Filters::HashFilter' do
     end
 
     result = hf.feed(foo: '1-1-2000')
-    assert_equal Date.new(2000, 1, 1), result.input[:foo]
+    assert_equal Date.new(2000, 1, 1), result.inputs[:foo]
     assert_equal nil, result.error
   end
 
@@ -59,7 +59,7 @@ describe 'Chaotic::Filters::HashFilter' do
     end
 
     result = hf.feed(foo: sio)
-    assert_equal ({ 'foo' => sio }), result.input
+    assert_equal ({ 'foo' => sio }), result.inputs
     assert_equal nil, result.error
   end
 end

@@ -19,7 +19,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
     result = f.feed(m)
-    assert_equal m, result.input
+    assert_equal m, result.inputs
     assert_equal nil, result.error
   end
 
@@ -40,14 +40,14 @@ describe 'Chaotic::Filters::ModelFilter' do
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: false)
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: true)
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal nil, result.error
   end
 
@@ -63,7 +63,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     m = SimpleModel.new
 
     result = f.feed(m)
-    assert_equal m, result.input
+    assert_equal m, result.inputs
     assert_equal nil, result.error
 
     Object.send(:remove_const, 'SimpleModel')
@@ -71,7 +71,7 @@ describe 'Chaotic::Filters::ModelFilter' do
 
     m = SimpleModel.new
     result = f.feed(m)
-    assert_equal m, result.input
+    assert_equal m, result.inputs
     assert_equal :model, result.error
 
     Chaotic::Filter::Options.model.cache_constants = was
@@ -85,7 +85,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     m = SimpleModel.new
 
     result = f.feed(m)
-    assert_equal m, result.input
+    assert_equal m, result.inputs
     assert_equal nil, result.error
 
     Object.send(:remove_const, 'SimpleModel')
@@ -93,7 +93,7 @@ describe 'Chaotic::Filters::ModelFilter' do
 
     m = SimpleModel.new
     result = f.feed(m)
-    assert_equal m, result.input
+    assert_equal m, result.inputs
     assert_equal nil, result.error
 
     Chaotic::Filter.config { |c| c.model.cache_constants = was }

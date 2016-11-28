@@ -27,9 +27,9 @@ module Chaotic
         return :date unless coerced.is_a?(Date)
       end
 
-      def validate(input)
-        return :after if options.after && input <= options.after
-        return :before if options.before && input >= options.before
+      def validate(coerced)
+        return :after if options.after && coerced <= options.after
+        return :before if options.before && coerced >= options.before
       end
     end
   end

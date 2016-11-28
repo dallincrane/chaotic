@@ -9,9 +9,9 @@ module Chaotic
 
       def feed(raw)
         result = super(raw)
-        return result if result.error || result.input.nil?
+        return result if result.error || result.inputs.nil?
 
-        input = []
+        inputs = []
         error = Chaotic::Errors::ErrorArray.new
 
         sub_filter = sub_filters.first
@@ -21,25 +21,25 @@ module Chaotic
         data = result.coerced
         data.each_with_index do |sub_data, index|
           sub_result = sub_filter.feed(sub_data)
-          sub_data = sub_result.input
+          sub_data = sub_result.inputs
           sub_error = sub_result.error
 
           if sub_error.nil?
-            input << sub_data
+            inputs << sub_data
           elsif sub_filter.discardable?(sub_error)
             if sub_filter.default?
-              input << sub_filter.default
+              inputs << sub_filter.default
             else
               index_shift += 1
             end
           else
             relative_index = index - index_shift
             error[relative_index] = create_index_error(relative_index, sub_error)
-            input << sub_data
+            inputs << sub_data
           end
         end
 
-        result.input = input
+        result.inputs = inputs
         result.error = error.present? ? error : nil
         result
       end

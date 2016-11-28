@@ -6,7 +6,7 @@ describe 'Chaotic::Filters::DateFilter' do
     date = Date.new
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date)
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -14,7 +14,7 @@ describe 'Chaotic::Filters::DateFilter' do
     date = DateTime.new
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date)
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -23,7 +23,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(time)
     if time.respond_to?(:to_date) # 1.8.7 doesn't support to_date
-      assert_equal time.to_date, result.input
+      assert_equal time.to_date, result.inputs
       assert_equal nil, result.error
     else
       assert_equal :date, result.error
@@ -36,7 +36,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, after: after_date)
     result = f.feed(date)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -46,7 +46,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, after: after_date)
     result = f.feed(date)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal :after, result.error
   end
 
@@ -56,7 +56,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, before: after_date)
     result = f.feed(date)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -66,7 +66,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, before: before_date)
     result = f.feed(date)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal :before, result.error
   end
 
@@ -77,7 +77,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, after: after_date, before: before_date)
     result = f.feed(date)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -87,7 +87,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date_string)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -97,7 +97,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date_string)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -107,14 +107,14 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, format: '%Y-%m-%d')
     result = f.feed(date_string)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
 
     date_string = '1, 2, 2000'
     f = Chaotic::Filters::DateFilter.new(:d1, format: '%m, %d, %Y')
     result = f.feed(date_string)
 
-    assert_equal date, result.input
+    assert_equal date, result.inputs
     assert_equal nil, result.error
   end
 
@@ -122,7 +122,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(nil)
 
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
@@ -130,7 +130,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, nils: true)
     result = f.feed(nil)
 
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal nil, result.error
   end
 
@@ -139,7 +139,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date_string)
 
-    assert_equal '1, 20, 2013', result.input
+    assert_equal '1, 20, 2013', result.inputs
     assert_equal :date, result.error
   end
 end

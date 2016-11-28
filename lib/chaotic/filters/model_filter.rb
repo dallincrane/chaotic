@@ -20,8 +20,8 @@ module Chaotic
         return :model unless coerced.is_a?(class_constant)
       end
 
-      def validate(input)
-        return :new_records if !options.new_records && (input.respond_to?(:new_record?) && input.new_record?)
+      def validate(coerced)
+        return :new_records if !options.new_records && (coerced.respond_to?(:new_record?) && coerced.new_record?)
       end
 
       def initialize_constants!

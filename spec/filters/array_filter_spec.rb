@@ -7,7 +7,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { any }
 
     result = f.feed([1])
-    assert_equal [1], result.input
+    assert_equal [1], result.inputs
     assert_equal nil, result.error
   end
 
@@ -24,7 +24,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr, nils: false) { any }
 
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
@@ -47,7 +47,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr, arrayize: true) { string }
 
     result = f.feed('foo')
-    assert_equal ['foo'], result.input
+    assert_equal ['foo'], result.inputs
     assert_nil result.error
   end
 
@@ -55,7 +55,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { integer min: 4 }
 
     result = f.feed([5, 6, 1, 'bob'])
-    assert_equal [5, 6, 1, 'bob'], result.input
+    assert_equal [5, 6, 1, 'bob'], result.inputs
     assert_equal [nil, nil, :min, :integer], result.error.symbolic
   end
 
@@ -63,7 +63,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:float) { float min: 4.0 }
 
     result = f.feed([5.0, 6.0, 1.0, 'bob'])
-    assert_equal [5.0, 6.0, 1.0, 'bob'], result.input
+    assert_equal [5.0, 6.0, 1.0, 'bob'], result.inputs
     assert_equal [nil, nil, :min, :float], result.error.symbolic
   end
 
@@ -71,7 +71,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { duck(methods: :length) }
 
     result = f.feed(['hi', [1], true])
-    assert_equal ['hi', [1], true], result.input
+    assert_equal ['hi', [1], true], result.inputs
     assert_equal [nil, nil, :duck], result.error.symbolic
   end
 
@@ -79,7 +79,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { date(format: '%Y-%m-%d') }
 
     result = f.feed(['2000-1-1', Date.new(2000, 1, 1), '2000-20-1'])
-    assert_equal [Date.new(2000, 1, 1), Date.new(2000, 1, 1), '2000-20-1'], result.input
+    assert_equal [Date.new(2000, 1, 1), Date.new(2000, 1, 1), '2000-20-1'], result.inputs
     assert_equal [nil, nil, :date], result.error.symbolic
   end
 
@@ -88,7 +88,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { file }
 
     result = f.feed([sio, 'bob'])
-    assert_equal [sio, 'bob'], result.input
+    assert_equal [sio, 'bob'], result.inputs
     assert_equal [nil, :file], result.error.symbolic
   end
 
@@ -96,7 +96,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { boolean }
 
     result = f.feed([true, false, '1'])
-    assert_equal [true, false, true], result.input
+    assert_equal [true, false, true], result.inputs
     assert_equal nil, result.error
   end
 
@@ -104,7 +104,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { model :string }
 
     result = f.feed(['hey'])
-    assert_equal ['hey'], result.input
+    assert_equal ['hey'], result.inputs
     assert_equal nil, result.error
   end
 
@@ -118,7 +118,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     end
 
     result = f.feed([{ foo: 'f', bar: 3, baz: true }, { foo: 'f', bar: 3 }, { foo: 'f' }])
-    assert_equal [{ 'foo' => 'f', 'bar' => 3, 'baz' => true }, { 'foo' => 'f', 'bar' => 3 }, { 'foo' => 'f' }], result.input
+    assert_equal [{ 'foo' => 'f', 'bar' => 3, 'baz' => true }, { 'foo' => 'f', 'bar' => 3 }, { 'foo' => 'f' }], result.inputs
     assert_equal nil, result.error[0]
     assert_equal nil, result.error[1]
     assert_equal ({ 'bar' => :required }), result.error[2].symbolic
@@ -132,7 +132,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     end
 
     result = f.feed([%w(h e), ['l'], [], ['lo']])
-    assert_equal [%w(h e), ['l'], [], ['lo']], result.input
+    assert_equal [%w(h e), ['l'], [], ['lo']], result.inputs
     assert_equal nil, result.error
   end
 
@@ -155,7 +155,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
     end
 
     result = f.feed([1, '2', 'three', '4', 5, [6]])
-    assert_equal [1, 2, 4, 5], result.input
+    assert_equal [1, 2, 4, 5], result.inputs
     assert_equal nil, result.error
   end
 end

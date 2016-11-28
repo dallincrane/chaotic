@@ -6,8 +6,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed(3.1415926)
 
-    assert result.input.is_a?(Float)
-    assert_equal 3.1415926, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3.1415926, result.inputs
     assert_equal nil, result.error
   end
 
@@ -15,8 +15,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed(3)
 
-    assert result.input.is_a?(Float)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -24,8 +24,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed(BigDecimal.new('3'))
 
-    assert result.input.is_a?(Float)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 
@@ -33,8 +33,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed('3')
 
-    assert result.input.is_a?(Float)
-    assert_equal 3.0, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3.0, result.inputs
     assert_equal nil, result.error
   end
 
@@ -42,8 +42,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed('3.14')
 
-    assert result.input.is_a?(Float)
-    assert_equal 3.14, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3.14, result.inputs
     assert_equal nil, result.error
   end
 
@@ -51,8 +51,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed('.14')
 
-    assert result.input.is_a?(Float)
-    assert_equal 0.14, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 0.14, result.inputs
     assert_equal nil, result.error
   end
 
@@ -60,8 +60,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed('-.14')
 
-    assert result.input.is_a?(Float)
-    assert_equal(-0.14, result.input)
+    assert result.inputs.is_a?(Float)
+    assert_equal(-0.14, result.inputs)
     assert_equal nil, result.error
   end
 
@@ -69,8 +69,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed('+.14')
 
-    assert result.input.is_a?(Float)
-    assert_equal 0.14, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 0.14, result.inputs
     assert_equal nil, result.error
   end
 
@@ -85,14 +85,14 @@ describe 'Chaotic::Filters::FloatFilter' do
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::FloatFilter.new(:x, nils: false)
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal :nils, result.error
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::FloatFilter.new(:x, nils: true)
     result = f.feed(nil)
-    assert_equal nil, result.input
+    assert_equal nil, result.inputs
     assert_equal nil, result.error
   end
 
@@ -106,8 +106,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new(:x, min: 10)
     result = f.feed(3)
 
-    assert result.input.is_a?(Float)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3, result.inputs
     assert_equal :min, result.error
   end
 
@@ -115,8 +115,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new(:x, min: 10)
     result = f.feed(31)
 
-    assert result.input.is_a?(Float)
-    assert_equal 31, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 31, result.inputs
     assert_equal nil, result.error
   end
 
@@ -124,8 +124,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new(:x, max: 10)
     result = f.feed(31)
 
-    assert result.input.is_a?(Float)
-    assert_equal 31, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 31, result.inputs
     assert_equal :max, result.error
   end
 
@@ -133,8 +133,8 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new(:x, max: 10)
     result = f.feed(3)
 
-    assert result.input.is_a?(Float)
-    assert_equal 3, result.input
+    assert result.inputs.is_a?(Float)
+    assert_equal 3, result.inputs
     assert_equal nil, result.error
   end
 end

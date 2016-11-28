@@ -10,9 +10,9 @@ module Chaotic
         sub_filters.map(&:key)
       end
 
-      def feed(*given)
-        coerced = coerce(given)
-        input = OpenStruct.new
+      def feed(*raw)
+        coerced = coerce(raw)
+        inputs = OpenStruct.new
         errors = Chaotic::Errors::ErrorHash.new
 
         sub_filters_hash.each_pair do |key, key_filter|
@@ -20,11 +20,11 @@ module Chaotic
 
           if coerced.respond_to?(key)
             key_filter_result = key_filter.feed(data_element)
-            sub_data = key_filter_result.input
+            sub_data = key_filter_result.inputs
             sub_error = key_filter_result.error
 
             if sub_error.nil?
-              input[key] = sub_data
+              inputs[key] = sub_data
             elsif key_filter.discardable?(sub_error)
               coerced.delete_field(key)
             else
@@ -35,22 +35,22 @@ module Chaotic
           next if coerced.respond_to?(key)
 
           if key_filter.default?
-            input[key] = key_filter.default
+            inputs[key] = key_filter.default
           elsif key_filter.required? && !key_filter.discardable?(sub_error)
             errors[key] = create_key_error(key, :required)
           end
         end
 
         OpenStruct.new(
-          raw: given,
+          raw: raw,
           coerced: coerced,
-          inputs: input,
+          inputs: inputs,
           errors: errors.present? ? errors : nil
         )
       end
 
-      def coerce(given)
-        given.each_with_object(OpenStruct.new) do |datum, result|
+      def coerce(raw)
+        raw.each_with_object(OpenStruct.new) do |datum, result|
           raise_argument_error unless datum.respond_to?(:each_pair)
           datum.each_pair { |key, value| result[key] = value }
         end
