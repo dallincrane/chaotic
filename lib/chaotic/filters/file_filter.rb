@@ -8,20 +8,10 @@ module Chaotic
         size: nil
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
+      private
 
-        coerced = coerce(given)
-        return [given, :file] unless respond_to_all?(coerced)
-
-        error = validate(coerced)
-        return [coerced, error] if error
-
-        [coerced, nil]
-      end
-
-      def coerce(given)
-        given
+      def coerce_error(coerced)
+        return :file unless respond_to_all?(coerced)
       end
 
       def respond_to_all?(coerced)

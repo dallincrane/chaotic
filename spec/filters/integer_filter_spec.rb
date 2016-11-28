@@ -4,147 +4,147 @@ require 'spec_helper'
 describe 'Chaotic::Filters::IntegerFilter' do
   it 'allows integers' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed(3)
+    result = f.feed(3)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_equal nil, result.error
   end
 
   it 'allows floats equivalent to an integer' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed(3.0)
+    result = f.feed(3.0)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_equal nil, result.error
   end
 
   it 'does not allows floats with partial units' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed(3.1)
+    result = f.feed(3.1)
 
-    assert_equal 3.1, filtered
-    assert_equal :integer, errors
+    assert_equal 3.1, result.input
+    assert_equal :integer, result.error
   end
 
   it 'allows bigdecimals equivalent to an integer' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed(BigDecimal.new('3.000000'))
+    result = f.feed(BigDecimal.new('3.000000'))
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_equal nil, result.error
   end
 
   it 'does not allows floats with partial units' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed(BigDecimal.new('3.111111'))
+    result = f.feed(BigDecimal.new('3.111111'))
 
-    assert_equal BigDecimal.new('3.111111'), filtered
-    assert_equal :integer, errors
+    assert_equal BigDecimal.new('3.111111'), result.input
+    assert_equal :integer, result.error
   end
 
   it 'allows strings that start with a digit' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed('3')
+    result = f.feed('3')
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_equal nil, result.error
   end
 
   it 'allows negative strings' do
     f = Chaotic::Filters::IntegerFilter.new
-    filtered, errors = f.feed('-3')
+    result = f.feed('-3')
 
-    assert filtered.is_a?(Integer)
-    assert_equal(-3, filtered)
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal(-3, result.input)
+    assert_equal nil, result.error
   end
 
   it 'does not allow other strings, nor does it allow random objects or symbols' do
     f = Chaotic::Filters::IntegerFilter.new
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
-      _filtered, errors = f.feed(thing)
-      assert_equal :integer, errors
+      result = f.feed(thing)
+      assert_equal :integer, result.error
     end
   end
 
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, nils: false)
-    filtered, errors = f.feed(nil)
+    result = f.feed(nil)
 
-    assert_equal nil, filtered
-    assert_equal :nils, errors
+    assert_equal nil, result.input
+    assert_equal :nils, result.error
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, nils: true)
-    filtered, errors = f.feed(nil)
+    result = f.feed(nil)
 
-    assert_equal nil, filtered
-    assert_equal nil, errors
+    assert_equal nil, result.input
+    assert_equal nil, result.error
   end
 
   it 'considers empty strings to be empty' do
     f = Chaotic::Filters::IntegerFilter.new
-    _filtered, errors = f.feed('')
+    result = f.feed('')
 
-    assert_equal :integer, errors
+    assert_equal :integer, result.error
   end
 
   it 'considers low numbers invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
-    filtered, errors = f.feed(3)
+    result = f.feed(3)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_equal :min, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_equal :min, result.error
   end
 
   it 'considers low numbers valid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, min: 10)
-    filtered, errors = f.feed(31)
+    result = f.feed(31)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 31, filtered
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 31, result.input
+    assert_equal nil, result.error
   end
 
   it 'considers high numbers invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
-    filtered, errors = f.feed(31)
+    result = f.feed(31)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 31, filtered
-    assert_equal :max, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 31, result.input
+    assert_equal :max, result.error
   end
 
   it 'considers high numbers vaild' do
     f = Chaotic::Filters::IntegerFilter.new(:i, max: 10)
-    filtered, errors = f.feed(3)
+    result = f.feed(3)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_equal nil, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_equal nil, result.error
   end
 
   it 'considers not matching numbers to be invalid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
-    filtered, errors = f.feed(6)
+    result = f.feed(6)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 6, filtered
-    assert_equal :in, errors
+    assert result.input.is_a?(Integer)
+    assert_equal 6, result.input
+    assert_equal :in, result.error
   end
 
   it 'considers matching numbers to be valid' do
     f = Chaotic::Filters::IntegerFilter.new(:i, in: [3, 4, 5])
-    filtered, errors = f.feed(3)
+    result = f.feed(3)
 
-    assert filtered.is_a?(Integer)
-    assert_equal 3, filtered
-    assert_nil errors
+    assert result.input.is_a?(Integer)
+    assert_equal 3, result.input
+    assert_nil result.error
   end
 end

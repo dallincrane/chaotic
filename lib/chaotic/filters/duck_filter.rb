@@ -7,17 +7,10 @@ module Chaotic
         methods: nil
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
+      private
 
-        coerced = coerce(given)
-        return [given, :duck] unless respond_to_all?(coerced)
-
-        [coerced, nil]
-      end
-
-      def coerce(given)
-        given
+      def coerce_error(coerced)
+        return :duck unless respond_to_all?(coerced)
       end
 
       def respond_to_all?(coerced)

@@ -9,24 +9,12 @@ module Chaotic
         before: nil  # A date object, representing the maximum date allowed, inclusive
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
-
-        coerced = coerce(given)
-        return [given, :date] unless coerced.is_a?(Date)
-
-        error = validate_datum(coerced)
-        return [coerced, error] if error
-
-        [coerced, nil]
-      end
-
       private
 
-      def coerce(given)
-        return given if given.is_a?(Date) # Date and DateTime
-        return given.to_date if given.respond_to?(:to_date)
-        parse(given) if given.is_a?(String)
+      def coerce(raw)
+        return raw if raw.is_a?(Date) # Date and DateTime
+        return raw.to_date if raw.respond_to?(:to_date)
+        parse(raw) if raw.is_a?(String)
       end
 
       def parse(data)
@@ -35,9 +23,13 @@ module Chaotic
         nil
       end
 
-      def validate_datum(coerced)
-        return :after if options.after && coerced <= options.after
-        return :before if options.before && coerced >= options.before
+      def coerce_error(coerced)
+        return :date unless coerced.is_a?(Date)
+      end
+
+      def validate(input)
+        return :after if options.after && input <= options.after
+        return :before if options.before && input >= options.before
       end
     end
   end

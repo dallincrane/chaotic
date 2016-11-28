@@ -1,8 +1,16 @@
 TODO
 * allow strict as an option to for all filters
+* make max/min_length just max/min
+* change internal options back into a hash?
+* create test for `['']`
+* make multiple errors per key possible
+* create atom errors inside of key filter rather than collection filter
+* allow errors on collections with "base" errors
+* add block to model filter to check methods of a passed model
+* create builder filter
 
 Issues
-* arrayize converts `''` into `[]` rather than `['']`
+* arrayize converts `''` into `[]` rather than `['']` - otherwise there is no way to get `['']`
 
 Optional Options
 * **discard_nil**
@@ -29,10 +37,6 @@ Options
   * nil (default): uses attribute name`.to_s.camelize.constantize`
   * String: uses given`.constantize`
   * Constant: uses given
-* **builder**
-  * nil (default): does nothing
-  * String: uses given`.constantize.run(...)` if passed a hash
-  * Constant: uses given`.run(...)` if passed a hash
 * **new_records**
   * false (default): `#new_record?` must return true if the model responds to it
   * true: unsaved models are valid
