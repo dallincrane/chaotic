@@ -80,32 +80,24 @@ module Chaotic
     end
 
     def feed(raw)
-      result = OpenStruct.new
+      error = :nils if raw.nil? && !options.nils
+      return feed_result(error, raw) if raw.nil?
 
-      result.raw = raw
-      result.coerced = raw
-      result.inputs = raw
+      coerced = options.strict ? raw : coerce(raw)
+      error = coerce_error(coerced)
+      return feed_result(error, raw, coerced) if error
 
-      result.error = :nils if raw.nil? && !options.nils
-      return result if raw.nil?
+      error = validate(coerced)
+      feed_result(error, raw, coerced)
+    end
 
-      if options.strict
-        coerced = raw
-      else
-        coerced = coerce(raw)
-        unless coerced.nil?
-          result.coerced = coerced
-          result.inputs = coerced
-        end
-      end
-
-      result.error = coerce_error(coerced)
-      return result if result.error
-
-      result.error = validate(coerced)
-      return result if result.error
-
-      result
+    def feed_result(error, raw, coerced = nil)
+      OpenStruct.new(
+        raw: raw,
+        coerced: coerced.nil? ? raw : coerced,
+        inputs: coerced.nil? ? raw : coerced,
+        error: error
+      )
     end
 
     def coerce(raw)

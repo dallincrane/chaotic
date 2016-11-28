@@ -1,5 +1,4 @@
 TODO
-* allow strict as an option to for all filters
 * make max/min_length just max/min
 * change internal options back into a hash?
 * create test for `['']`
