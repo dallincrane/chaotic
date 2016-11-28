@@ -9,7 +9,6 @@ module Chaotic
       private
 
       def coerce(raw)
-        return raw if options.strict
         return raw if boolean?(raw)
         Chaotic.boolean_map[raw.to_s.downcase] if raw.respond_to?(:to_s)
       end

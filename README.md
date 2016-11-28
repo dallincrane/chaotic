@@ -17,13 +17,15 @@ Optional Options
 * **discard_empty**
 * **discard_invalid**
 
-Options
+Global Filter Options
 * **nils**
-  * false (default): invalid when data is nil
+  * nil (default): invalid when data is nil
   * true: allows nil data to be valid
 * **strict**
-  * false (default): allows type coercion
+  * nil (default): allows type coercion
   * true: disables type coercion
+
+Options
 * **format**
   * nil (default): uses `Time.parse(`data`)`
   * String: uses `Time.strptime(`data`, `given`)`

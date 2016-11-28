@@ -4,7 +4,6 @@ module Chaotic
     class StringFilter < Chaotic::Filter
       default_options(
         nils: false,
-        strict: false,
         allow_control_characters: false,
         strip: true,
         empty: false,
@@ -15,7 +14,6 @@ module Chaotic
       )
 
       def coerce(raw)
-        return raw if options.strict
         return raw unless raw.is_a?(String) || coercable?(raw)
         tmp = raw.to_s
         tmp = tmp.gsub(/[^[:print:]\t\r\n]+/, ' ') unless options.allow_control_characters
