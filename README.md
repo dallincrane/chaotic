@@ -1,5 +1,4 @@
 TODO
-* make max/min_length just max/min
 * change internal options back into a hash?
 * create test for `['']`
 * make multiple errors per key possible
@@ -47,21 +46,15 @@ Options
 * **min**
   * nil (default): does nothing
   * self: given must be >= value
-* **min_length**
-  * nil (default): does nothing
-  * self: given must be >= value
-* **after**
-  * nil (default): does nothing
-  * self: given must be >= value
 * **max**
-  * nil (default): does nothing
-  * self: given must be <= value
-* **max_length**
   * nil (default): does nothing
   * self: given must be <= value
 * **before**
   * nil (default): does nothing
   * self: given must be <= value
+* **after**
+  * nil (default): does nothing
+  * self: given must be >= value
 * **scale**
   * nil (default): does nothing
   * Integer: validates data has no more decimal places than the given

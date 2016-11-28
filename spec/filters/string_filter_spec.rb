@@ -95,28 +95,28 @@ describe 'Chaotic::Filters::StringFilter' do
   end
 
   it 'considers long strings to be invalid' do
-    sf = Chaotic::Filters::StringFilter.new(:s, max_length: 5)
+    sf = Chaotic::Filters::StringFilter.new(:s, max: 5)
     result = sf.feed('123456')
     assert_equal '123456', result.inputs
-    assert_equal :max_length, result.error
+    assert_equal :max, result.error
   end
 
   it 'considers long strings to be valid' do
-    sf = Chaotic::Filters::StringFilter.new(:s, max_length: 5)
+    sf = Chaotic::Filters::StringFilter.new(:s, max: 5)
     result = sf.feed('12345')
     assert_equal '12345', result.inputs
     assert_equal nil, result.error
   end
 
   it 'considers short strings to be invalid' do
-    sf = Chaotic::Filters::StringFilter.new(:s, min_length: 5)
+    sf = Chaotic::Filters::StringFilter.new(:s, min: 5)
     result = sf.feed('1234')
     assert_equal '1234', result.inputs
-    assert_equal :min_length, result.error
+    assert_equal :min, result.error
   end
 
   it 'considers short strings to be valid' do
-    sf = Chaotic::Filters::StringFilter.new(:s, min_length: 5)
+    sf = Chaotic::Filters::StringFilter.new(:s, min: 5)
     result = sf.feed('12345')
     assert_equal '12345', result.inputs
     assert_equal nil, result.error

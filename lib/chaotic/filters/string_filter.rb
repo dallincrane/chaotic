@@ -7,8 +7,8 @@ module Chaotic
         allow_control_characters: false,
         strip: true,
         empty: false,
-        min_length: nil,
-        max_length: nil,
+        min: nil,
+        max: nil,
         in: nil,
         matches: nil
       )
@@ -31,8 +31,8 @@ module Chaotic
 
       def validate(coerced)
         return :empty if !options.empty && coerced.empty?
-        return :min_length if options.min_length && coerced.length < options.min_length
-        return :max_length if options.max_length && coerced.length > options.max_length
+        return :min if options.min && coerced.length < options.min
+        return :max if options.max && coerced.length > options.max
         return :in if options.in && !options.in.include?(coerced)
         return :matches if options.matches && (options.matches !~ coerced)
       end

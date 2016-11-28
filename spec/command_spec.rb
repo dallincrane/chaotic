@@ -24,7 +24,7 @@ describe 'Command' do
       outcome = SimpleCommand.run(name: 'JohnTooLong', email: 'john@gmail.com')
 
       assert !outcome.success
-      assert_equal :max_length, outcome.errors.symbolic[:name]
+      assert_equal :max, outcome.errors.symbolic[:name]
     end
 
     it 'shouldn\'t throw an exception with run!' do
@@ -46,7 +46,7 @@ describe 'Command' do
       outcome = SimpleCommand.build(name: 'JohnTooLong', email: 'john@gmail.com')
       assert !outcome.success
       assert_nil outcome.result
-      assert_equal :max_length, outcome.errors.symbolic[:name]
+      assert_equal :max, outcome.errors.symbolic[:name]
     end
 
     it 'should execute a custom validate method' do
@@ -68,7 +68,7 @@ describe 'Command' do
       outcome = SimpleCommand.build(name: 'JohnTooLong', email: 'xxxx')
 
       assert !outcome.success
-      assert_equal :max_length, outcome.errors.symbolic[:name]
+      assert_equal :max, outcome.errors.symbolic[:name]
       assert_equal nil, outcome.errors.symbolic[:email]
     end
 

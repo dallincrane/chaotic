@@ -18,13 +18,9 @@ module Chaotic
 
           before: 'must be before given date',
           after: 'must be after given date',
-
           empty: 'cannot be empty',
-          max_length: 'is too long',
-          min_length: 'is too short',
           matches: 'has an incorrect format',
           in: 'is not an available option',
-
           min: 'is too small',
           max: 'is too big',
 

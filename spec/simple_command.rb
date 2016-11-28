@@ -3,7 +3,7 @@ class SimpleCommand
   include Chaotic::Command
 
   filter do
-    string :name, max_length: 10
+    string :name, max: 10
     string :email
     integer :amount, discard_nils: true
   end
