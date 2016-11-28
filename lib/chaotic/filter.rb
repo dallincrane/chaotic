@@ -89,7 +89,9 @@ module Chaotic
       result.error = :nils if raw.nil? && !options.nils
       return result if raw.nil?
 
-      unless options.strict
+      if options.strict
+        coerced = raw
+      else
         coerced = coerce(raw)
         unless coerced.nil?
           result.coerced = coerced
