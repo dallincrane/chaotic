@@ -24,16 +24,28 @@ describe 'Chaotic::Filters::ModelFilter' do
   end
 
   it 'raises an exception during filtering if constantization fails' do
-    f = Chaotic::Filters::ModelFilter.new(:complex_model)
+    f = Chaotic::Filters::ModelFilter.new(:non_existent_class)
+
+    # NOTE: nil will short circuit the check for an existing constant
+    result = f.feed(nil)
+    assert_equal nil, result.inputs
+    assert_equal :nils, result.error
+
     assert_raises NameError do
-      f.feed(nil)
+      f.feed(0)
     end
   end
 
   it 'raises an exception during filtering if constantization of class fails' do
-    f = Chaotic::Filters::ModelFilter.new(:simple_model, class: 'ComplexModel')
+    f = Chaotic::Filters::ModelFilter.new(:simple_model, class: 'NonExistentClass')
+
+    # NOTE: nil will short circuit the check for an existing constant
+    result = f.feed(nil)
+    assert_equal nil, result.inputs
+    assert_equal :nils, result.error
+
     assert_raises NameError do
-      f.feed(nil)
+      f.feed(0)
     end
   end
 
@@ -49,54 +61,6 @@ describe 'Chaotic::Filters::ModelFilter' do
     result = f.feed(nil)
     assert_equal nil, result.inputs
     assert_equal nil, result.error
-  end
-
-  it 'has a cache_constants default value of true' do
-    assert_equal Chaotic::Filter::Options.model.cache_constants, true
-  end
-
-  it 'it will not re-constantize if cache_constants is true' do
-    was = Chaotic::Filter::Options.model.cache_constants
-    Chaotic::Filter::Options.model.cache_constants = true
-
-    f = Chaotic::Filters::ModelFilter.new(:simple_model)
-    m = SimpleModel.new
-
-    result = f.feed(m)
-    assert_equal m, result.inputs
-    assert_equal nil, result.error
-
-    Object.send(:remove_const, 'SimpleModel')
-    class SimpleModel; end
-
-    m = SimpleModel.new
-    result = f.feed(m)
-    assert_equal m, result.inputs
-    assert_equal :model, result.error
-
-    Chaotic::Filter::Options.model.cache_constants = was
-  end
-
-  it 'will re-constantize if cache_constants is false' do
-    was = Chaotic::Filter::Options.model.cache_constants
-    Chaotic::Filter.config { |c| c.model.cache_constants = false }
-
-    f = Chaotic::Filters::ModelFilter.new(:simple_model)
-    m = SimpleModel.new
-
-    result = f.feed(m)
-    assert_equal m, result.inputs
-    assert_equal nil, result.error
-
-    Object.send(:remove_const, 'SimpleModel')
-    class SimpleModel; end
-
-    m = SimpleModel.new
-    result = f.feed(m)
-    assert_equal m, result.inputs
-    assert_equal nil, result.error
-
-    Chaotic::Filter.config { |c| c.model.cache_constants = was }
   end
 
   # it "disallows different types of models" do

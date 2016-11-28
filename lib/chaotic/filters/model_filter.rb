@@ -5,14 +5,8 @@ module Chaotic
       default_options(
         nils: false,
         class: nil,
-        new_records: false,
-        cache_constants: true
+        new_records: false
       )
-
-      def feed(raw)
-        initialize_constants!
-        super(raw)
-      end
 
       private
 
@@ -24,19 +18,7 @@ module Chaotic
         return :new_records if !options.new_records && (coerced.respond_to?(:new_record?) && coerced.new_record?)
       end
 
-      def initialize_constants!
-        class_constant
-      end
-
       def class_constant
-        @class_constant ||= nil
-        return @class_constant if @class_constant
-        result = deduce_class_constant
-        @class_constant = result if options.cache_constants
-        result
-      end
-
-      def deduce_class_constant
         klass = options[:class]
         return key.to_s.camelize.constantize if klass.nil?
         return klass if klass.instance_of? Class

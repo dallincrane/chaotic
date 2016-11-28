@@ -70,3 +70,9 @@ Options
 * **matches**
   * nil (default): does nothing
   * RegExp: ensures data matches given regexp pattern
+
+Tips And Tricks
+* model constants
+  * implied and string classes are constantized with every feed - good if constants are ever removed and recreated
+  * pass in a constant with the `class` option to get a performance boost - bad if constants are ever removed
+  * FYI - a `nil` value with short circuit the check for a valid constant
