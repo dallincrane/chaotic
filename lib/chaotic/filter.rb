@@ -11,7 +11,7 @@ module Chaotic
       method_name = filter_name(child_class)
 
       define_method(method_name) do |*args, &block|
-        args.unshift(nil) if args[0].is_a?(Hash)
+        args.unshift(key) if args[0].is_a?(Hash)
         new_filter = child_class.new(*args, &block)
         sub_filters.push(new_filter)
       end
@@ -79,12 +79,37 @@ module Chaotic
         (options.discard_nils == true && sub_error == :nil)
     end
 
-    def handle_nil
-      options.nils ? [nil, nil] : [nil, :nils]
+    def feed(raw)
+      result = OpenStruct.new
+
+      result.raw = raw
+      result.coerced = raw
+      result.input = raw
+
+      result.error = :nils if raw.nil? && !options.nils
+      return result if raw.nil?
+
+      coerced = coerce(raw)
+      result.coerced = coerced unless coerced.nil?
+      result.input = coerced unless coerced.nil?
+
+      result.error = coerce_error(coerced)
+      return result if result.error
+
+      result.error = validate(coerced)
+      return result if result.error
+
+      result
     end
 
-    def handle_empty(datum)
-      options.empty ? [datum, nil] : [datum, :empty]
+    def coerce(raw)
+      raw
+    end
+
+    def coerce_error(coerced)
+    end
+
+    def validate(coerced)
     end
   end
 end

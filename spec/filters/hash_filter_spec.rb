@@ -7,44 +7,49 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       string :foo
     end
-    filtered, errors = hf.feed(foo: 'bar')
-    assert_equal ({ 'foo' => 'bar' }), filtered
-    assert_equal nil, errors
+
+    result = hf.feed(foo: 'bar')
+    assert_equal ({ 'foo' => 'bar' }), result.input
+    assert_equal nil, result.error
   end
 
   it 'disallows non-hashes' do
     hf = Chaotic::Filters::HashFilter.new do
       string :foo
     end
-    _filtered, errors = hf.feed('bar')
-    assert_equal :hash, errors
+
+    result = hf.feed('bar')
+    assert_equal :hash, result.error
   end
 
   it 'allows floats in hashes' do
     hf = Chaotic::Filters::HashFilter.new do
       float :foo
     end
-    filtered, errors = hf.feed(foo: 3.14)
-    assert_equal ({ 'foo' => 3.14 }), filtered
-    assert_equal nil, errors
+
+    result = hf.feed(foo: 3.14)
+    assert_equal ({ 'foo' => 3.14 }), result.input
+    assert_equal nil, result.error
   end
 
   it 'allows ducks in hashes' do
     hf = Chaotic::Filters::HashFilter.new do
       duck :foo, methods: [:length]
     end
-    filtered, errors = hf.feed(foo: '123')
-    assert_equal ({ 'foo' => '123' }), filtered
-    assert_equal nil, errors
+
+    result = hf.feed(foo: '123')
+    assert_equal ({ 'foo' => '123' }), result.input
+    assert_equal nil, result.error
   end
 
   it 'allows dates in hashes' do
     hf = Chaotic::Filters::HashFilter.new do
       date :foo, format: '%d-%m-%Y'
     end
-    filtered, errors = hf.feed(foo: '1-1-2000')
-    assert_equal Date.new(2000, 1, 1), filtered[:foo]
-    assert_equal nil, errors
+
+    result = hf.feed(foo: '1-1-2000')
+    assert_equal Date.new(2000, 1, 1), result.input[:foo]
+    assert_equal nil, result.error
   end
 
   it 'allows files in hashes' do
@@ -52,8 +57,9 @@ describe 'Chaotic::Filters::HashFilter' do
     hf = Chaotic::Filters::HashFilter.new do
       file :foo
     end
-    filtered, errors = hf.feed(foo: sio)
-    assert_equal ({ 'foo' => sio }), filtered
-    assert_equal nil, errors
+
+    result = hf.feed(foo: sio)
+    assert_equal ({ 'foo' => sio }), result.input
+    assert_equal nil, result.error
   end
 end

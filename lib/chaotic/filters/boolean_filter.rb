@@ -6,19 +6,16 @@ module Chaotic
         nils: false
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
+      private
 
-        coerced = coerce(given)
-        return [given, :boolean] unless boolean?(coerced)
-
-        [coerced, nil]
+      def coerce(raw)
+        return raw if options.strict
+        return raw if boolean?(raw)
+        Chaotic.boolean_map[raw.to_s.downcase] if raw.respond_to?(:to_s)
       end
 
-      def coerce(given)
-        return given if options.strict
-        return given if boolean?(given)
-        Chaotic.boolean_map[given.to_s.downcase] if given.respond_to?(:to_s)
+      def coerce_error(coerced)
+        return :boolean unless boolean?(coerced)
       end
 
       def boolean?(datum)

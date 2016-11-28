@@ -6,25 +6,25 @@ describe 'Chaotic::Filters::AnyFilter' do
     f = Chaotic::Filters::AnyFilter.new
 
     [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3, nil].each do |v|
-      filtered, errors = f.feed(v)
-      assert_equal v, filtered
-      assert_equal nil, errors
+      result = f.feed(v)
+      assert_equal v, result.input
+      assert_equal nil, result.error
     end
   end
 
   it 'Allows nils by default' do
     f = Chaotic::Filters::AnyFilter.new
 
-    filtered, errors = f.feed(nil)
-    assert_equal nil, filtered
-    assert_equal nil, errors
+    result = f.feed(nil)
+    assert_equal nil, result.input
+    assert_equal nil, result.error
   end
 
   it 'Does not allow nils if set to false' do
     f = Chaotic::Filters::AnyFilter.new(:a1, nils: false)
 
-    filtered, errors = f.feed(nil)
-    assert_equal nil, filtered
-    assert_equal :nils, errors
+    result = f.feed(nil)
+    assert_equal nil, result.input
+    assert_equal :nils, result.error
   end
 end

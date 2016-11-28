@@ -18,9 +18,9 @@ describe 'Chaotic::Filters::ModelFilter' do
   it 'allows models' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
-    filtered, errors = f.feed(m)
-    assert_equal m, filtered
-    assert_equal nil, errors
+    result = f.feed(m)
+    assert_equal m, result.input
+    assert_equal nil, result.error
   end
 
   it 'raises an exception during filtering if constantization fails' do
@@ -37,25 +37,18 @@ describe 'Chaotic::Filters::ModelFilter' do
     end
   end
 
-  it 'raises an exception during filtering if constantization of builder fails' do
-    f = Chaotic::Filters::ModelFilter.new(:simple_model, builder: 'ComplexModel')
-    assert_raises NameError do
-      f.feed(nil)
-    end
-  end
-
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: false)
-    filtered, errors = f.feed(nil)
-    assert_equal nil, filtered
-    assert_equal :nils, errors
+    result = f.feed(nil)
+    assert_equal nil, result.input
+    assert_equal :nils, result.error
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: true)
-    filtered, errors = f.feed(nil)
-    assert_equal nil, filtered
-    assert_equal nil, errors
+    result = f.feed(nil)
+    assert_equal nil, result.input
+    assert_equal nil, result.error
   end
 
   it 'has a cache_constants default value of true' do
@@ -69,17 +62,17 @@ describe 'Chaotic::Filters::ModelFilter' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
 
-    filtered, errors = f.feed(m)
-    assert_equal m, filtered
-    assert_equal nil, errors
+    result = f.feed(m)
+    assert_equal m, result.input
+    assert_equal nil, result.error
 
     Object.send(:remove_const, 'SimpleModel')
     class SimpleModel; end
 
     m = SimpleModel.new
-    filtered, errors = f.feed(m)
-    assert_equal m, filtered
-    assert_equal :model, errors
+    result = f.feed(m)
+    assert_equal m, result.input
+    assert_equal :model, result.error
 
     Chaotic::Filter::Options.model.cache_constants = was
   end
@@ -91,17 +84,17 @@ describe 'Chaotic::Filters::ModelFilter' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
 
-    filtered, errors = f.feed(m)
-    assert_equal m, filtered
-    assert_equal nil, errors
+    result = f.feed(m)
+    assert_equal m, result.input
+    assert_equal nil, result.error
 
     Object.send(:remove_const, 'SimpleModel')
     class SimpleModel; end
 
     m = SimpleModel.new
-    filtered, errors = f.feed(m)
-    assert_equal m, filtered
-    assert_equal nil, errors
+    result = f.feed(m)
+    assert_equal m, result.input
+    assert_equal nil, result.error
 
     Chaotic::Filter.config { |c| c.model.cache_constants = was }
   end

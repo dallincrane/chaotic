@@ -4,52 +4,63 @@ require 'spec_helper'
 describe 'Chaotic::Filters::BooleanFilter' do
   it 'allows booleans' do
     f = Chaotic::Filters::BooleanFilter.new
-    filtered, errors = f.feed(true)
-    assert_equal true, filtered
-    assert_equal nil, errors
+    result = f.feed(true)
+    assert_equal true, result.input
+    assert_equal nil, result.error
 
-    filtered, errors = f.feed(false)
-    assert_equal false, filtered
-    assert_equal nil, errors
+    result = f.feed(false)
+    assert_equal false, result.input
+    assert_equal nil, result.error
   end
 
   it 'considers non-booleans to be invalid' do
     f = Chaotic::Filters::BooleanFilter.new
     [[true], { a: '1' }, Object.new].each do |thing|
-      _filtered, errors = f.feed(thing)
-      assert_equal :boolean, errors
+      result = f.feed(thing)
+      assert_equal :boolean, result.error
     end
   end
 
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::BooleanFilter.new(:bool, nils: false)
-    filtered, errors = f.feed(nil)
-    assert_equal nil, filtered
-    assert_equal :nils, errors
+    result = f.feed(nil)
+    assert_equal nil, result.input
+    assert_equal :nils, result.error
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::BooleanFilter.new(:bool, nils: true)
-    filtered, errors = f.feed(nil)
-    assert_equal nil, filtered
-    assert_equal nil, errors
+    result = f.feed(nil)
+    assert_equal nil, result.input
+    assert_equal nil, result.error
   end
 
-  it 'considers certain strings to be valid booleans' do
+  it 'considers certain values to be true' do
     f = Chaotic::Filters::BooleanFilter.new
-    [['true', true], ['TRUE', true], ['TrUe', true], ['1', true], ['false', false], ['FALSE', false], ['FalSe', false], ['0', false], [0, false], [1, true]].each do |(str, v)|
-      filtered, errors = f.feed(str)
-      assert_equal v, filtered
-      assert_equal nil, errors
+
+    ['true', 'TRUE', 'TrUe', '1', 1].each do |value|
+      result = f.feed(value)
+      assert_equal true, result.input
+      assert_equal nil, result.error
+    end
+  end
+
+  it 'considers certain values to be true' do
+    f = Chaotic::Filters::BooleanFilter.new
+
+    ['false', 'FALSE', 'FalSe', '0', 0].each do |value|
+      result = f.feed(value)
+      assert_equal false, result.input
+      assert_equal nil, result.error
     end
   end
 
   it 'considers other string to be invalid' do
     f = Chaotic::Filters::BooleanFilter.new
-    ['truely', '2'].each do |str|
-      filtered, errors = f.feed(str)
-      assert_equal str, filtered
-      assert_equal :boolean, errors
+    %w(truely 2).each do |str|
+      result = f.feed(str)
+      assert_equal str, result.input
+      assert_equal :boolean, result.error
     end
   end
 end

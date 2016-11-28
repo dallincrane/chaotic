@@ -7,40 +7,50 @@ module Chaotic
         arrayize: false
       )
 
-      def feed(data)
-        return handle_nil if data.nil?
+      def feed(raw)
+        result = super(raw)
+        return result if result.error || result.input.nil?
 
-        data = Array.wrap(data) if options.arrayize
-
-        return [data, :array] unless data.is_a?(Array)
-
-        errors = Chaotic::Errors::ErrorArray.new
-        filtered_data = []
+        input = []
+        error = Chaotic::Errors::ErrorArray.new
 
         sub_filter = sub_filters.first
 
         index_shift = 0
 
+        data = result.coerced
         data.each_with_index do |sub_data, index|
-          sub_data, sub_error = sub_filter.feed(sub_data)
+          sub_result = sub_filter.feed(sub_data)
+          sub_data = sub_result.input
+          sub_error = sub_result.error
 
           if sub_error.nil?
-            filtered_data << sub_data
+            input << sub_data
           elsif sub_filter.discardable?(sub_error)
             if sub_filter.default?
-              filtered_data << sub_filter.default
+              input << sub_filter.default
             else
               index_shift += 1
             end
           else
             relative_index = index - index_shift
-            errors[relative_index] = create_index_error(relative_index, sub_error)
-            filtered_data << sub_data
+            error[relative_index] = create_index_error(relative_index, sub_error)
+            input << sub_data
           end
         end
 
-        return [filtered_data, errors] if errors.any?
-        [filtered_data, nil]
+        result.input = input
+        result.error = error.present? ? error : nil
+        result
+      end
+
+      def coerce(raw)
+        return Array.wrap(raw) if options.arrayize
+        raw
+      end
+
+      def coerce_error(coerced)
+        return :array unless coerced.is_a?(Array)
       end
 
       def create_index_error(index, sub_error)

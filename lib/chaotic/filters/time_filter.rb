@@ -9,30 +9,23 @@ module Chaotic
         before: nil
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
-
-        coerced = coerce(given)
-        return [given, :time] unless coerced.is_a?(Time)
-
-        error = validate(coerced)
-        return [coerced, error] if error
-
-        [coerced, nil]
-      end
-
       private
 
-      def coerce(given)
-        return given if given.is_a?(Time)
-        return given.to_time if given.respond_to?(:to_time)
-        parse(given) if given.is_a?(String)
+      def coerce(raw)
+        return raw if raw.is_a?(Time)
+        return parse(raw) if raw.is_a?(String)
+        return raw.to_time if raw.respond_to?(:to_time)
+        raw
       end
 
-      def parse(given)
-        options.format ? Time.strptime(given, options.format) : Time.parse(given)
+      def parse(raw)
+        options.format ? Time.strptime(raw, options.format) : Time.parse(raw)
       rescue ArgumentError
         nil
+      end
+
+      def coerce_error(coerced)
+        return :time unless coerced.is_a?(Time)
       end
 
       def validate(coerced)

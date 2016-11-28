@@ -45,10 +45,10 @@ module Chaotic
     # INSTANCE METHODS
 
     def build(*args)
-      filtered = self.class.root_filter.feed(*args)
-      @raw_inputs = filtered.coerced
-      @inputs = filtered.inputs
-      @errors = filtered.errors
+      filter_result = self.class.root_filter.feed(*args)
+      @raw_inputs = filter_result.coerced
+      @inputs = filter_result.inputs
+      @errors = filter_result.errors
       # @inputs, @errors, @raw_inputs = self.class.root_filter.feed(*args).values
       @built = true
       try('validate') if valid?

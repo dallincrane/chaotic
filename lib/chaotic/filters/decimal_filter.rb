@@ -11,17 +11,6 @@ module Chaotic
         scale: nil
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
-
-        coerced = coerce(given)
-
-        error = validate_datum(coerced)
-        return [coerced, error] if error
-
-        [coerced, nil]
-      end
-
       private
 
       # TODO: the Rational class should be coerced - it requires a precision argument
@@ -37,8 +26,11 @@ module Chaotic
         clean_str.to_d
       end
 
-      def validate_datum(datum)
-        return :decimal unless datum.is_a?(BigDecimal)
+      def coerce_error(coerced)
+        return :decimal unless coerced.is_a?(BigDecimal)
+      end
+
+      def validate(datum)
         return :min unless above_min?(datum)
         return :max unless below_max?(datum)
         return :scale unless within_scale?(datum)

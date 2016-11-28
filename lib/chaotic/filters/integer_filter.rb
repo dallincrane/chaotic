@@ -12,31 +12,12 @@ module Chaotic
         in: nil
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
-
-        coerced = coerce(given)
-
-        error = validate_datum(coerced)
-        return [coerced, error] if error
-
-        [coerced, nil]
-      end
-
       private
 
       def coerce(datum)
         return datum if datum.blank?
 
-        datum_str =
-          if datum.is_a?(Float)
-            datum.to_s
-          elsif datum.is_a?(BigDecimal)
-            datum.to_s('F')
-          elsif datum.is_a?(String)
-            datum
-          end
-
+        datum_str = raw_to_string(datum)
         return datum unless datum_str
 
         clean_str = datum_str.tr(options.delimiter, '').tr(options.decimal_mark, '.')
@@ -44,12 +25,25 @@ module Chaotic
         clean_str.to_i
       end
 
-      def validate_datum(datum)
-        return :integer unless datum.is_a?(Integer)
-        return :in unless included?(datum)
-        return :min unless above_min?(datum)
-        return :max unless below_max?(datum)
-        return :scale unless within_scale?(datum)
+      def raw_to_string(raw)
+        if raw.is_a?(Float)
+          raw.to_s
+        elsif raw.is_a?(BigDecimal)
+          raw.to_s('F')
+        elsif raw.is_a?(String)
+          raw
+        end
+      end
+
+      def coerce_error(coerced)
+        return :integer unless coerced.is_a?(Integer)
+      end
+
+      def validate(input)
+        return :in unless included?(input)
+        return :min unless above_min?(input)
+        return :max unless below_max?(input)
+        return :scale unless within_scale?(input)
       end
 
       def included?(datum)

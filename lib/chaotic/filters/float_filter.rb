@@ -11,17 +11,6 @@ module Chaotic
         scale: nil
       )
 
-      def feed(given)
-        return handle_nil if given.nil?
-
-        coerced = coerce(given)
-
-        error = validate_datum(coerced)
-        return [coerced, error] if error
-
-        [coerced, nil]
-      end
-
       private
 
       def coerce(datum)
@@ -36,11 +25,14 @@ module Chaotic
         clean_str.to_f
       end
 
-      def validate_datum(datum)
-        return :float unless datum.is_a?(Float)
-        return :min unless above_min?(datum)
-        return :max unless below_max?(datum)
-        return :scale unless within_scale?(datum)
+      def coerce_error(coerced)
+        return :float unless coerced.is_a?(Float)
+      end
+
+      def validate(input)
+        return :min unless above_min?(input)
+        return :max unless below_max?(input)
+        return :scale unless within_scale?(input)
       end
 
       def above_min?(datum)
