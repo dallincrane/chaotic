@@ -9,10 +9,10 @@ module Chaotic
 
       def feed(raw)
         result = super(raw)
-        return result if result.error || result.inputs.nil?
+        return result if result.errors || result.inputs.nil?
 
         inputs = []
-        error = Chaotic::Errors::ErrorArray.new
+        errors = Chaotic::Errors::ErrorArray.new
 
         sub_filter = sub_filters.first
 
@@ -22,7 +22,7 @@ module Chaotic
         data.each_with_index do |sub_data, index|
           sub_result = sub_filter.feed(sub_data)
           sub_data = sub_result.inputs
-          sub_error = sub_result.error
+          sub_error = sub_result.errors
 
           if sub_error.nil?
             inputs << sub_data
@@ -34,13 +34,13 @@ module Chaotic
             end
           else
             relative_index = index - index_shift
-            error[relative_index] = create_index_error(relative_index, sub_error)
+            errors[relative_index] = create_index_error(relative_index, sub_error)
             inputs << sub_data
           end
         end
 
         result.inputs = inputs
-        result.error = error.present? ? error : nil
+        result.errors = errors.present? ? errors : nil
         result
       end
 

@@ -8,7 +8,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([1])
     assert_equal [1], result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers non-arrays to be invalid' do
@@ -16,7 +16,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     ['hi', true, 1, { a: '1' }, Object.new].each do |thing|
       result = f.feed(thing)
-      assert_equal :array, result.error
+      assert_equal :array, result.errors
     end
   end
 
@@ -25,22 +25,22 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed(nil)
     assert_equal nil, result.inputs
-    assert_equal :nils, result.error
+    assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::ArrayFilter.new(:arr, nils: true) { any }
 
     result = f.feed(nil)
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'lets you use a block to supply an element filter' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) { string }
 
     result = f.feed(['hi', { stuff: 'ok' }])
-    assert_nil result.error[0]
-    assert_equal :string, result.error[1].symbolic
+    assert_nil result.errors[0]
+    assert_equal :string, result.errors[1].symbolic
   end
 
   it 'lets you wrap everything' do
@@ -57,12 +57,12 @@ describe 'Chaotic::Filters::ArrayFilter' do
     ].each do |(given, expected)|
       result = f.feed(given)
       assert_equal expected, result.inputs
-      assert_equal nil, result.error
+      assert_equal nil, result.errors
     end
 
     result = f.feed('foo')
     assert_equal ['foo'], result.inputs
-    assert_nil result.error
+    assert_nil result.errors
   end
 
   it 'lets you pass integers in arrays' do
@@ -70,7 +70,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([5, 6, 1, 'bob'])
     assert_equal [5, 6, 1, 'bob'], result.inputs
-    assert_equal [nil, nil, :min, :integer], result.error.symbolic
+    assert_equal [nil, nil, :min, :integer], result.errors.symbolic
   end
 
   it 'lets you pass floats in arrays' do
@@ -78,7 +78,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([5.0, 6.0, 1.0, 'bob'])
     assert_equal [5.0, 6.0, 1.0, 'bob'], result.inputs
-    assert_equal [nil, nil, :min, :float], result.error.symbolic
+    assert_equal [nil, nil, :min, :float], result.errors.symbolic
   end
 
   it 'lets you pass ducks in arrays' do
@@ -86,7 +86,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed(['hi', [1], true])
     assert_equal ['hi', [1], true], result.inputs
-    assert_equal [nil, nil, :duck], result.error.symbolic
+    assert_equal [nil, nil, :duck], result.errors.symbolic
   end
 
   it 'lets you pass dates in arrays' do
@@ -94,7 +94,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed(['2000-1-1', Date.new(2000, 1, 1), '2000-20-1'])
     assert_equal [Date.new(2000, 1, 1), Date.new(2000, 1, 1), '2000-20-1'], result.inputs
-    assert_equal [nil, nil, :date], result.error.symbolic
+    assert_equal [nil, nil, :date], result.errors.symbolic
   end
 
   it 'lets you pass files in arrays' do
@@ -103,7 +103,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([sio, 'bob'])
     assert_equal [sio, 'bob'], result.inputs
-    assert_equal [nil, :file], result.error.symbolic
+    assert_equal [nil, :file], result.errors.symbolic
   end
 
   it 'lets you pass booleans in arrays' do
@@ -111,7 +111,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([true, false, '1'])
     assert_equal [true, false, true], result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'lets you pass model in arrays' do
@@ -119,7 +119,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed(['hey'])
     assert_equal ['hey'], result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'lets you pass hashes in arrays' do
@@ -133,9 +133,9 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([{ foo: 'f', bar: 3, baz: true }, { foo: 'f', bar: 3 }, { foo: 'f' }])
     assert_equal [{ 'foo' => 'f', 'bar' => 3, 'baz' => true }, { 'foo' => 'f', 'bar' => 3 }, { 'foo' => 'f' }], result.inputs
-    assert_equal nil, result.error[0]
-    assert_equal nil, result.error[1]
-    assert_equal ({ 'bar' => :required }), result.error[2].symbolic
+    assert_equal nil, result.errors[0]
+    assert_equal nil, result.errors[1]
+    assert_equal ({ 'bar' => :required }), result.errors[2].symbolic
   end
 
   it 'lets you pass arrays of arrays' do
@@ -147,7 +147,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([%w(h e), ['l'], [], ['lo']])
     assert_equal [%w(h e), ['l'], [], ['lo']], result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'handles errors for arrays of arrays' do
@@ -158,9 +158,9 @@ describe 'Chaotic::Filters::ArrayFilter' do
     end
 
     result = f.feed([['h', 'e', {}], ['l'], [], ['']])
-    assert_equal [[nil, nil, :string], nil, nil, [:empty]], result.error.symbolic
-    assert_equal [[nil, nil, '3rd Item must be a string'], nil, nil, ['1st Item cannot be empty']], result.error.message
-    assert_equal ['3rd Item must be a string', '1st Item cannot be empty'], result.error.message_list
+    assert_equal [[nil, nil, :string], nil, nil, [:empty]], result.errors.symbolic
+    assert_equal [[nil, nil, '3rd Item must be a string'], nil, nil, ['1st Item cannot be empty']], result.errors.message
+    assert_equal ['3rd Item must be a string', '1st Item cannot be empty'], result.errors.message_list
   end
 
   it 'strips invalid elements' do
@@ -170,6 +170,6 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
     result = f.feed([1, '2', 'three', '4', 5, [6]])
     assert_equal [1, 2, 4, 5], result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 end

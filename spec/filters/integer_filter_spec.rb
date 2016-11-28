@@ -8,7 +8,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows floats equivalent to an integer' do
@@ -17,7 +17,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'does not allows floats with partial units' do
@@ -25,7 +25,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     result = f.feed(3.1)
 
     assert_equal 3.1, result.inputs
-    assert_equal :integer, result.error
+    assert_equal :integer, result.errors
   end
 
   it 'allows bigdecimals equivalent to an integer' do
@@ -34,7 +34,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'does not allows floats with partial units' do
@@ -42,7 +42,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     result = f.feed(BigDecimal.new('3.111111'))
 
     assert_equal BigDecimal.new('3.111111'), result.inputs
-    assert_equal :integer, result.error
+    assert_equal :integer, result.errors
   end
 
   it 'allows strings that start with a digit' do
@@ -51,7 +51,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows negative strings' do
@@ -60,14 +60,14 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal(-3, result.inputs)
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'does not allow other strings, nor does it allow random objects or symbols' do
     f = Chaotic::Filters::IntegerFilter.new
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
       result = f.feed(thing)
-      assert_equal :integer, result.error
+      assert_equal :integer, result.errors
     end
   end
 
@@ -76,7 +76,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
     result = f.feed(nil)
 
     assert_equal nil, result.inputs
-    assert_equal :nils, result.error
+    assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
@@ -84,14 +84,14 @@ describe 'Chaotic::Filters::IntegerFilter' do
     result = f.feed(nil)
 
     assert_equal nil, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers empty strings to be empty' do
     f = Chaotic::Filters::IntegerFilter.new
     result = f.feed('')
 
-    assert_equal :integer, result.error
+    assert_equal :integer, result.errors
   end
 
   it 'considers low numbers invalid' do
@@ -100,7 +100,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_equal :min, result.error
+    assert_equal :min, result.errors
   end
 
   it 'considers low numbers valid' do
@@ -109,7 +109,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 31, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers high numbers invalid' do
@@ -118,7 +118,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 31, result.inputs
-    assert_equal :max, result.error
+    assert_equal :max, result.errors
   end
 
   it 'considers high numbers vaild' do
@@ -127,7 +127,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers not matching numbers to be invalid' do
@@ -136,7 +136,7 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 6, result.inputs
-    assert_equal :in, result.error
+    assert_equal :in, result.errors
   end
 
   it 'considers matching numbers to be valid' do
@@ -145,6 +145,6 @@ describe 'Chaotic::Filters::IntegerFilter' do
 
     assert result.inputs.is_a?(Integer)
     assert_equal 3, result.inputs
-    assert_nil result.error
+    assert_nil result.errors
   end
 end

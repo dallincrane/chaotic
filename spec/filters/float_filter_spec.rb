@@ -8,7 +8,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3.1415926, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows integers' do
@@ -17,7 +17,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows bigdecimals' do
@@ -26,7 +26,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows strings that start with a digit' do
@@ -35,7 +35,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3.0, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows string representation of float' do
@@ -44,7 +44,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3.14, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows string representation of float without a number before dot' do
@@ -53,7 +53,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 0.14, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows negative strings' do
@@ -62,7 +62,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal(-0.14, result.inputs)
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows strings with a positive sign' do
@@ -71,14 +71,14 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 0.14, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'does not allow other strings, nor does it allow random objects or symbols' do
     f = Chaotic::Filters::FloatFilter.new
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
       result = f.feed(thing)
-      assert_equal :float, result.error
+      assert_equal :float, result.errors
     end
   end
 
@@ -86,20 +86,20 @@ describe 'Chaotic::Filters::FloatFilter' do
     f = Chaotic::Filters::FloatFilter.new(:x, nils: false)
     result = f.feed(nil)
     assert_equal nil, result.inputs
-    assert_equal :nils, result.error
+    assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::FloatFilter.new(:x, nils: true)
     result = f.feed(nil)
     assert_equal nil, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers empty strings invalid' do
     f = Chaotic::Filters::FloatFilter.new
     result = f.feed('')
-    assert_equal :float, result.error
+    assert_equal :float, result.errors
   end
 
   it 'considers low numbers invalid' do
@@ -108,7 +108,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3, result.inputs
-    assert_equal :min, result.error
+    assert_equal :min, result.errors
   end
 
   it 'considers low numbers valid' do
@@ -117,7 +117,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 31, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers high numbers invalid' do
@@ -126,7 +126,7 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 31, result.inputs
-    assert_equal :max, result.error
+    assert_equal :max, result.errors
   end
 
   it 'considers high numbers vaild' do
@@ -135,6 +135,6 @@ describe 'Chaotic::Filters::FloatFilter' do
 
     assert result.inputs.is_a?(Float)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 end

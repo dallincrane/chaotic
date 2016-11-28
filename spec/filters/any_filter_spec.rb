@@ -8,7 +8,7 @@ describe 'Chaotic::Filters::AnyFilter' do
     [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3, nil].each do |v|
       result = f.feed(v)
       assert_equal v, result.inputs
-      assert_equal nil, result.error
+      assert_equal nil, result.errors
     end
   end
 
@@ -17,7 +17,7 @@ describe 'Chaotic::Filters::AnyFilter' do
 
     result = f.feed(nil)
     assert_equal nil, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'Does not allow nils if set to false' do
@@ -25,6 +25,6 @@ describe 'Chaotic::Filters::AnyFilter' do
 
     result = f.feed(nil)
     assert_equal nil, result.inputs
-    assert_equal :nils, result.error
+    assert_equal :nils, result.errors
   end
 end

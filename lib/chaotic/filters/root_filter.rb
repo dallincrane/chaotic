@@ -21,7 +21,7 @@ module Chaotic
           if coerced.respond_to?(key)
             key_filter_result = key_filter.feed(data_element)
             sub_data = key_filter_result.inputs
-            sub_error = key_filter_result.error
+            sub_error = key_filter_result.errors
 
             if sub_error.nil?
               inputs[key] = sub_data

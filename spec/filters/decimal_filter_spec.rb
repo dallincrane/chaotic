@@ -8,7 +8,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal '0.99999999999999999', result.inputs.to_s('F')
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows integers' do
@@ -17,7 +17,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows floats' do
@@ -26,7 +26,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 3.1415926, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows strings that start with a digit' do
@@ -35,7 +35,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 3.0, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows string representation of float' do
@@ -44,7 +44,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 3.14, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows string representation of float without a number before dot' do
@@ -53,7 +53,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 0.14, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows negative strings' do
@@ -62,7 +62,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal(-0.14, result.inputs)
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'allows strings with a positive sign' do
@@ -71,7 +71,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 0.14, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'does not allow other strings, nor does it allow random objects or symbols' do
@@ -80,7 +80,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
       result = f.feed(thing)
 
-      assert_equal :decimal, result.error
+      assert_equal :decimal, result.errors
     end
   end
 
@@ -89,7 +89,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
     result = f.feed(nil)
 
     assert_equal nil, result.inputs
-    assert_equal :nils, result.error
+    assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
@@ -97,14 +97,14 @@ describe 'Chaotic::Filters::DecimalFilter' do
     result = f.feed(nil)
 
     assert_equal nil, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers empty strings to be invalid' do
     f = Chaotic::Filters::DecimalFilter.new
     result = f.feed('')
 
-    assert_equal :decimal, result.error
+    assert_equal :decimal, result.errors
   end
 
   it 'considers low numbers invalid' do
@@ -113,7 +113,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 3, result.inputs
-    assert_equal :min, result.error
+    assert_equal :min, result.errors
   end
 
   it 'considers low numbers valid' do
@@ -122,7 +122,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 31, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 
   it 'considers high numbers invalid' do
@@ -131,7 +131,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 31, result.inputs
-    assert_equal :max, result.error
+    assert_equal :max, result.errors
   end
 
   it 'considers high numbers vaild' do
@@ -140,6 +140,6 @@ describe 'Chaotic::Filters::DecimalFilter' do
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 3, result.inputs
-    assert_equal nil, result.error
+    assert_equal nil, result.errors
   end
 end
