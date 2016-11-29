@@ -15,10 +15,8 @@ module Chaotic
 
         data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
-          data_element = data[key]
-
           if data.key?(key)
-            key_filter_result = key_filter.feed(data_element)
+            key_filter_result = key_filter.feed(data[key])
             sub_data = key_filter_result.inputs
             sub_error = key_filter_result.errors
 

@@ -16,10 +16,8 @@ module Chaotic
         errors = Chaotic::Errors::ErrorHash.new
 
         sub_filters_hash.each_pair do |key, key_filter|
-          data_element = coerced[key]
-
           if coerced.respond_to?(key)
-            key_filter_result = key_filter.feed(data_element)
+            key_filter_result = key_filter.feed(coerced[key])
             sub_data = key_filter_result.inputs
             sub_error = key_filter_result.errors
 
