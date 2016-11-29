@@ -1,4 +1,5 @@
 TODO
+* add test for relative_index
 * change internal options back into a hash?
 * make multiple errors per key possible
 * create atom errors inside of key filter rather than collection filter

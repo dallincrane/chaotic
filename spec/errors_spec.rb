@@ -68,7 +68,7 @@ describe 'Chaotic - errors' do
       )
     end
 
-    it 'gives symbolic errors' do
+    it 'gives coded errors' do
       expected = {
         'str1' => :empty,
         'str2' => :in,
@@ -77,7 +77,7 @@ describe 'Chaotic - errors' do
         'arr1' => [:integer, nil, :integer]
       }
 
-      assert_equal expected, @outcome.errors.symbolic
+      assert_equal expected, @outcome.errors.codes
     end
 
     it 'gives messages' do
@@ -105,6 +105,9 @@ describe 'Chaotic - errors' do
         '1st Arr1 must be an integer',
         '3rd Arr1 must be an integer'
       ]
+
+      assert_equal expected, @outcome.errors.message_list
+      expected.each { |e| assert @outcome.errors.message_list.include?(e) }
 
       assert_equal expected.size, @outcome.errors.message_list.size
       expected.each { |e| assert @outcome.errors.message_list.include?(e) }

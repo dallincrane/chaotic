@@ -11,7 +11,7 @@ module Chaotic
       method_name = filter_name(child_class)
 
       define_method(method_name) do |*args, &block|
-        args.unshift(key) if args[0].is_a?(Hash)
+        args.unshift(nil) if args[0].is_a?(Hash)
         new_filter = child_class.new(*args, &block)
         sub_filters.push(new_filter)
       end
@@ -108,6 +108,21 @@ module Chaotic
     end
 
     def validate(coerced)
+    end
+
+    def handle_errors(given_error)
+      return if given_error.nil?
+
+      case given_error
+      when Chaotic::Errors::ErrorHash
+        given_error
+      when Chaotic::Errors::ErrorArray
+        given_error
+      when Chaotic::Errors::ErrorAtom
+        given_error
+      else
+        Chaotic::Errors::ErrorAtom.new(key, given_error)
+      end
     end
   end
 end

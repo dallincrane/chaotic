@@ -28,14 +28,18 @@ module Chaotic
         )
       end
 
-      def message(error_atom)
+      def message(atom, parent_key, index)
         [
-          error_atom.index_ordinal,
-          (error_atom.key || 'item').to_s.titleize,
-          MESSAGES[error_atom.symbolic]
+          index_ordinal(index),
+          (atom.key || parent_key || 'item').to_s.titleize,
+          MESSAGES[atom.codes]
         ]
           .compact
           .join(' ')
+      end
+
+      def index_ordinal(index)
+        index&.+(1)&.ordinalize
       end
     end
   end

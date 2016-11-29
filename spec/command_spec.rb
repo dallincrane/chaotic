@@ -24,7 +24,7 @@ describe 'Command' do
       outcome = SimpleCommand.run(name: 'JohnTooLong', email: 'john@gmail.com')
 
       assert !outcome.success
-      assert_equal :max, outcome.errors.symbolic[:name]
+      assert_equal :max, outcome.errors.codes[:name]
     end
 
     it 'shouldn\'t throw an exception with run!' do
@@ -46,14 +46,14 @@ describe 'Command' do
       outcome = SimpleCommand.build(name: 'JohnTooLong', email: 'john@gmail.com')
       assert !outcome.success
       assert_nil outcome.result
-      assert_equal :max, outcome.errors.symbolic[:name]
+      assert_equal :max, outcome.errors.codes[:name]
     end
 
     it 'should execute a custom validate method' do
       outcome = SimpleCommand.build(name: 'JohnLong', email: 'xxxx')
 
       assert !outcome.success
-      assert_equal :invalid, outcome.errors.symbolic[:email]
+      assert_equal :invalid, outcome.errors.codes[:email]
     end
 
     it 'should execute custom validate method during run' do
@@ -61,15 +61,15 @@ describe 'Command' do
 
       assert !outcome.success
       assert_nil outcome.result
-      assert_equal :invalid, outcome.errors.symbolic[:email]
+      assert_equal :invalid, outcome.errors.codes[:email]
     end
 
     it 'should execute custom validate method only if regular validations succeed' do
       outcome = SimpleCommand.build(name: 'JohnTooLong', email: 'xxxx')
 
       assert !outcome.success
-      assert_equal :max, outcome.errors.symbolic[:name]
-      assert_equal nil, outcome.errors.symbolic[:email]
+      assert_equal :max, outcome.errors.codes[:name]
+      assert_equal nil, outcome.errors.codes[:email]
     end
 
     it 'should merge multiple hashes' do
@@ -169,7 +169,7 @@ describe 'Command' do
 
       assert !outcome.success
       assert 1, outcome.result
-      assert :is_a_bob, outcome.errors.symbolic[:bob]
+      assert :is_a_bob, outcome.errors.codes[:bob]
     end
   end
 
@@ -192,7 +192,7 @@ describe 'Command' do
 
       assert !outcome.success
       assert 1, outcome.result
-      assert :is_a_bob, outcome.errors[:people].symbolic[:bob]
+      assert :is_a_bob, outcome.errors[:people].codes[:bob]
     end
   end
 
@@ -219,8 +219,8 @@ describe 'Command' do
 
       assert !outcome.success
       assert 1, outcome.result
-      assert :is_short, outcome.errors.symbolic[:bob]
-      assert :is_fat, outcome.errors.symbolic[:sally]
+      assert :is_short, outcome.errors.codes[:bob]
+      assert :is_fat, outcome.errors.codes[:sally]
     end
   end
 

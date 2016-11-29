@@ -21,10 +21,10 @@ module Chaotic
       #     state: :in
       #   }
       # }
-      def symbolic
+      def codes
         HashWithIndifferentAccess.new.tap do |hash|
           each do |k, v|
-            hash[k] = v.symbolic
+            hash[k] = v.codes
           end
         end
       end
@@ -38,10 +38,10 @@ module Chaotic
       #     state: "isn't a valid option"
       #   }
       # }
-      def message
+      def message(_parent_key = nil, _index = nil)
         HashWithIndifferentAccess.new.tap do |hash|
           each do |k, v|
-            hash[k] = v.message
+            hash[k] = v.message(k)
           end
         end
       end
@@ -53,10 +53,10 @@ module Chaotic
       #   "That's not a city, silly!",
       #   "State isn't a valid option."
       # ]
-      def message_list
+      def message_list(_parent_key = nil, _index = nil)
         list = []
-        each do |_k, v|
-          list.concat(v.message_list)
+        each do |k, v|
+          list.concat(v.message_list(k))
         end
         list
       end

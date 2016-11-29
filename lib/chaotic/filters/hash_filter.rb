@@ -27,7 +27,7 @@ module Chaotic
             elsif key_filter.discardable?(sub_error)
               data.delete(key)
             else
-              errors[key] = create_key_error(key, sub_error)
+              errors[key] = key_filter.handle_errors(sub_error)
             end
           end
 
@@ -36,7 +36,7 @@ module Chaotic
           if key_filter.default?
             inputs[key] = key_filter.default
           elsif key_filter.required? && !key_filter.discardable?(sub_error)
-            errors[key] = create_key_error(key, :required)
+            errors[key] = key_filter.handle_errors(:required)
           end
         end
 
@@ -51,13 +51,6 @@ module Chaotic
 
       def coerce_error(coerced)
         return :hash unless coerced.is_a?(Hash)
-      end
-
-      def create_key_error(key, sub_error)
-        return sub_error if sub_error.is_a?(Chaotic::Errors::ErrorHash)
-        return sub_error if sub_error.is_a?(Chaotic::Errors::ErrorArray)
-
-        Chaotic::Errors::ErrorAtom.new(key, sub_error)
       end
     end
   end

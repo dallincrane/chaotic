@@ -49,7 +49,6 @@ module Chaotic
       @raw_inputs = filter_result.coerced
       @inputs = filter_result.inputs
       @errors = filter_result.errors
-      # @inputs, @errors, @raw_inputs = self.class.root_filter.feed(*args).values
       @built = true
       try('validate') if valid?
       outcome

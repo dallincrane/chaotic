@@ -26,7 +26,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: nil)
       assert_equal OpenStruct.new(foo: 'bar'), result.inputs
-      assert_equal :nils, result.errors.symbolic[:bar]
+      assert_equal :nils, result.errors.codes[:bar]
     end
 
     it 'bar is optional -- it works if nil is passed and nils are allowed' do
@@ -92,7 +92,7 @@ describe 'Chaotic::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: '')
-      assert_equal({ 'bar' => :empty }, result.errors.symbolic)
+      assert_equal({ 'bar' => :empty }, result.errors.codes)
     end
   end
 

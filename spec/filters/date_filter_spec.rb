@@ -22,7 +22,7 @@ describe 'Chaotic::Filters::DateFilter' do
     time = Time.now
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(time)
-    if time.respond_to?(:to_date) # 1.8.7 doesn't support to_date
+    if time.respond_to?(:to_date)
       assert_equal time.to_date, result.inputs
       assert_equal nil, result.errors
     else

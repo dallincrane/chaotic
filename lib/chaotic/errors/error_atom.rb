@@ -2,37 +2,29 @@
 module Chaotic
   module Errors
     class ErrorAtom
-      attr_reader :key, :type, :index, :datum, :bound
+      attr_reader :key, :codes, :type, :datum, :bound
+      attr_writer :key
       # NOTE: in the future, could also pass in:
       #  - error type
       #  - bound (eg, string :name, length: 5 # bound=5)
 
       # ErrorAtom.new(:name, :too_short)
       # ErrorAtom.new(:name, :too_short, message: "is too short")
-      def initialize(key, error_symbol, options = {})
+      def initialize(key, codes, options = {})
         @key = key # attribute
-        @symbol = error_symbol
+        @codes = codes
         @message = options[:message]
         @type = options[:type] # target class/filter of coercion
-        @index = options[:index]
         @value = options[:value] # value given
         @bound = options[:bound] # value of validator
       end
 
-      def symbolic
-        @symbol
+      def message(parent_key = nil, index = nil)
+        @message ||= Chaotic.error_message_creator.message(self, parent_key, index)
       end
 
-      def index_ordinal
-        index&.+(1)&.ordinalize
-      end
-
-      def message
-        @message ||= Chaotic.error_message_creator.message(self)
-      end
-
-      def message_list
-        Array.wrap(message)
+      def message_list(parent_key = nil, index = nil)
+        Array.wrap(message(parent_key, index))
       end
     end
   end

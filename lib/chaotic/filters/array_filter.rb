@@ -33,8 +33,7 @@ module Chaotic
               index_shift += 1
             end
           else
-            relative_index = index - index_shift
-            errors[relative_index] = create_index_error(relative_index, sub_error)
+            errors[index - index_shift] = sub_filter.handle_errors(sub_error)
             inputs << sub_data
           end
         end
@@ -51,13 +50,6 @@ module Chaotic
 
       def coerce_error(coerced)
         return :array unless coerced.is_a?(Array)
-      end
-
-      def create_index_error(index, sub_error)
-        return sub_error if sub_error.is_a?(Chaotic::Errors::ErrorHash)
-        return sub_error if sub_error.is_a?(Chaotic::Errors::ErrorArray)
-
-        Chaotic::Errors::ErrorAtom.new(key, sub_error, index: index)
       end
     end
   end
