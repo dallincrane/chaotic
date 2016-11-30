@@ -163,13 +163,33 @@ describe 'Chaotic::Filters::ArrayFilter' do
     assert_equal ['3rd Item must be a string', '1st Item cannot be empty'], result.errors.message_list
   end
 
-  it 'strips invalid elements' do
+  it 'can discard invalid elements' do
     f = Chaotic::Filters::ArrayFilter.new(:arr) do
       integer discard_invalid: true
     end
 
     result = f.feed([1, '2', 'three', '4', 5, [6]])
-    assert_equal [1, 2, 4, 5], result.inputs
     assert_equal nil, result.errors
+    assert_equal [1, 2, 4, 5], result.inputs
+  end
+
+  it 'can discard nil elements' do
+    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+      integer discard_nils: true
+    end
+
+    result = f.feed([nil, 1, '2', nil, nil, '4', 5, nil])
+    assert_equal nil, result.errors
+    assert_equal [1, 2, 4, 5], result.inputs
+  end
+
+  it 'can discard empty elements' do
+    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+      string discard_empty: true
+    end
+
+    result = f.feed(['', 1, '2', '', '', '4', 5, ''])
+    assert_equal nil, result.errors
+    assert_equal %w(1 2 4 5), result.inputs
   end
 end

@@ -1,75 +1,90 @@
 TODO
-* add test for relative_index
+* handle zero length strings
 * change internal options back into a hash?
 * make multiple errors per key possible
 * create atom errors inside of key filter rather than collection filter
 * allow errors on collections with "base" errors
 * add block to model filter to check methods of a passed model
 * create builder filter
+* add squish to string filter
 
-Optional Options
-* **discard_nil**
-* **discard_empty**
-* **discard_invalid**
+Filter Options  
+__option default value listed first__   
+_none_ means that a key on the options hash is not present
 
-Global Filter Options
+
+Global Options
+* **default**
+  * none: does nothing
+  * (anything): replaces missing or discarded values
 * **nils**
-  * nil (default): invalid when data is nil
+  * != true: invalid when data is nil
   * true: allows nil data to be valid
 * **strict**
-  * nil (default): allows type coercion
+  * != true: allows type coercion
   * true: disables type coercion
+
+Global Discard Options
+* **discard_nils**
+  * != true: handles nils errors regularly
+  * true: removes nil value causing `nils` error from surrounding collection
+* **discard_empty**
+  * != true: handles empty errors regularly
+  * true: removes value causing `empty` error from surrounding collection
+* **discard_invalid**
+  * != true: handles values regularly
+  * true: removes any value cause any error from surrounding collection
 
 Options
 * **format**
-  * nil (default): uses `Time.parse(`data`)`
+  * nil: uses `Time.parse(`data`)`
   * String: uses `Time.strptime(`data`, `given`)`
 * **allow_control_characters**
-  * false (default): removes unprintable characters using `.gsub(/[^[:print:]\t\r\n]+/, ' ')`
+  * false: removes unprintable characters using `.gsub(/[^[:print:]\t\r\n]+/, ' ')`
   * true: does nothing
 * **strip**
-  * true (default): uses data`.strip`
+  * true: uses data`.strip`
   * false: does nothing
 * **class(ModelFilter)**
-  * nil (default): uses attribute name`.to_s.camelize.constantize`
+  * nil: uses attribute name`.to_s.camelize.constantize`
   * String: uses given`.constantize`
   * Constant: uses given
 * **new_records**
-  * false (default): `#new_record?` must return true if the model responds to it
+  * false: `#new_record?` must return true if the model responds to it
   * true: unsaved models are valid
 * **wrap(ArrayFilter)**
-  * false (default): does nothing
+  * false: does nothing
   * true: uses `Array.wrap(`data`)`
 * **min**
-  * nil (default): does nothing
+  * nil: does nothing
   * self: given must be >= value
 * **max**
-  * nil (default): does nothing
+  * nil: does nothing
   * self: given must be <= value
 * **before**
-  * nil (default): does nothing
+  * nil: does nothing
   * self: given must be <= value
 * **after**
-  * nil (default): does nothing
+  * nil: does nothing
   * self: given must be >= value
 * **scale**
-  * nil (default): does nothing
+  * nil: does nothing
   * Integer: validates data has no more decimal places than the given
 * **methods**
-  * nil (default): does nothing
+  * nil: does nothing
   * Symbol: validates data responds to method
   * Array(<Symbol>): validates data responds to each method
 * **upload**
-  * false (default): does nothing
+  * false: does nothing
   * true: data must respond to `#original_filename` and `#content_type`
 * **size**
-  * nil (default): does nothing
+  * nil: does nothing
   * Integer: validates data is no larger than the given number of bytes
 * **in**
-  * nil (default): does nothing
+  * nil: does nothing
   * Array: data must be included in the given array
 * **matches**
-  * nil (default): does nothing
+  * nil: does nothing
   * RegExp: ensures data matches given regexp pattern
 
 Tips And Tricks

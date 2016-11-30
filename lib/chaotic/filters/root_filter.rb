@@ -11,40 +11,32 @@ module Chaotic
       end
 
       def feed(*raw)
-        coerced = coerce(raw)
+        result = OpenStruct.new
+        result.raw = raw
+        result.coerced = coerce(raw)
+
         inputs = OpenStruct.new
         errors = Chaotic::Errors::ErrorHash.new
 
+        data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
-          if coerced.respond_to?(key)
-            key_filter_result = key_filter.feed(coerced[key])
-            sub_data = key_filter_result.inputs
-            sub_error = key_filter_result.errors
+          datum = data.to_h.key?(key) ? data[key] : Chaotic::None
+          key_filter_result = key_filter.feed(datum)
+          next unless key_filter_result
 
-            if sub_error.nil?
-              inputs[key] = sub_data
-            elsif key_filter.discardable?(sub_error)
-              coerced.delete_field(key)
-            else
-              errors[key] = key_filter.handle_errors(sub_error)
-            end
-          end
+          sub_data = key_filter_result.inputs
+          sub_error = key_filter_result.errors
 
-          next if coerced.respond_to?(key)
-
-          if key_filter.default?
-            inputs[key] = key_filter.default
-          elsif key_filter.required? && !key_filter.discardable?(sub_error)
-            errors[key] = key_filter.handle_errors(:required)
+          if sub_error.nil?
+            inputs[key] = sub_data
+          else
+            errors[key] = key_filter.handle_errors(sub_error)
           end
         end
 
-        OpenStruct.new(
-          raw: raw,
-          coerced: coerced,
-          inputs: inputs,
-          errors: errors.present? ? errors : nil
-        )
+        result.inputs = inputs
+        result.errors = errors.present? ? errors : nil
+        result
       end
 
       def coerce(raw)

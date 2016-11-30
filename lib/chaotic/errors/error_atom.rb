@@ -3,10 +3,6 @@ module Chaotic
   module Errors
     class ErrorAtom
       attr_reader :key, :codes, :type, :datum, :bound
-      attr_writer :key
-      # NOTE: in the future, could also pass in:
-      #  - error type
-      #  - bound (eg, string :name, length: 5 # bound=5)
 
       # ErrorAtom.new(:name, :too_short)
       # ErrorAtom.new(:name, :too_short, message: "is too short")

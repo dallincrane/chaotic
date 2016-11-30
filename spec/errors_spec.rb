@@ -113,4 +113,23 @@ describe 'Chaotic - errors' do
       expected.each { |e| assert @outcome.errors.message_list.include?(e) }
     end
   end
+
+  class WithShrinkingArray
+    include Chaotic::Command
+    filter do
+      array :arr_one do
+        integer discard_nils: true
+      end
+    end
+  end
+
+  it 'returns an ErrorArray for errors in arrays' do
+    o = WithShrinkingArray.run(arr_one: [nil, 1, 'sally'])
+
+    assert !o.success
+    assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
+    assert o.errors[:arr_one].is_a?(Chaotic::Errors::ErrorArray)
+    assert_nil o.errors[:arr_one][0]
+    assert o.errors[:arr_one][1].is_a?(Chaotic::Errors::ErrorAtom)
+  end
 end

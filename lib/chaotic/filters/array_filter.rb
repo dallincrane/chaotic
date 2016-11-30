@@ -9,7 +9,7 @@ module Chaotic
 
       def feed(raw)
         result = super(raw)
-        return result if result.errors || result.inputs.nil?
+        return result if result&.errors || result&.inputs.nil?
 
         inputs = []
         errors = Chaotic::Errors::ErrorArray.new
@@ -21,21 +21,19 @@ module Chaotic
         data = result.coerced
         data.each_with_index do |sub_data, index|
           sub_result = sub_filter.feed(sub_data)
+          unless sub_result
+            index_shift += 1
+            next
+          end
+
           sub_data = sub_result.inputs
           sub_error = sub_result.errors
 
-          if sub_error.nil?
-            inputs << sub_data
-          elsif sub_filter.discardable?(sub_error)
-            if sub_filter.default?
-              inputs << sub_filter.default
-            else
-              index_shift += 1
-            end
-          else
+          unless sub_error.nil?
             errors[index - index_shift] = sub_filter.handle_errors(sub_error)
-            inputs << sub_data
           end
+
+          inputs[index - index_shift] = sub_data
         end
 
         result.inputs = inputs

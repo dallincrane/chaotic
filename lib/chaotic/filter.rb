@@ -66,7 +66,7 @@ module Chaotic
     end
 
     def default?
-      options.respond_to?(:default)
+      options.to_h.key?(:default)
     end
 
     def default
@@ -76,14 +76,16 @@ module Chaotic
     def discardable?(sub_error)
       options.discard_invalid == true ||
         (options.discard_empty == true && sub_error == :empty) ||
-        (options.discard_nils == true && sub_error == :nil)
+        (options.discard_nils == true && sub_error == :nils)
     end
 
     def feed(raw)
-      errors = :nils if raw.nil? && !options.nils
+      return feed_none if raw == Chaotic::None
+
+      errors = :nils if raw.nil? && options.nils != true
       return feed_result(errors, raw) if raw.nil?
 
-      coerced = options.strict ? raw : coerce(raw)
+      coerced = options.strict == true ? raw : coerce(raw)
       errors = coerce_error(coerced)
       return feed_result(errors, raw, coerced) if errors
 
@@ -91,7 +93,17 @@ module Chaotic
       feed_result(errors, raw, coerced)
     end
 
+    def feed_none
+      if default?
+        feed_result(nil, nil, default)
+      elsif required?
+        feed_result(:required, nil)
+      end
+    end
+
     def feed_result(errors, raw, coerced = nil)
+      return if errors && discardable?(errors)
+
       OpenStruct.new(
         raw: raw,
         coerced: coerced.nil? ? raw : coerced,
