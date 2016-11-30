@@ -15,6 +15,8 @@ require 'active_support/core_ext/array/wrap'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/integer/inflections'
 
+require 'chaotic/discard'
+require 'chaotic/invalid'
 require 'chaotic/none'
 
 require 'chaotic/errors/error_atom'
@@ -43,6 +45,10 @@ require 'chaotic/command'
 require 'chaotic/outcome'
 
 module Chaotic
+  DISCARD = Chaotic::Discard.instance.freeze
+  INVALID = Chaotic::Invalid.instance.freeze
+  NONE = Chaotic::None.instance.freeze
+
   mattr_accessor :error_message_creator
   self.error_message_creator = Errors::ErrorMessageCreator.new
 

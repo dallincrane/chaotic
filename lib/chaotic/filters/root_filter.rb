@@ -20,9 +20,9 @@ module Chaotic
 
         data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
-          datum = data.to_h.key?(key) ? data[key] : Chaotic::None
+          datum = data.to_h.key?(key) ? data[key] : Chaotic::NONE
           key_filter_result = key_filter.feed(datum)
-          next unless key_filter_result
+          next if key_filter_result == Chaotic::DISCARD
 
           sub_data = key_filter_result.inputs
           sub_error = key_filter_result.errors

@@ -9,7 +9,7 @@ module Chaotic
 
       def feed(raw)
         result = super(raw)
-        return result if result&.errors || result&.inputs.nil?
+        return result if result == Chaotic::DISCARD || result.errors || result.inputs.nil?
 
         inputs = []
         errors = Chaotic::Errors::ErrorArray.new
@@ -21,7 +21,7 @@ module Chaotic
         data = result.coerced
         data.each_with_index do |sub_data, index|
           sub_result = sub_filter.feed(sub_data)
-          unless sub_result
+          if sub_result == Chaotic::DISCARD
             index_shift += 1
             next
           end

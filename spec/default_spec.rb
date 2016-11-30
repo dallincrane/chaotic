@@ -16,8 +16,8 @@ describe 'Chaotic - defaults' do
 
   it 'should have a default if no value is passed' do
     outcome = DefaultCommand.run
-    assert_equal true, outcome.success
     assert_equal({ name: 'Bob Jones' }, outcome.result)
+    assert_equal true, outcome.success
   end
 
   it 'should have the passed value if a value is passed' do

@@ -2,7 +2,7 @@
 require 'singleton'
 
 module Chaotic
-  class None
+  class Discard
     include Singleton
   end
 end
