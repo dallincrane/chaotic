@@ -2,11 +2,10 @@
 Gem::Specification.new do |s|
   s.name        = 'chaotic'
   s.version     = '0.0.0'
-  s.date        = '2016-09-01'
+  s.date        = '2017-03-21'
   s.summary     = 'Business Logic Bliss'
-  s.description = 'incremental strong params and validations for paranoid developers'
+  s.description = 'incremental strong params and validations for cautious developers'
   s.authors     = ['Dallin Crane']
-  s.email       = 'dallin@objectiveinc.com'
   s.homepage    = 'https://github.com/dallincrane/chaotic'
 
   s.files         = Dir['lib/**/*'].keep_if { |file| File.file?(file) }
