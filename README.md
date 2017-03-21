@@ -1,3 +1,6 @@
+TEST NEEDED
+* decimal_string_format
+
 TODO
 * handle zero length strings
 * change internal options back into a hash?

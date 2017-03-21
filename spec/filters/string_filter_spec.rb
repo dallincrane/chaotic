@@ -167,7 +167,7 @@ describe 'Chaotic::Filters::StringFilter' do
   it 'converts bigdecimals to strings' do
     sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
     result = sf.feed(BigDecimal.new('0.0001'))
-    assert_equal '0.1E-3', result.inputs
+    assert_equal '0.0001', result.inputs
     assert_nil result.errors
   end
 

@@ -15,7 +15,7 @@ module Chaotic
 
       def coerce(raw)
         return raw unless raw.is_a?(String) || coercable?(raw)
-        tmp = raw.to_s
+        tmp = raw.is_a?(BigDecimal) ? raw.to_s(Chaotic.decimal_string_format) : raw.to_s
         tmp = tmp.gsub(/[^[:print:]\t\r\n]+/, ' ') unless options.allow_control_characters
         tmp = tmp.strip if options.strip
         tmp
