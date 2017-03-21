@@ -6,11 +6,11 @@ describe 'Chaotic::Filters::DuckFilter' do
     f = Chaotic::Filters::DuckFilter.new(:quack, methods: [:length])
     result = f.feed('test')
     assert_equal 'test', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
 
     result = f.feed([1, 2])
     assert_equal [1, 2], result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'does not allow objects that respond to a single specified method' do
@@ -27,15 +27,15 @@ describe 'Chaotic::Filters::DuckFilter' do
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::DuckFilter.new(:quack, nils: false)
     result = f.feed(nil)
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::DuckFilter.new(:quack, nils: true)
     result = f.feed(nil)
-    assert_equal nil, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.inputs
+    assert_nil result.errors
   end
 
   it 'Allows anything if no methods are specified' do
@@ -43,7 +43,7 @@ describe 'Chaotic::Filters::DuckFilter' do
     [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3].each do |v|
       result = f.feed(v)
       assert_equal v, result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
   end
 end

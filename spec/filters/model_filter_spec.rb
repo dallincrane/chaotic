@@ -20,7 +20,7 @@ describe 'Chaotic::Filters::ModelFilter' do
     m = SimpleModel.new
     result = f.feed(m)
     assert_equal m, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'raises an exception during filtering if constantization fails' do
@@ -28,7 +28,7 @@ describe 'Chaotic::Filters::ModelFilter' do
 
     # NOTE: nil will short circuit the check for an existing constant
     result = f.feed(nil)
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
 
     assert_raises NameError do
@@ -41,7 +41,7 @@ describe 'Chaotic::Filters::ModelFilter' do
 
     # NOTE: nil will short circuit the check for an existing constant
     result = f.feed(nil)
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
 
     assert_raises NameError do
@@ -52,15 +52,15 @@ describe 'Chaotic::Filters::ModelFilter' do
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: false)
     result = f.feed(nil)
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: true)
     result = f.feed(nil)
-    assert_equal nil, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.inputs
+    assert_nil result.errors
   end
 
   # it "disallows different types of models" do

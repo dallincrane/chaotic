@@ -7,7 +7,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date)
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'takes a DateTime object' do
@@ -15,7 +15,7 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(date)
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'takes a Time object and converts it to a date' do
@@ -24,7 +24,7 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(time)
     if time.respond_to?(:to_date)
       assert_equal time.to_date, result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     else
       assert_equal :date, result.errors
     end
@@ -37,7 +37,7 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(date)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'gives errors when the given date is before the after date' do
@@ -57,7 +57,7 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(date)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'gives errors when the given date is after the before date' do
@@ -78,7 +78,7 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(date)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'should be able to parse a D-M-Y string to a date' do
@@ -88,7 +88,7 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(date_string)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'should be able to parse a Y-M-D string to a date' do
@@ -98,7 +98,7 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(date_string)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'should be able to handle date formatting' do
@@ -108,21 +108,21 @@ describe 'Chaotic::Filters::DateFilter' do
     result = f.feed(date_string)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
 
     date_string = '1, 2, 2000'
     f = Chaotic::Filters::DateFilter.new(:d1, format: '%m, %d, %Y')
     result = f.feed(date_string)
 
     assert_equal date, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::DateFilter.new
     result = f.feed(nil)
 
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
@@ -130,8 +130,8 @@ describe 'Chaotic::Filters::DateFilter' do
     f = Chaotic::Filters::DateFilter.new(:d1, nils: true)
     result = f.feed(nil)
 
-    assert_equal nil, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.inputs
+    assert_nil result.errors
   end
 
   it 'does not allow non-existing dates' do

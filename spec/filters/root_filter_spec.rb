@@ -13,7 +13,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar')
       assert_equal OpenStruct.new(foo: 'bar'), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
 
     it 'bar is optional -- it works if nil is passed' do
@@ -26,7 +26,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: nil)
       assert_equal OpenStruct.new(foo: 'bar'), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
 
     it 'bar is optional -- it works if nil is passed and nils are allowed' do
@@ -39,7 +39,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: nil)
       assert_equal OpenStruct.new(foo: 'bar', bar: nil), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
   end
 
@@ -54,7 +54,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: '')
       assert_equal OpenStruct.new(foo: 'bar'), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
 
     it 'bar is optional -- discards empty if it needs to be stripped' do
@@ -67,7 +67,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: ' ')
       assert_equal OpenStruct.new(foo: 'bar'), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
 
     it "bar is optional -- don't discard empty if it's spaces but stripping is off" do
@@ -80,7 +80,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: ' ')
       assert_equal OpenStruct.new(foo: 'bar', bar: ' '), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
 
     it 'bar is optional -- errors if discard_empty is false and value is blank' do
@@ -107,7 +107,7 @@ describe 'Chaotic::Filters::RootFilter' do
 
       result = hf.feed(foo: 'bar', bar: 'baz')
       assert_equal OpenStruct.new(foo: 'bar'), result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
   end
 end

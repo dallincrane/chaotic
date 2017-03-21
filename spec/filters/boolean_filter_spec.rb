@@ -6,11 +6,11 @@ describe 'Chaotic::Filters::BooleanFilter' do
     f = Chaotic::Filters::BooleanFilter.new
     result = f.feed(true)
     assert_equal true, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
 
     result = f.feed(false)
     assert_equal false, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers non-booleans to be invalid' do
@@ -24,15 +24,15 @@ describe 'Chaotic::Filters::BooleanFilter' do
   it 'considers nil to be invalid' do
     f = Chaotic::Filters::BooleanFilter.new(:bool, nils: false)
     result = f.feed(nil)
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
     f = Chaotic::Filters::BooleanFilter.new(:bool, nils: true)
     result = f.feed(nil)
-    assert_equal nil, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.inputs
+    assert_nil result.errors
   end
 
   it 'considers certain values to be true' do
@@ -41,7 +41,7 @@ describe 'Chaotic::Filters::BooleanFilter' do
     ['true', 'TRUE', 'TrUe', '1', 1].each do |value|
       result = f.feed(value)
       assert_equal true, result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
   end
 
@@ -51,7 +51,7 @@ describe 'Chaotic::Filters::BooleanFilter' do
     ['false', 'FALSE', 'FalSe', '0', 0].each do |value|
       result = f.feed(value)
       assert_equal false, result.inputs
-      assert_equal nil, result.errors
+      assert_nil result.errors
     end
   end
 

@@ -6,28 +6,28 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new
     result = sf.feed('hello')
     assert_equal 'hello', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'allows symbols' do
     sf = Chaotic::Filters::StringFilter.new
     result = sf.feed(:hello)
     assert_equal 'hello', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'allows fixnums' do
     sf = Chaotic::Filters::StringFilter.new
     result = sf.feed(1)
     assert_equal '1', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'allows bignums' do
     sf = Chaotic::Filters::StringFilter.new
     result = sf.feed(11_111_111_111_111_111_111)
     assert_equal '11111111111111111111', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'disallows non-string' do
@@ -42,28 +42,28 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, strip: true)
     result = sf.feed(' hello ')
     assert_equal 'hello', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'doesn\'t strip' do
     sf = Chaotic::Filters::StringFilter.new(:s, strip: false)
     result = sf.feed(' hello ')
     assert_equal ' hello ', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers nil to be invalid' do
     sf = Chaotic::Filters::StringFilter.new(:s, nils: false)
     result = sf.feed(nil)
-    assert_equal nil, result.inputs
+    assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
     sf = Chaotic::Filters::StringFilter.new(:s, nils: true)
     result = sf.feed(nil)
-    assert_equal nil, result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.inputs
+    assert_nil result.errors
   end
 
   it 'considers empty strings to be invalid' do
@@ -77,7 +77,7 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, empty: true)
     result = sf.feed('')
     assert_equal '', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers stripped strings that are empty to be invalid' do
@@ -105,7 +105,7 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, max: 5)
     result = sf.feed('12345')
     assert_equal '12345', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers short strings to be invalid' do
@@ -119,7 +119,7 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, min: 5)
     result = sf.feed('12345')
     assert_equal '12345', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers bad matches to be invalid' do
@@ -133,7 +133,7 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, matches: /aaa/)
     result = sf.feed('baaab')
     assert_equal 'baaab', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'considers non-inclusion to be invalid' do
@@ -147,42 +147,42 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, in: %w(red blue green))
     result = sf.feed('red')
     assert_equal 'red', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'converts symbols to strings' do
     sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
     result = sf.feed(:my_sym)
     assert_equal 'my_sym', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'converts integers to strings' do
     sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
     result = sf.feed(1)
     assert_equal '1', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'converts bigdecimals to strings' do
     sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
     result = sf.feed(BigDecimal.new('0.0001'))
     assert_equal '0.1E-3', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'converts floats to strings' do
     sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
     result = sf.feed(0.0001)
     assert_equal '0.0001', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'converts booleans to strings' do
     sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
     result = sf.feed(true)
     assert_equal 'true', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it 'disallows symbols' do
@@ -225,20 +225,20 @@ describe 'Chaotic::Filters::StringFilter' do
     sf = Chaotic::Filters::StringFilter.new(:s, allow_control_characters: false)
     result = sf.feed("Hello\u0000\u0000World!")
     assert_equal 'Hello World!', result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it "doesn't remove unprintable characters" do
     sf = Chaotic::Filters::StringFilter.new(:s, allow_control_characters: true)
     result = sf.feed("Hello\u0000\u0000World!")
     assert_equal "Hello\u0000\u0000World!", result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 
   it "doesn't remove tabs, spaces and line breaks" do
     sf = Chaotic::Filters::StringFilter.new(:s, allow_control_characters: false)
     result = sf.feed("Hello,\tWorld !\r\nNew Line")
     assert_equal "Hello,\tWorld !\r\nNew Line", result.inputs
-    assert_equal nil, result.errors
+    assert_nil result.errors
   end
 end

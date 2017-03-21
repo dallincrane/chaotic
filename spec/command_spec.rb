@@ -9,7 +9,7 @@ describe 'Command' do
 
       assert outcome.success
       assert_equal OpenStruct.new(name: 'John', email: 'john@gmail.com', amount: 5), outcome.inputs
-      assert_equal nil, outcome.errors
+      assert_nil outcome.errors
     end
 
     it 'should filter out extra inputs' do
@@ -17,7 +17,7 @@ describe 'Command' do
 
       assert outcome.success
       assert_equal OpenStruct.new(name: 'John', email: 'john@gmail.com', amount: 5), outcome.inputs
-      assert_equal nil, outcome.errors
+      assert_nil outcome.errors
     end
 
     it 'should discover errors in inputs' do
@@ -29,7 +29,7 @@ describe 'Command' do
 
     it 'shouldn\'t throw an exception with run!' do
       result = SimpleCommand.run!(name: 'John', email: 'john@gmail.com', amount: 5)
-      assert_equal(nil, result)
+      assert_nil result
     end
 
     it 'should throw an exception with run!' do
@@ -69,7 +69,7 @@ describe 'Command' do
 
       assert !outcome.success
       assert_equal :max, outcome.errors.codes[:name]
-      assert_equal nil, outcome.errors.codes[:email]
+      assert_nil outcome.errors.codes[:email]
     end
 
     it 'should merge multiple hashes' do
