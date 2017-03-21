@@ -8,12 +8,64 @@ TODO
 * create builder filter
 * add squish to string filter
 
-Filter Options  
+## Creating A Chaotic Class
+```ruby
+class CreateUser
+  include Chaotic::Command
+
+  filter do
+    string :name
+    date :birthday, nils: true
+    hash :settings do
+      string :home_page, discard_nils: true
+      decimal :pi, default: 3.14
+    end
+  end
+
+  def validate
+    # add extra validations here
+  end
+
+  def execute
+    inputs # => filtered data available via :inputs attr_reader
+    User.create!(inputs)
+  end
+end
+```
+
+## Running A Chaotic Class
+```ruby
+CreateUser.run(params)
+
+CreateUser.run!(params)
+# <User >
+```
+
+### Setting the Global Config
+```ruby
+Choatic.boolean_map = {
+  'true' => true,
+  'false' => false,
+  '1' => true,
+  '0' => false
+}
+
+Chaotic.config do |config|
+  config.boolean_map = {
+    'true' => true,
+    'false' => false,
+    '1' => true,
+    '0' => false
+  }
+end
+```
+
+### Filter Options  
 __option default value listed first__   
 _none_ means that a key on the options hash is not present
 
 
-Global Options
+## Global Options
 * **default**
   * none: does nothing
   * (anything): replaces missing or discarded values
@@ -24,7 +76,7 @@ Global Options
   * != true: allows type coercion
   * true: disables type coercion
 
-Global Discard Options
+## Global Discard Options
 * **discard_nils**
   * != true: handles nils errors regularly
   * true: removes nil value causing `nils` error from surrounding collection
@@ -35,7 +87,7 @@ Global Discard Options
   * != true: handles values regularly
   * true: removes any value cause any error from surrounding collection
 
-Options
+## Options
 * **format**
   * nil: uses `Time.parse(`data`)`
   * String: uses `Time.strptime(`data`, `given`)`
@@ -87,8 +139,8 @@ Options
   * nil: does nothing
   * RegExp: ensures data matches given regexp pattern
 
-Tips And Tricks
+### Tips And Tricks
 * model constants
   * implied and string classes are constantized with every feed - good if constants are ever removed and recreated
   * pass in a constant with the `class` option to get a performance boost - bad if constants are ever removed
-  * FYI - a `nil` value with short circuit the check for a valid constant
+  * FYI - a `nil` value will short circuit the check for a valid constant
