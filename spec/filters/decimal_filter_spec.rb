@@ -74,7 +74,25 @@ describe 'Chaotic::Filters::DecimalFilter' do
     assert_nil result.errors
   end
 
-  it 'does not allow other strings, nor does it allow random objects or symbols' do
+  it 'allows spaces in strings as a delimiter' do
+    f = Chaotic::Filters::DecimalFilter.new
+    result = f.feed('123 456.789')
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 123_456.789, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'allows commas in strings as a delimiter' do
+    f = Chaotic::Filters::DecimalFilter.new
+    result = f.feed('123,456.789')
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 123_456.789, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'does not allow random objects, symbols, or strings with non-numeric characters' do
     f = Chaotic::Filters::DecimalFilter.new
 
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
@@ -105,6 +123,42 @@ describe 'Chaotic::Filters::DecimalFilter' do
     result = f.feed('')
 
     assert_equal :decimal, result.errors
+  end
+
+  it 'can allow alternative number formats' do
+    f = Chaotic::Filters::DecimalFilter.new(:x, delimiter: '.', decimal_mark: ',')
+    result = f.feed('123.456,789')
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 123_456.789, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'considers numbers with less decimal points than the scale value to be valid' do
+    f = Chaotic::Filters::DecimalFilter.new(:x, scale: 2)
+    result = f.feed('1.2')
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 1.2, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'considers numbers with the same decimal points as the scale value to be valid' do
+    f = Chaotic::Filters::DecimalFilter.new(:x, scale: 2)
+    result = f.feed('1.23')
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 1.23, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'considers numbers with more decimal points than scale value to be invalid' do
+    f = Chaotic::Filters::DecimalFilter.new(:x, scale: 2)
+    result = f.feed('1.234')
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 1.234, result.inputs
+    assert_equal :scale, result.errors
   end
 
   it 'considers low numbers invalid' do

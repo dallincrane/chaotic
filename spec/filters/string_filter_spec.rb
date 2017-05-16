@@ -151,35 +151,42 @@ describe 'Chaotic::Filters::StringFilter' do
   end
 
   it 'converts symbols to strings' do
-    sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
+    sf = Chaotic::Filters::StringFilter.new(:s)
     result = sf.feed(:my_sym)
     assert_equal 'my_sym', result.inputs
     assert_nil result.errors
   end
 
   it 'converts integers to strings' do
-    sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
+    sf = Chaotic::Filters::StringFilter.new(:s)
     result = sf.feed(1)
     assert_equal '1', result.inputs
     assert_nil result.errors
   end
 
   it 'converts bigdecimals to strings' do
-    sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
-    result = sf.feed(BigDecimal.new('0.0001'))
-    assert_equal '0.0001', result.inputs
+    sf = Chaotic::Filters::StringFilter.new(:s)
+    result = sf.feed(BigDecimal.new('0.00000123'))
+    assert_equal '0.00000123', result.inputs
+    assert_nil result.errors
+  end
+
+  it 'converts bigdecimals to scientific notation strings' do
+    sf = Chaotic::Filters::StringFilter.new(:s, decimal_format: 'E')
+    result = sf.feed(BigDecimal.new('0.00000123'))
+    assert_equal '0.123e-5', result.inputs
     assert_nil result.errors
   end
 
   it 'converts floats to strings' do
-    sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
+    sf = Chaotic::Filters::StringFilter.new(:s)
     result = sf.feed(0.0001)
     assert_equal '0.0001', result.inputs
     assert_nil result.errors
   end
 
   it 'converts booleans to strings' do
-    sf = Chaotic::Filters::StringFilter.new(:s, strict: false)
+    sf = Chaotic::Filters::StringFilter.new(:s)
     result = sf.feed(true)
     assert_equal 'true', result.inputs
     assert_nil result.errors

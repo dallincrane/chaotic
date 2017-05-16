@@ -70,9 +70,6 @@ module Chaotic
     BigDecimal
   ].freeze
 
-  mattr_accessor :decimal_string_format
-  self.decimal_string_format = 'F'
-
   def self.config
     yield self
   end
