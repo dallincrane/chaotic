@@ -1,14 +1,4 @@
-TODO
-* handle zero length strings
-* change internal options back into a hash?
-* make multiple errors per key possible
-* create atom errors inside of key filter rather than collection filter
-* allow errors on collections with "base" errors
-* add block to model filter to check methods of a passed model
-* create builder filter
-* add squish to string filter
-
-## Creating A Objective Unit
+## Creating An Objective
 ```ruby
 class CreateUser
   include Objective::Unit
@@ -144,3 +134,12 @@ _none_ means that a key on the options hash is not present
   * implied and string classes are constantized with every feed - good if constants are ever removed and recreated
   * pass in a constant with the `class` option to get a performance boost - bad if constants are ever removed
   * FYI - a `nil` value will short circuit the check for a valid constant
+
+TODO
+* handle zero length strings
+* make multiple errors per key possible
+* create atom errors inside of key filter rather than collection filter
+* allow errors on collections with "base" errors
+* add block to model filter to check methods of a passed model
+* create builder filter
+* add squish to string filter
