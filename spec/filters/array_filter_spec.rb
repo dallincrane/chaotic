@@ -2,9 +2,9 @@
 require 'spec_helper'
 require 'stringio'
 
-describe 'Chaotic::Filters::ArrayFilter' do
+describe 'Objective::Filters::ArrayFilter' do
   it 'allows arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr) { any }
 
     result = f.feed([1])
     assert_equal [1], result.inputs
@@ -12,7 +12,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'considers non-arrays to be invalid' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr) { any }
 
     ['hi', true, 1, { a: '1' }, Object.new].each do |thing|
       result = f.feed(thing)
@@ -21,7 +21,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr, nils: false) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr, nils: false) { any }
 
     result = f.feed(nil)
     assert_nil result.inputs
@@ -29,14 +29,14 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr, nils: true) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr, nils: true) { any }
 
     result = f.feed(nil)
     assert_nil result.errors
   end
 
   it 'lets you use a block to supply an element filter' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { string }
+    f = Objective::Filters::ArrayFilter.new(:arr) { string }
 
     result = f.feed(['hi', { stuff: 'ok' }])
     assert_nil result.errors[0]
@@ -44,7 +44,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you wrap everything' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr, wrap: true) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr, wrap: true) { any }
 
     [
       [true, [true]],
@@ -66,7 +66,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass integers in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { integer min: 4 }
+    f = Objective::Filters::ArrayFilter.new(:arr) { integer min: 4 }
 
     result = f.feed([5, 6, 1, 'bob'])
     assert_equal [5, 6, 1, 'bob'], result.inputs
@@ -74,7 +74,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass floats in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:float) { float min: 4.0 }
+    f = Objective::Filters::ArrayFilter.new(:float) { float min: 4.0 }
 
     result = f.feed([5.0, 6.0, 1.0, 'bob'])
     assert_equal [5.0, 6.0, 1.0, 'bob'], result.inputs
@@ -82,7 +82,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass ducks in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { duck(methods: :length) }
+    f = Objective::Filters::ArrayFilter.new(:arr) { duck(methods: :length) }
 
     result = f.feed(['hi', [1], true])
     assert_equal ['hi', [1], true], result.inputs
@@ -90,7 +90,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass dates in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { date(format: '%Y-%m-%d') }
+    f = Objective::Filters::ArrayFilter.new(:arr) { date(format: '%Y-%m-%d') }
 
     result = f.feed(['2000-1-1', Date.new(2000, 1, 1), '2000-20-1'])
     assert_equal [Date.new(2000, 1, 1), Date.new(2000, 1, 1), '2000-20-1'], result.inputs
@@ -99,7 +99,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
 
   it 'lets you pass files in arrays' do
     sio = StringIO.new('bob')
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { file }
+    f = Objective::Filters::ArrayFilter.new(:arr) { file }
 
     result = f.feed([sio, 'bob'])
     assert_equal [sio, 'bob'], result.inputs
@@ -107,7 +107,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass booleans in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { boolean }
+    f = Objective::Filters::ArrayFilter.new(:arr) { boolean }
 
     result = f.feed([true, false, '1'])
     assert_equal [true, false, true], result.inputs
@@ -115,7 +115,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass model in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) { model :string }
+    f = Objective::Filters::ArrayFilter.new(:arr) { model :string }
 
     result = f.feed(['hey'])
     assert_equal ['hey'], result.inputs
@@ -123,7 +123,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass hashes in arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+    f = Objective::Filters::ArrayFilter.new(:arr) do
       hash do
         string :foo
         integer :bar
@@ -139,7 +139,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'lets you pass arrays of arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+    f = Objective::Filters::ArrayFilter.new(:arr) do
       array do
         string
       end
@@ -151,7 +151,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'handles errors for arrays of arrays' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+    f = Objective::Filters::ArrayFilter.new(:arr) do
       array do
         string
       end
@@ -164,7 +164,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'can discard invalid elements' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+    f = Objective::Filters::ArrayFilter.new(:arr) do
       integer discard_invalid: true
     end
 
@@ -174,7 +174,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'can discard nil elements' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+    f = Objective::Filters::ArrayFilter.new(:arr) do
       integer discard_nils: true
     end
 
@@ -184,7 +184,7 @@ describe 'Chaotic::Filters::ArrayFilter' do
   end
 
   it 'can discard empty elements' do
-    f = Chaotic::Filters::ArrayFilter.new(:arr) do
+    f = Objective::Filters::ArrayFilter.new(:arr) do
       string discard_empty: true
     end
 

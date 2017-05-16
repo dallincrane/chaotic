@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::Filters::ModelFilter' do
+describe 'Objective::Filters::ModelFilter' do
   class SimpleModel; end
   class AlwaysNew
     def new_record?
@@ -16,7 +16,7 @@ describe 'Chaotic::Filters::ModelFilter' do
   end
 
   it 'allows models' do
-    f = Chaotic::Filters::ModelFilter.new(:simple_model)
+    f = Objective::Filters::ModelFilter.new(:simple_model)
     m = SimpleModel.new
     result = f.feed(m)
     assert_equal m, result.inputs
@@ -24,7 +24,7 @@ describe 'Chaotic::Filters::ModelFilter' do
   end
 
   it 'raises an exception during filtering if constantization fails' do
-    f = Chaotic::Filters::ModelFilter.new(:non_existent_class)
+    f = Objective::Filters::ModelFilter.new(:non_existent_class)
 
     # NOTE: nil will short circuit the check for an existing constant
     result = f.feed(nil)
@@ -37,7 +37,7 @@ describe 'Chaotic::Filters::ModelFilter' do
   end
 
   it 'raises an exception during filtering if constantization of class fails' do
-    f = Chaotic::Filters::ModelFilter.new(:simple_model, class: 'NonExistentClass')
+    f = Objective::Filters::ModelFilter.new(:simple_model, class: 'NonExistentClass')
 
     # NOTE: nil will short circuit the check for an existing constant
     result = f.feed(nil)
@@ -50,14 +50,14 @@ describe 'Chaotic::Filters::ModelFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: false)
+    f = Objective::Filters::ModelFilter.new(:simple_model, nils: false)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::Filters::ModelFilter.new(:simple_model, nils: true)
+    f = Objective::Filters::ModelFilter.new(:simple_model, nils: true)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors

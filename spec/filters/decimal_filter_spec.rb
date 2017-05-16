@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::Filters::DecimalFilter' do
+describe 'Objective::Filters::DecimalFilter' do
   it 'allows bigdecimals' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed(BigDecimal.new('0.99999999999999999'))
 
     assert result.inputs.is_a?(BigDecimal)
@@ -12,7 +12,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows integers' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed(3)
 
     assert result.inputs.is_a?(BigDecimal)
@@ -21,7 +21,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows floats' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed(3.1415926)
 
     assert result.inputs.is_a?(BigDecimal)
@@ -30,7 +30,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows strings that start with a digit' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('3')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -39,7 +39,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows string representation of float' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('3.14')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -48,7 +48,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows string representation of float without a number before dot' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('.14')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -57,7 +57,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows negative strings' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('-.14')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -66,7 +66,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows strings with a positive sign' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('+.14')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -75,7 +75,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows spaces in strings as a delimiter' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('123 456.789')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -84,7 +84,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'allows commas in strings as a delimiter' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('123,456.789')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -93,7 +93,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'does not allow random objects, symbols, or strings with non-numeric characters' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
 
     ['zero', 'a1', {}, [], Object.new, :d].each do |thing|
       result = f.feed(thing)
@@ -103,7 +103,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, nils: false)
+    f = Objective::Filters::DecimalFilter.new(:x, nils: false)
     result = f.feed(nil)
 
     assert_nil result.inputs
@@ -111,7 +111,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers nil to be valid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, nils: true)
+    f = Objective::Filters::DecimalFilter.new(:x, nils: true)
     result = f.feed(nil)
 
     assert_nil result.inputs
@@ -119,14 +119,14 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers empty strings to be invalid' do
-    f = Chaotic::Filters::DecimalFilter.new
+    f = Objective::Filters::DecimalFilter.new
     result = f.feed('')
 
     assert_equal :decimal, result.errors
   end
 
   it 'can allow alternative number formats' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, delimiter: '.', decimal_mark: ',')
+    f = Objective::Filters::DecimalFilter.new(:x, delimiter: '.', decimal_mark: ',')
     result = f.feed('123.456,789')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -135,7 +135,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers numbers with less decimal points than the scale value to be valid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, scale: 2)
+    f = Objective::Filters::DecimalFilter.new(:x, scale: 2)
     result = f.feed('1.2')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -144,7 +144,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers numbers with the same decimal points as the scale value to be valid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, scale: 2)
+    f = Objective::Filters::DecimalFilter.new(:x, scale: 2)
     result = f.feed('1.23')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -153,7 +153,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers numbers with more decimal points than scale value to be invalid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, scale: 2)
+    f = Objective::Filters::DecimalFilter.new(:x, scale: 2)
     result = f.feed('1.234')
 
     assert result.inputs.is_a?(BigDecimal)
@@ -162,7 +162,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers low numbers invalid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, min: 10)
+    f = Objective::Filters::DecimalFilter.new(:x, min: 10)
     result = f.feed(3)
 
     assert result.inputs.is_a?(BigDecimal)
@@ -171,7 +171,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers low numbers valid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, min: 10)
+    f = Objective::Filters::DecimalFilter.new(:x, min: 10)
     result = f.feed(31)
 
     assert result.inputs.is_a?(BigDecimal)
@@ -180,7 +180,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers high numbers invalid' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, max: 10)
+    f = Objective::Filters::DecimalFilter.new(:x, max: 10)
     result = f.feed(31)
 
     assert result.inputs.is_a?(BigDecimal)
@@ -189,7 +189,7 @@ describe 'Chaotic::Filters::DecimalFilter' do
   end
 
   it 'considers high numbers vaild' do
-    f = Chaotic::Filters::DecimalFilter.new(:x, max: 10)
+    f = Objective::Filters::DecimalFilter.new(:x, max: 10)
     result = f.feed(3)
 
     assert result.inputs.is_a?(BigDecimal)

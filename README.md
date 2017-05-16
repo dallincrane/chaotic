@@ -8,10 +8,10 @@ TODO
 * create builder filter
 * add squish to string filter
 
-## Creating A Chaotic Command
+## Creating A Objective Unit
 ```ruby
 class CreateUser
-  include Chaotic::Command
+  include Objective::Unit
 
   filter do
     string :name
@@ -33,7 +33,7 @@ class CreateUser
 end
 ```
 
-## Running A Chaotic Class
+## Running A Objective Class
 ```ruby
 CreateUser.run(params)
 
@@ -50,7 +50,7 @@ Choatic.boolean_map = {
   '0' => false
 }
 
-Chaotic.config do |config|
+Objective.config do |config|
   config.boolean_map = {
     'true' => true,
     'false' => false,

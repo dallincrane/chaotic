@@ -2,9 +2,9 @@
 require 'spec_helper'
 require 'stringio'
 
-describe 'Chaotic::Filters::HashFilter' do
+describe 'Objective::Filters::HashFilter' do
   it 'allows valid hashes' do
-    hf = Chaotic::Filters::HashFilter.new do
+    hf = Objective::Filters::HashFilter.new do
       string :foo
     end
 
@@ -14,7 +14,7 @@ describe 'Chaotic::Filters::HashFilter' do
   end
 
   it 'disallows non-hashes' do
-    hf = Chaotic::Filters::HashFilter.new do
+    hf = Objective::Filters::HashFilter.new do
       string :foo
     end
 
@@ -23,7 +23,7 @@ describe 'Chaotic::Filters::HashFilter' do
   end
 
   it 'allows floats in hashes' do
-    hf = Chaotic::Filters::HashFilter.new do
+    hf = Objective::Filters::HashFilter.new do
       float :foo
     end
 
@@ -33,7 +33,7 @@ describe 'Chaotic::Filters::HashFilter' do
   end
 
   it 'allows ducks in hashes' do
-    hf = Chaotic::Filters::HashFilter.new do
+    hf = Objective::Filters::HashFilter.new do
       duck :foo, methods: [:length]
     end
 
@@ -43,7 +43,7 @@ describe 'Chaotic::Filters::HashFilter' do
   end
 
   it 'allows dates in hashes' do
-    hf = Chaotic::Filters::HashFilter.new do
+    hf = Objective::Filters::HashFilter.new do
       date :foo, format: '%d-%m-%Y'
     end
 
@@ -54,7 +54,7 @@ describe 'Chaotic::Filters::HashFilter' do
 
   it 'allows files in hashes' do
     sio = StringIO.new('bob')
-    hf = Chaotic::Filters::HashFilter.new do
+    hf = Objective::Filters::HashFilter.new do
       file :foo
     end
 

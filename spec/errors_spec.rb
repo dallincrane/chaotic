@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic - errors' do
+describe 'Objective - errors' do
   class GivesErrors
-    include Chaotic::Command
+    include Objective::Unit
     filter do
       string :str1
       string :str2, in: %w(opt1 opt2 opt3)
@@ -27,37 +27,37 @@ describe 'Chaotic - errors' do
   it 'returns an ErrorHash as the top level error object, and ErrorAtom\'s inside' do
     o = GivesErrors.run(hash1: 1, arr1: 'bob')
     assert !o.success
-    assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
-    assert o.errors[:str1].is_a?(Chaotic::Errors::ErrorAtom)
-    assert o.errors[:str2].is_a?(Chaotic::Errors::ErrorAtom)
+    assert o.errors.is_a?(Objective::Errors::ErrorHash)
+    assert o.errors[:str1].is_a?(Objective::Errors::ErrorAtom)
+    assert o.errors[:str2].is_a?(Objective::Errors::ErrorAtom)
     assert_nil o.errors[:int1]
-    assert o.errors[:hash1].is_a?(Chaotic::Errors::ErrorAtom)
-    assert o.errors[:arr1].is_a?(Chaotic::Errors::ErrorAtom)
+    assert o.errors[:hash1].is_a?(Objective::Errors::ErrorAtom)
+    assert o.errors[:arr1].is_a?(Objective::Errors::ErrorAtom)
   end
 
   it 'returns an ErrorHash for nested hashes' do
     o = GivesErrors.run(hash1: { bool1: 'ooooo' })
 
     assert !o.success
-    assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
-    assert o.errors[:hash1].is_a?(Chaotic::Errors::ErrorHash)
-    assert o.errors[:hash1][:bool1].is_a?(Chaotic::Errors::ErrorAtom)
-    assert o.errors[:hash1][:bool2].is_a?(Chaotic::Errors::ErrorAtom)
+    assert o.errors.is_a?(Objective::Errors::ErrorHash)
+    assert o.errors[:hash1].is_a?(Objective::Errors::ErrorHash)
+    assert o.errors[:hash1][:bool1].is_a?(Objective::Errors::ErrorAtom)
+    assert o.errors[:hash1][:bool2].is_a?(Objective::Errors::ErrorAtom)
   end
 
   it 'returns an ErrorArray for errors in arrays' do
     o = GivesErrors.run(str1: 'a', str2: 'opt1', arr1: ['bob', 1, 'sally'])
 
     assert !o.success
-    assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
-    assert o.errors[:arr1].is_a?(Chaotic::Errors::ErrorArray)
-    assert o.errors[:arr1][0].is_a?(Chaotic::Errors::ErrorAtom)
+    assert o.errors.is_a?(Objective::Errors::ErrorHash)
+    assert o.errors[:arr1].is_a?(Objective::Errors::ErrorArray)
+    assert o.errors[:arr1][0].is_a?(Objective::Errors::ErrorAtom)
     assert_nil o.errors[:arr1][1]
-    assert o.errors[:arr1][2].is_a?(Chaotic::Errors::ErrorAtom)
+    assert o.errors[:arr1][2].is_a?(Objective::Errors::ErrorAtom)
   end
 
   it 'titleizes keys' do
-    atom = Chaotic::Errors::ErrorAtom.new(:newsletter_subscription, :boolean)
+    atom = Objective::Errors::ErrorAtom.new(:newsletter_subscription, :boolean)
     assert_equal 'Newsletter Subscription must be a boolean', atom.message
   end
 
@@ -115,7 +115,7 @@ describe 'Chaotic - errors' do
   end
 
   class WithShrinkingArray
-    include Chaotic::Command
+    include Objective::Unit
     filter do
       array :arr_one do
         integer discard_nils: true
@@ -127,9 +127,9 @@ describe 'Chaotic - errors' do
     o = WithShrinkingArray.run(arr_one: [nil, 1, 'sally'])
 
     assert !o.success
-    assert o.errors.is_a?(Chaotic::Errors::ErrorHash)
-    assert o.errors[:arr_one].is_a?(Chaotic::Errors::ErrorArray)
+    assert o.errors.is_a?(Objective::Errors::ErrorHash)
+    assert o.errors[:arr_one].is_a?(Objective::Errors::ErrorArray)
     assert_nil o.errors[:arr_one][0]
-    assert o.errors[:arr_one][1].is_a?(Chaotic::Errors::ErrorAtom)
+    assert o.errors[:arr_one][1].is_a?(Objective::Errors::ErrorAtom)
   end
 end

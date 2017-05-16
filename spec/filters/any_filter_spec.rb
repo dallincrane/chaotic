@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'Chaotic::Filters::AnyFilter' do
+describe 'Objective::Filters::AnyFilter' do
   it 'Allows anything' do
-    f = Chaotic::Filters::AnyFilter.new
+    f = Objective::Filters::AnyFilter.new
 
     [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3, nil].each do |v|
       result = f.feed(v)
@@ -17,7 +17,7 @@ describe 'Chaotic::Filters::AnyFilter' do
   end
 
   it 'Allows nils by default' do
-    f = Chaotic::Filters::AnyFilter.new
+    f = Objective::Filters::AnyFilter.new
 
     result = f.feed(nil)
     assert_nil result.inputs
@@ -25,7 +25,7 @@ describe 'Chaotic::Filters::AnyFilter' do
   end
 
   it 'Does not allow nils if set to false' do
-    f = Chaotic::Filters::AnyFilter.new(:a1, nils: false)
+    f = Objective::Filters::AnyFilter.new(:a1, nils: false)
 
     result = f.feed(nil)
     assert_nil result.inputs
