@@ -2,15 +2,11 @@
 module Chaotic
   module Filters
     class BooleanFilter < Chaotic::Filter
-      default_options(
-        nils: false
-      )
-
       private
 
       def coerce(raw)
         return raw if boolean?(raw)
-        Chaotic.boolean_map[raw.to_s.downcase] if raw.respond_to?(:to_s)
+        options.coercion_map[raw.to_s.downcase] if raw.respond_to?(:to_s)
       end
 
       def coerce_error(coerced)

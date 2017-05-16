@@ -2,18 +2,6 @@
 module Chaotic
   module Filters
     class StringFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        allow_control_characters: false,
-        strip: true,
-        empty: false,
-        min: nil,
-        max: nil,
-        in: nil,
-        matches: nil,
-        decimal_format: 'F'
-      )
-
       def coerce(raw)
         return raw unless raw.is_a?(String) || coercable?(raw)
         tmp = raw.is_a?(BigDecimal) ? raw.to_s(options.decimal_format) : raw.to_s
@@ -23,7 +11,7 @@ module Chaotic
       end
 
       def coercable?(raw)
-        Chaotic.coerce_to_string.map { |klass| raw.is_a?(klass) }.any?
+        options.coercable_classes.map { |klass| raw.is_a?(klass) }.any?
       end
 
       def coerce_error(coerced)

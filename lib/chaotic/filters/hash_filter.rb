@@ -2,10 +2,6 @@
 module Chaotic
   module Filters
     class HashFilter < Chaotic::Filter
-      default_options(
-        nils: false
-      )
-
       def feed(raw)
         result = super(raw)
         return result if result == Chaotic::DISCARD || result.errors || result.inputs.nil?

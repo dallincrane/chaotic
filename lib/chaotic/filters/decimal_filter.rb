@@ -2,15 +2,6 @@
 module Chaotic
   module Filters
     class DecimalFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        delimiter: ', ',
-        decimal_mark: '.',
-        min: nil,
-        max: nil,
-        scale: nil
-      )
-
       private
 
       # TODO: the Rational class should be coerced - it requires a precision argument

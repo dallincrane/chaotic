@@ -2,11 +2,6 @@
 module Chaotic
   module Filters
     class ArrayFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        wrap: false
-      )
-
       def feed(raw)
         result = super(raw)
         return result if result == Chaotic::DISCARD || result.errors || result.inputs.nil?

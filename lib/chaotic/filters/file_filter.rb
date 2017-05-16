@@ -2,12 +2,6 @@
 module Chaotic
   module Filters
     class FileFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        upload: false,
-        size: nil
-      )
-
       private
 
       def coerce_error(coerced)

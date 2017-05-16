@@ -2,16 +2,6 @@
 module Chaotic
   module Filters
     class IntegerFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        delimiter: ', ',
-        decimal_mark: '.',
-        min: nil,
-        max: nil,
-        scale: nil,
-        in: nil
-      )
-
       private
 
       def coerce(datum)

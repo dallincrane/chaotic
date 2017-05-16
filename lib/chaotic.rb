@@ -26,6 +26,7 @@ require 'chaotic/errors/error_message_creator'
 require 'chaotic/errors/validation_error'
 
 require 'chaotic/filter'
+require 'chaotic/filters'
 require 'chaotic/filters/any_filter'
 require 'chaotic/filters/array_filter'
 require 'chaotic/filters/boolean_filter'
@@ -51,26 +52,4 @@ module Chaotic
 
   mattr_accessor :error_message_creator
   self.error_message_creator = Errors::ErrorMessageCreator.new
-
-  mattr_accessor :boolean_map
-  self.boolean_map = {
-    'true' => true,
-    'false' => false,
-    '1' => true,
-    '0' => false
-  }.freeze
-
-  mattr_accessor :coerce_to_string
-  self.coerce_to_string = [
-    Symbol,
-    TrueClass,
-    FalseClass,
-    Integer,
-    Float,
-    BigDecimal
-  ].freeze
-
-  def self.config
-    yield self
-  end
 end

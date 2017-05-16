@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 module Chaotic
   class Filter
-    Options = OpenStruct.new
-
-    def self.config
-      yield Options
-    end
-
     def self.inherited(child_class)
       method_name = filter_name(child_class)
 
@@ -15,11 +9,6 @@ module Chaotic
         new_filter = child_class.new(*args, &block)
         sub_filters.push(new_filter)
       end
-    end
-
-    def self.default_options(given)
-      child_class_options = Options[filter_name] ||= OpenStruct.new
-      given.each_pair { |key, value| child_class_options[key] = value }
     end
 
     def self.filter_name(klass = self)
@@ -44,7 +33,7 @@ module Chaotic
     end
 
     def type_specific_options_hash
-      Options[self.class.filter_name].to_h
+      Chaotic::Filters::Config[self.class.filter_name].to_h
     end
 
     def sub_filters_hash

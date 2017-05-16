@@ -2,13 +2,6 @@
 module Chaotic
   module Filters
     class TimeFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        format: nil,
-        after: nil,
-        before: nil
-      )
-
       private
 
       def coerce(raw)

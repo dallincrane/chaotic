@@ -2,12 +2,6 @@
 module Chaotic
   module Filters
     class ModelFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        class: nil,
-        new_records: false
-      )
-
       private
 
       def coerce_error(coerced)

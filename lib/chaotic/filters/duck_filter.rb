@@ -2,11 +2,6 @@
 module Chaotic
   module Filters
     class DuckFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        methods: nil
-      )
-
       private
 
       def coerce_error(coerced)

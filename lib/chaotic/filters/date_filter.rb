@@ -2,13 +2,6 @@
 module Chaotic
   module Filters
     class DateFilter < Chaotic::Filter
-      default_options(
-        nils: false,
-        format: nil, # If nil, Date.parse will be used for coercion. If something like "%Y-%m-%d", Date.strptime is used
-        after: nil,  # A date object, representing the minimum date allowed, inclusive
-        before: nil  # A date object, representing the maximum date allowed, inclusive
-      )
-
       private
 
       def coerce(raw)
