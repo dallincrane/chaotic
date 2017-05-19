@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 Gem::Specification.new do |s|
   s.name          = 'objective'
-  s.version       = '1.0.0'
+  s.version       = '0.1.0'
   s.date          = '2017-05-16'
   s.summary       = 'Business Logic Units'
   s.description   = 'functional classes with param validations for cautious developers'
