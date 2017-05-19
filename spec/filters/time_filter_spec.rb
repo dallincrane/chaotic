@@ -107,7 +107,7 @@ describe 'Objective::Filters::TimeFilter' do
   end
 
   it 'allows the use of nil when specified' do
-    f = Objective::Filters::TimeFilter.new(:t, nils: true)
+    f = Objective::Filters::TimeFilter.new(:t, nils: Objective::ALLOW)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors

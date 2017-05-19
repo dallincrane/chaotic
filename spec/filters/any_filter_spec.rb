@@ -24,8 +24,8 @@ describe 'Objective::Filters::AnyFilter' do
     assert_nil result.errors
   end
 
-  it 'Does not allow nils if set to false' do
-    f = Objective::Filters::AnyFilter.new(:a1, nils: false)
+  it 'Does not allow nils if set to deny' do
+    f = Objective::Filters::AnyFilter.new(:a1, nils: Objective::DENY)
 
     result = f.feed(nil)
     assert_nil result.inputs

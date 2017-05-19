@@ -6,3 +6,5 @@ module Objective
     include Singleton
   end
 end
+
+Objective::DISCARD = Objective::Discard.instance.freeze

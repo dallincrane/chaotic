@@ -72,7 +72,7 @@ describe 'Objective::Filters::IntegerFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Objective::Filters::IntegerFilter.new(:i, nils: false)
+    f = Objective::Filters::IntegerFilter.new(:i)
     result = f.feed(nil)
 
     assert_nil result.inputs
@@ -80,7 +80,7 @@ describe 'Objective::Filters::IntegerFilter' do
   end
 
   it 'considers nil to be valid' do
-    f = Objective::Filters::IntegerFilter.new(:i, nils: true)
+    f = Objective::Filters::IntegerFilter.new(:i, nils: Objective::ALLOW)
     result = f.feed(nil)
 
     assert_nil result.inputs

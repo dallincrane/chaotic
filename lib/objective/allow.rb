@@ -2,9 +2,9 @@
 require 'singleton'
 
 module Objective
-  class None
+  class Allow
     include Singleton
   end
 end
 
-Objective::NONE = Objective::None.instance.freeze
+Objective::ALLOW = Objective::Allow.instance.freeze

@@ -25,14 +25,14 @@ describe 'Objective::Filters::DuckFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Objective::Filters::DuckFilter.new(:quack, nils: false)
+    f = Objective::Filters::DuckFilter.new(:quack)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
-    f = Objective::Filters::DuckFilter.new(:quack, nils: true)
+    f = Objective::Filters::DuckFilter.new(:quack, nils: Objective::ALLOW)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors

@@ -83,14 +83,14 @@ describe 'Objective::Filters::FloatFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Objective::Filters::FloatFilter.new(:x, nils: false)
+    f = Objective::Filters::FloatFilter.new(:x)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
-    f = Objective::Filters::FloatFilter.new(:x, nils: true)
+    f = Objective::Filters::FloatFilter.new(:x, nils: Objective::ALLOW)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors

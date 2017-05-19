@@ -6,3 +6,5 @@ module Objective
     include Singleton
   end
 end
+
+Objective::INVALID = Objective::Invalid.instance.freeze

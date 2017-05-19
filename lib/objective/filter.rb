@@ -46,14 +46,6 @@ module Objective
       dupped
     end
 
-    def required?
-      !optional?
-    end
-
-    def optional?
-      options.discard_nils || options.discard_empty || options.discard_invalid
-    end
-
     def default?
       options.to_h.key?(:default)
     end
@@ -62,41 +54,87 @@ module Objective
       options.default
     end
 
-    def discardable?(sub_error)
-      options.discard_invalid == true ||
-        (options.discard_nils == true && sub_error == :required) ||
-        (options.discard_nils == true && sub_error == :nils) ||
-        (options.discard_empty == true && sub_error == :empty)
-    end
-
     def feed(raw)
-      errors = :required if raw == Objective::NONE
-      return feed_result(errors, raw, raw) if raw == Objective::NONE
-
-      errors = :nils if raw.nil? && options.nils != true
-      return feed_result(errors, raw, raw) if raw.nil?
+      return feed_none if raw == Objective::NONE
+      return feed_nil if raw.nil?
 
       coerced = options.strict == true ? raw : coerce(raw)
       errors = coerce_error(coerced)
-      return feed_result(errors, raw, coerced) if errors
+      return feed_invalid(errors, raw, coerced) if errors
 
       errors = validate(coerced)
+      return feed_empty(raw, coerced) if errors == :empty
+
+      feed_result(errors, raw, coerced)
+    end
+
+    def feed_none
+      case options.none
+      when Objective::ALLOW
+        return Objective::DISCARD
+      when Objective::DENY
+        coerced = Objective::NONE
+        errors = :required
+      when Objective::DISCARD
+        raise 'the none option cannot be discarded — did you mean to use allow instead?'
+      else
+        coerced = options.none
+      end
+
+      feed_result(errors, Objective::NONE, coerced)
+    end
+
+    def feed_nil
+      case options.nils
+      when Objective::ALLOW
+        coerced = nil
+        errors = nil
+      when Objective::DENY
+        coerced = nil
+        errors = :nils
+      when Objective::DISCARD
+        return Objective::DISCARD
+      else
+        coerced = options.nils
+      end
+
+      feed_result(errors, nil, coerced)
+    end
+
+    def feed_invalid(errors, raw, coerced)
+      case options.invalid
+      when Objective::DENY
+        # nothing
+      when Objective::DISCARD
+        return Objective::DISCARD
+      else
+        coerced = options.invalid
+      end
+
+      feed_result(errors, raw, raw)
+    end
+
+    def feed_empty(raw, coerced)
+      case options.empty
+      when Objective::ALLOW
+        errors = nil
+      when Objective::DENY
+        errors = :empty
+      when Objective::DISCARD
+        return Objective::DISCARD
+      else
+        coerced = options.empty
+      end
+
       feed_result(errors, raw, coerced)
     end
 
     def feed_result(errors, raw, coerced)
-      return Objective::DISCARD if errors && discardable?(errors) && !default?
-
-      if coerced == Objective::NONE && default?
-        errors = nil
-        coerced = default
-      end
-
       OpenStruct.new(
+        errors: errors,
         raw: raw,
-        coerced: coerced.nil? ? raw : coerced,
-        inputs: coerced.nil? ? raw : coerced,
-        errors: errors
+        coerced: coerced,
+        inputs: coerced
       )
     end
 

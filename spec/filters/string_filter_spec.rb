@@ -53,42 +53,42 @@ describe 'Objective::Filters::StringFilter' do
   end
 
   it 'considers nil to be invalid' do
-    sf = Objective::Filters::StringFilter.new(:s, nils: false)
+    sf = Objective::Filters::StringFilter.new(:s)
     result = sf.feed(nil)
     assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
-    sf = Objective::Filters::StringFilter.new(:s, nils: true)
+    sf = Objective::Filters::StringFilter.new(:s, nils: Objective::ALLOW)
     result = sf.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors
   end
 
   it 'considers empty strings to be invalid' do
-    sf = Objective::Filters::StringFilter.new(:s, empty: false)
+    sf = Objective::Filters::StringFilter.new(:s)
     result = sf.feed('')
     assert_equal '', result.inputs
     assert_equal :empty, result.errors
   end
 
   it 'considers empty strings to be valid' do
-    sf = Objective::Filters::StringFilter.new(:s, empty: true)
+    sf = Objective::Filters::StringFilter.new(:s, empty: Objective::ALLOW)
     result = sf.feed('')
     assert_equal '', result.inputs
     assert_nil result.errors
   end
 
   it 'considers stripped strings that are empty to be invalid' do
-    sf = Objective::Filters::StringFilter.new(:s, empty: false)
+    sf = Objective::Filters::StringFilter.new(:s)
     result = sf.feed('   ')
     assert_equal '', result.inputs
     assert_equal :empty, result.errors
   end
 
   it 'considers strings that contain only unprintable characters to be invalid' do
-    sf = Objective::Filters::StringFilter.new(:s, empty: false)
+    sf = Objective::Filters::StringFilter.new(:s)
     result = sf.feed("\u0000\u0000")
     assert_equal '', result.inputs
     assert_equal :empty, result.errors

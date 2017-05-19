@@ -15,6 +15,8 @@ require 'active_support/core_ext/array/wrap'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/integer/inflections'
 
+require 'objective/allow'
+require 'objective/deny'
 require 'objective/discard'
 require 'objective/invalid'
 require 'objective/none'
@@ -46,10 +48,6 @@ require 'objective/unit'
 require 'objective/outcome'
 
 module Objective
-  DISCARD = Objective::Discard.instance.freeze
-  INVALID = Objective::Invalid.instance.freeze
-  NONE = Objective::None.instance.freeze
-
   mattr_accessor :error_message_creator
   self.error_message_creator = Errors::ErrorMessageCreator.new
 end

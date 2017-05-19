@@ -127,7 +127,7 @@ describe 'Objective::Filters::DateFilter' do
   end
 
   it 'allows the use of nil when specified' do
-    f = Objective::Filters::DateFilter.new(:d1, nils: true)
+    f = Objective::Filters::DateFilter.new(:d1, nils: Objective::ALLOW)
     result = f.feed(nil)
 
     assert_nil result.inputs
