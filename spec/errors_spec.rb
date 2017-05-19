@@ -7,14 +7,14 @@ describe 'Objective - errors' do
     filter do
       string :str1
       string :str2, in: %w(opt1 opt2 opt3)
-      integer :int1, none: Objective::ALLOW
+      integer :int1, none: ALLOW
 
-      hash :hash1, none: Objective::ALLOW do
+      hash :hash1, none: ALLOW do
         boolean :bool1
         boolean :bool2
       end
 
-      array :arr1, none: Objective::ALLOW do
+      array :arr1, none: ALLOW do
         integer
       end
     end
@@ -118,7 +118,7 @@ describe 'Objective - errors' do
     include Objective::Unit
     filter do
       array :arr_one do
-        integer nils: Objective::DISCARD
+        integer nils: DISCARD
       end
     end
   end
