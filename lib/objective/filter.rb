@@ -60,7 +60,7 @@ module Objective
 
       coerced = options.strict == true ? raw : coerce(raw)
       errors = coerce_error(coerced)
-      return feed_invalid(errors, raw, coerced) if errors
+      return feed_invalid(errors, raw, raw) if errors
 
       errors = validate(coerced)
       return feed_empty(raw, coerced) if errors == :empty
@@ -111,7 +111,7 @@ module Objective
         coerced = options.invalid
       end
 
-      feed_result(errors, raw, raw)
+      feed_result(errors, raw, coerced)
     end
 
     def feed_empty(raw, coerced)

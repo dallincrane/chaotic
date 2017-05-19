@@ -58,6 +58,7 @@ module Objective
     Config.file = OpenStruct.new(
       none: Objective::DENY,
       nils: Objective::DENY,
+      invalid: Objective::DENY,
       upload: false,
       size: nil
     )
