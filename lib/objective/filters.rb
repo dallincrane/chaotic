@@ -4,23 +4,22 @@ module Objective
     Config = OpenStruct.new
 
     Config.any = OpenStruct.new(
-      nils: true
+      none: Objective::DENY,
+      nils: Objective::ALLOW,
+      invalid: Objective::DENY
     )
 
     Config.array = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       wrap: false
     )
 
     Config.boolean = OpenStruct.new(
-      nils: false
-    )
-
-    Config.boolean = OpenStruct.new(
-      nils: false,
-      format: nil, # If nil, Date.parse will be used for coercion. If something like "%Y-%m-%d", Date.strptime is used
-      after: nil,  # A date object, representing the minimum date allowed, inclusive
-      before: nil, # A date object, representing the maximum date allowed, inclusive
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       coercion_map: {
         'true' => true,
         'false' => false,
@@ -29,8 +28,19 @@ module Objective
       }.freeze
     )
 
+    Config.date = OpenStruct.new(
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
+      format: nil, # If nil, Date.parse will be used for coercion. If something like "%Y-%m-%d", Date.strptime is used
+      after: nil,  # A date object, representing the minimum date allowed, inclusive
+      before: nil  # A date object, representing the maximum date allowed, inclusive
+    )
+
     Config.decimal = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       delimiter: ', ',
       decimal_mark: '.',
       min: nil,
@@ -39,18 +49,24 @@ module Objective
     )
 
     Config.duck = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       methods: nil
     )
 
     Config.file = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       upload: false,
       size: nil
     )
 
     Config.float = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       delimiter: ', ',
       decimal_mark: '.',
       min: nil,
@@ -59,11 +75,15 @@ module Objective
     )
 
     Config.hash = OpenStruct.new(
-      nils: false
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY
     )
 
     Config.integer = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       delimiter: ', ',
       decimal_mark: '.',
       min: nil,
@@ -73,7 +93,9 @@ module Objective
     )
 
     Config.model = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       class: nil,
       new_records: false
     )
@@ -81,10 +103,12 @@ module Objective
     Config.root = OpenStruct.new
 
     Config.string = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       allow_control_characters: false,
       strip: true,
-      empty: false,
+      empty: Objective::DENY,
       min: nil,
       max: nil,
       in: nil,
@@ -101,7 +125,9 @@ module Objective
     )
 
     Config.time = OpenStruct.new(
-      nils: false,
+      none: Objective::DENY,
+      nils: Objective::DENY,
+      invalid: Objective::DENY,
       format: nil,
       after: nil,
       before: nil

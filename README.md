@@ -5,10 +5,10 @@ class CreateUser
 
   filter do
     string :name
-    date :birthday, nils: true
+    date :birthday, nils: Objective::ALLOW
     hash :settings do
-      string :home_page, discard_nils: true
-      decimal :pi, default: 3.14
+      string :home_page, nils: Objective::DISCARD
+      decimal :pi, none: 3.14
     end
   end
 
@@ -65,17 +65,6 @@ _none_ means that a key on the options hash is not present
 * **strict**
   * != true: allows type coercion
   * true: disables type coercion
-
-## Global Discard Options
-* **discard_nils**
-  * != true: handles nils errors regularly
-  * true: removes nil value causing `nils` error from surrounding collection
-* **discard_empty**
-  * != true: handles empty errors regularly
-  * true: removes value causing `empty` error from surrounding collection
-* **discard_invalid**
-  * != true: handles values regularly
-  * true: removes any value cause any error from surrounding collection
 
 ## Options
 * **format**

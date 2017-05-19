@@ -2,7 +2,9 @@
 require 'singleton'
 
 module Objective
-  class Invalid
+  class Allow
     include Singleton
   end
 end
+
+Objective::ALLOW = Objective::Allow.instance.freeze

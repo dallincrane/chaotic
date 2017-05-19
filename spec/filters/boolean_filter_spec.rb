@@ -22,14 +22,14 @@ describe 'Objective::Filters::BooleanFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Objective::Filters::BooleanFilter.new(:bool, nils: false)
+    f = Objective::Filters::BooleanFilter.new(:bool)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
-    f = Objective::Filters::BooleanFilter.new(:bool, nils: true)
+    f = Objective::Filters::BooleanFilter.new(:bool, nils: Objective::ALLOW)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors

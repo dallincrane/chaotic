@@ -7,7 +7,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, discard_nils: true
+          string :bar, none: Objective::ALLOW
         end
       end
 
@@ -20,7 +20,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, discard_nils: true
+          string :bar, nils: Objective::DISCARD
         end
       end
 
@@ -33,7 +33,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, nils: true, discard_nils: true
+          string :bar, nils: Objective::ALLOW
         end
       end
 
@@ -48,7 +48,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, discard_empty: true
+          string :bar, empty: Objective::DISCARD
         end
       end
 
@@ -61,7 +61,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, discard_empty: true
+          string :bar, empty: Objective::DISCARD
         end
       end
 
@@ -74,7 +74,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, discard_empty: true, strip: false
+          string :bar, empty: Objective::DISCARD, strip: false
         end
       end
 
@@ -83,11 +83,11 @@ describe 'Objective::Filters::RootFilter' do
       assert_nil result.errors
     end
 
-    it 'bar is optional -- errors if discard_empty is false and value is blank' do
+    it 'bar is optional -- errors if value is blank' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, discard_empty: false
+          string :bar, none: Objective::ALLOW
         end
       end
 
@@ -101,7 +101,7 @@ describe 'Objective::Filters::RootFilter' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          integer :bar, discard_invalid: true
+          integer :bar, invalid: Objective::DISCARD
         end
       end
 

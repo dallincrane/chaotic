@@ -6,7 +6,7 @@ describe 'Objective - defaults' do
   class DefaultUnit
     include Objective::Unit
     filter do
-      string :name, default: 'Bob Jones'
+      string :name, none: 'Bob Jones'
     end
 
     def execute

@@ -21,7 +21,7 @@ describe 'Objective::Filters::ArrayFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Objective::Filters::ArrayFilter.new(:arr, nils: false) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr) { any }
 
     result = f.feed(nil)
     assert_nil result.inputs
@@ -29,7 +29,7 @@ describe 'Objective::Filters::ArrayFilter' do
   end
 
   it 'considers nil to be valid' do
-    f = Objective::Filters::ArrayFilter.new(:arr, nils: true) { any }
+    f = Objective::Filters::ArrayFilter.new(:arr, nils: Objective::ALLOW) { any }
 
     result = f.feed(nil)
     assert_nil result.errors
@@ -127,7 +127,7 @@ describe 'Objective::Filters::ArrayFilter' do
       hash do
         string :foo
         integer :bar
-        boolean :baz, discard_nils: true
+        boolean :baz, none: Objective::ALLOW
       end
     end
 
@@ -165,7 +165,7 @@ describe 'Objective::Filters::ArrayFilter' do
 
   it 'can discard invalid elements' do
     f = Objective::Filters::ArrayFilter.new(:arr) do
-      integer discard_invalid: true
+      integer invalid: Objective::DISCARD
     end
 
     result = f.feed([1, '2', 'three', '4', 5, [6]])
@@ -175,7 +175,7 @@ describe 'Objective::Filters::ArrayFilter' do
 
   it 'can discard nil elements' do
     f = Objective::Filters::ArrayFilter.new(:arr) do
-      integer discard_nils: true
+      integer nils: Objective::DISCARD
     end
 
     result = f.feed([nil, 1, '2', nil, nil, '4', 5, nil])
@@ -185,7 +185,7 @@ describe 'Objective::Filters::ArrayFilter' do
 
   it 'can discard empty elements' do
     f = Objective::Filters::ArrayFilter.new(:arr) do
-      string discard_empty: true
+      string empty: Objective::DISCARD
     end
 
     result = f.feed(['', 1, '2', '', '', '4', 5, ''])

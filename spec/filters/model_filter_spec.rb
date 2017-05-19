@@ -50,14 +50,14 @@ describe 'Objective::Filters::ModelFilter' do
   end
 
   it 'considers nil to be invalid' do
-    f = Objective::Filters::ModelFilter.new(:simple_model, nils: false)
+    f = Objective::Filters::ModelFilter.new(:simple_model)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_equal :nils, result.errors
   end
 
   it 'considers nil to be valid' do
-    f = Objective::Filters::ModelFilter.new(:simple_model, nils: true)
+    f = Objective::Filters::ModelFilter.new(:simple_model, nils: Objective::ALLOW)
     result = f.feed(nil)
     assert_nil result.inputs
     assert_nil result.errors

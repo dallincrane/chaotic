@@ -5,7 +5,7 @@ class SimpleUnit
   filter do
     string :name, max: 10
     string :email
-    integer :amount, discard_nils: true
+    integer :amount, none: ALLOW
   end
 
   def validate

@@ -19,7 +19,7 @@ module Objective
       end
 
       def validate(coerced)
-        return :empty if !options.empty && coerced.empty?
+        return :empty if coerced.empty?
         return :min if options.min && coerced.length < options.min
         return :max if options.max && coerced.length > options.max
         return :in if options.in && !options.in.include?(coerced)

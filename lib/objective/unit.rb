@@ -5,6 +5,9 @@ module Objective
 
     included do
       attr_reader :inputs, :raw_inputs, :built
+      const_set('ALLOW', Objective::ALLOW)
+      const_set('DENY', Objective::DENY)
+      const_set('DISCARD', Objective::DISCARD)
     end
 
     class_methods do
