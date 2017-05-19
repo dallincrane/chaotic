@@ -5,9 +5,9 @@ class CreateUser
 
   filter do
     string :name
-    date :birthday, nils: Objective::ALLOW
+    date :birthday, nils: ALLOW
     hash :settings do
-      string :home_page, nils: Objective::DISCARD
+      string :home_page, nils: DISCARD
       decimal :pi, none: 3.14
     end
   end
@@ -26,28 +26,8 @@ end
 ## Running A Objective Class
 ```ruby
 CreateUser.run(params)
-
-CreateUser.run!(params)
-# <User >
-```
-
-### Setting the Global Config
-```ruby
-Choatic.boolean_map = {
-  'true' => true,
-  'false' => false,
-  '1' => true,
-  '0' => false
-}
-
-Objective.config do |config|
-  config.boolean_map = {
-    'true' => true,
-    'false' => false,
-    '1' => true,
-    '0' => false
-  }
-end
+# or
+CreateUser.run!(params) # <User >
 ```
 
 ### Filter Options  
@@ -56,12 +36,15 @@ _none_ means that a key on the options hash is not present
 
 
 ## Global Options
-* **default**
-  * none: does nothing
-  * (anything): replaces missing or discarded values
+* **none**
+  * ALLOW: allows data to not be provided but still valid
+  * DENY: makes data invalid when value is not provided
+  * (anything else): becomes a default value for when a value is not provided
 * **nils**
-  * != true: invalid when data is nil
-  * true: allows nil data to be valid
+  * ALLOW: allows nil data to be valid
+  * DENY: makes nil data invalid
+  * DISCARD: removes key from input data altogether
+  * (anything else): replaces data when nil, like a default value
 * **strict**
   * != true: allows type coercion
   * true: disables type coercion
