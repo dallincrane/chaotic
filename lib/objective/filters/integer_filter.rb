@@ -33,7 +33,6 @@ module Objective
         return :in unless included?(coerced)
         return :min unless above_min?(coerced)
         return :max unless below_max?(coerced)
-        return :scale unless within_scale?(coerced)
       end
 
       def included?(datum)
@@ -49,11 +48,6 @@ module Objective
       def below_max?(datum)
         return true if options.max.nil?
         datum <= options.max
-      end
-
-      def within_scale?(datum)
-        return true if options.scale.nil?
-        (datum - datum.round(options.scale)).zero?
       end
     end
   end

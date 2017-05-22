@@ -98,7 +98,6 @@ module Objective
       decimal_mark: '.',
       min: nil,
       max: nil,
-      scale: nil,
       in: nil
     )
 
