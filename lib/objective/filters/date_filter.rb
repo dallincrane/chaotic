@@ -8,8 +8,8 @@ module Objective
         invalid: Objective::DENY,
         strict: false,
         format: nil,
-        after: nil,
-        before: nil
+        min: nil,
+        max: nil
       )
 
       private
@@ -31,8 +31,8 @@ module Objective
       end
 
       def validate(coerced)
-        return :after if options.after && coerced <= options.after
-        return :before if options.before && coerced >= options.before
+        return :min if options.min && coerced <= options.min
+        return :max if options.max && coerced >= options.max
       end
     end
   end

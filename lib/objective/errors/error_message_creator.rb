@@ -16,14 +16,11 @@ module Objective
           model: 'must be the right class',
           date: 'date does non exist',
 
-          before: 'must be before given date',
-          after: 'must be after given date',
           empty: 'cannot be empty',
           matches: 'has an incorrect format',
           in: 'is not an available option',
           min: 'is too small',
           max: 'is too big',
-
           new_records: 'model must be saved'
         )
       end

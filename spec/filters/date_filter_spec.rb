@@ -30,51 +30,51 @@ describe 'Objective::Filters::DateFilter' do
     end
   end
 
-  it 'checks if the given date is after a certain date' do
+  it 'checks if the given date is after the min date' do
     date = Date.new(2005, 1, 1)
-    after_date = Date.new(2000, 1, 1)
-    f = Objective::Filters::DateFilter.new(:d1, after: after_date)
+    min_date = Date.new(2000, 1, 1)
+    f = Objective::Filters::DateFilter.new(:d1, min: min_date)
     result = f.feed(date)
 
     assert_equal date, result.inputs
     assert_nil result.errors
   end
 
-  it 'gives errors when the given date is before the after date' do
+  it 'gives errors when the given date is before the min date' do
     date = Date.new(1995, 1, 1)
-    after_date = Date.new(2000, 1, 1)
-    f = Objective::Filters::DateFilter.new(:d1, after: after_date)
+    min_date = Date.new(2000, 1, 1)
+    f = Objective::Filters::DateFilter.new(:d1, min: min_date)
     result = f.feed(date)
 
     assert_equal date, result.inputs
-    assert_equal :after, result.errors
+    assert_equal :min, result.errors
   end
 
-  it 'checks if the given date is before a certain date' do
+  it 'checks if the given date is before a max date' do
     date = Date.new(1995, 1, 1)
-    after_date = Date.new(2000, 1, 1)
-    f = Objective::Filters::DateFilter.new(:d1, before: after_date)
+    min_date = Date.new(2000, 1, 1)
+    f = Objective::Filters::DateFilter.new(:d1, max: min_date)
     result = f.feed(date)
 
     assert_equal date, result.inputs
     assert_nil result.errors
   end
 
-  it 'gives errors when the given date is after the before date' do
+  it 'gives errors when the given date is after the max date' do
     date = Date.new(2005, 1, 1)
-    before_date = Date.new(2000, 1, 1)
-    f = Objective::Filters::DateFilter.new(:d1, before: before_date)
+    max_date = Date.new(2000, 1, 1)
+    f = Objective::Filters::DateFilter.new(:d1, max: max_date)
     result = f.feed(date)
 
     assert_equal date, result.inputs
-    assert_equal :before, result.errors
+    assert_equal :max, result.errors
   end
 
   it 'checks if the given date is in the given range' do
     date = Date.new(2005, 1, 1)
-    after_date = Date.new(2000, 1, 1)
-    before_date = Date.new(2010, 1, 1)
-    f = Objective::Filters::DateFilter.new(:d1, after: after_date, before: before_date)
+    min_date = Date.new(2000, 1, 1)
+    max_date = Date.new(2010, 1, 1)
+    f = Objective::Filters::DateFilter.new(:d1, min: min_date, max: max_date)
     result = f.feed(date)
 
     assert_equal date, result.inputs

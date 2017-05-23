@@ -26,41 +26,41 @@ describe 'Objective::Filters::TimeFilter' do
     assert_nil result.errors
   end
 
-  it 'checks if the given time is after a certain time' do
+  it 'checks if the given time is after the min time' do
     time = Time.now
-    f = Objective::Filters::TimeFilter.new(:t, after: time - 1)
+    f = Objective::Filters::TimeFilter.new(:t, min: time - 1)
     result = f.feed(time)
     assert_equal time, result.inputs
     assert_nil result.errors
   end
 
-  it 'gives errors when the given time is before the after time' do
+  it 'gives errors when the given time is before the min time' do
     time = Time.now
-    f = Objective::Filters::TimeFilter.new(:t, after: time + 1)
+    f = Objective::Filters::TimeFilter.new(:t, min: time + 1)
     result = f.feed(time)
     assert_equal time, result.inputs
-    assert_equal :after, result.errors
+    assert_equal :min, result.errors
   end
 
-  it 'checks if the given time is before a certain time' do
+  it 'checks if the given time is before the max time' do
     time = Time.now
-    f = Objective::Filters::TimeFilter.new(:t, before: time + 1)
+    f = Objective::Filters::TimeFilter.new(:t, max: time + 1)
     result = f.feed(time)
     assert_equal time, result.inputs
     assert_nil result.errors
   end
 
-  it 'gives errors when the given time is after the before time' do
+  it 'gives errors when the given time is after the max time' do
     time = Time.now
-    f = Objective::Filters::TimeFilter.new(:t, before: time - 1)
+    f = Objective::Filters::TimeFilter.new(:t, max: time - 1)
     result = f.feed(time)
     assert_equal time, result.inputs
-    assert_equal :before, result.errors
+    assert_equal :max, result.errors
   end
 
   it 'checks if the given time is in the given range' do
     time = Time.now
-    f = Objective::Filters::TimeFilter.new(:t, after: time - 1, before: time + 1)
+    f = Objective::Filters::TimeFilter.new(:t, min: time - 1, max: time + 1)
     result = f.feed(time)
     assert_equal time, result.inputs
     assert_nil result.errors
