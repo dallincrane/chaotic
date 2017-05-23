@@ -8,8 +8,7 @@ module Objective
         invalid: Objective::DENY,
         strict: false,
         empty: Objective::DENY,
-        allow_control_characters: false,
-        strip: true,
+        squish: true,
         min: nil,
         max: nil,
         in: nil,
@@ -21,8 +20,7 @@ module Objective
       def coerce(raw)
         return raw unless raw.is_a?(String) || coercable?(raw)
         tmp = raw.is_a?(BigDecimal) ? raw.to_s(options.decimal_format) : raw.to_s
-        tmp = tmp.gsub(/[^[:print:]\t\r\n]+/, ' ') unless options.allow_control_characters
-        tmp = tmp.strip if options.strip
+        tmp = tmp.squish if options.squish
         tmp
       end
 

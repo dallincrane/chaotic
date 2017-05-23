@@ -57,7 +57,7 @@ describe 'Objective::Filters::RootFilter' do
       assert_nil result.errors
     end
 
-    it 'bar is optional -- discards empty if it needs to be stripped' do
+    it 'bar is optional -- discards empty if it needs to be squished' do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
@@ -70,11 +70,11 @@ describe 'Objective::Filters::RootFilter' do
       assert_nil result.errors
     end
 
-    it "bar is optional -- don't discard empty if it's spaces but stripping is off" do
+    it "bar is optional -- don't discard empty if it's spaces but squishing is off" do
       hf = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, empty: Objective::DISCARD, strip: false
+          string :bar, empty: Objective::DISCARD, squish: false
         end
       end
 
