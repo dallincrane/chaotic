@@ -2,6 +2,14 @@
 module Objective
   module Filters
     class DuckFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        methods: nil
+      )
+
       private
 
       def coerce_error(coerced)

@@ -2,6 +2,14 @@
 module Objective
   module Filters
     class ArrayFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        wrap: false
+      )
+
       def feed(raw)
         result = super(raw)
         return result if result == Objective::DISCARD || result.errors || result.inputs.nil?

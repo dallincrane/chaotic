@@ -2,6 +2,18 @@
 module Objective
   module Filters
     class IntegerFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        delimiter: ', ',
+        decimal_mark: '.',
+        min: nil,
+        max: nil,
+        in: nil
+      )
+
       private
 
       def coerce(datum)

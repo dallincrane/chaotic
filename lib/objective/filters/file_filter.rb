@@ -2,6 +2,15 @@
 module Objective
   module Filters
     class FileFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        upload: false,
+        size: nil
+      )
+
       private
 
       def coerce_error(coerced)

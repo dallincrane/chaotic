@@ -2,6 +2,18 @@
 module Objective
   module Filters
     class DecimalFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        delimiter: ', ',
+        decimal_mark: '.',
+        min: nil,
+        max: nil,
+        scale: nil
+      )
+
       private
 
       # TODO: the Rational class should be coerced - it requires a precision argument
