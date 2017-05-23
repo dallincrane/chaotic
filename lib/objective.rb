@@ -12,6 +12,7 @@ require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/hash/deep_merge'
 require 'active_support/core_ext/array/wrap'
+require 'active_support/core_ext/string/filters'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/integer/inflections'
 

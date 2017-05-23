@@ -38,17 +38,17 @@ describe 'Objective::Filters::StringFilter' do
     end
   end
 
-  it 'strips' do
-    sf = Objective::Filters::StringFilter.new(:s, strip: true)
-    result = sf.feed(' hello ')
-    assert_equal 'hello', result.inputs
+  it 'squishes' do
+    sf = Objective::Filters::StringFilter.new(:s)
+    result = sf.feed(" Hello,\tWorld!\r\nNew Line ")
+    assert_equal 'Hello, World! New Line', result.inputs
     assert_nil result.errors
   end
 
-  it 'doesn\'t strip' do
-    sf = Objective::Filters::StringFilter.new(:s, strip: false)
-    result = sf.feed(' hello ')
-    assert_equal ' hello ', result.inputs
+  it 'does not squish' do
+    sf = Objective::Filters::StringFilter.new(:s, squish: false)
+    result = sf.feed(" hello \t")
+    assert_equal " hello \t", result.inputs
     assert_nil result.errors
   end
 
@@ -80,7 +80,7 @@ describe 'Objective::Filters::StringFilter' do
     assert_nil result.errors
   end
 
-  it 'considers stripped strings that are empty to be invalid' do
+  it 'considers squished strings that are empty to be invalid' do
     sf = Objective::Filters::StringFilter.new(:s)
     result = sf.feed('   ')
     assert_equal '', result.inputs
@@ -226,26 +226,5 @@ describe 'Objective::Filters::StringFilter' do
     result = sf.feed(true)
     assert_equal true, result.inputs
     assert_equal :string, result.errors
-  end
-
-  it 'removes unprintable characters' do
-    sf = Objective::Filters::StringFilter.new(:s, allow_control_characters: false)
-    result = sf.feed("Hello\u0000\u0000World!")
-    assert_equal 'Hello World!', result.inputs
-    assert_nil result.errors
-  end
-
-  it "doesn't remove unprintable characters" do
-    sf = Objective::Filters::StringFilter.new(:s, allow_control_characters: true)
-    result = sf.feed("Hello\u0000\u0000World!")
-    assert_equal "Hello\u0000\u0000World!", result.inputs
-    assert_nil result.errors
-  end
-
-  it "doesn't remove tabs, spaces and line breaks" do
-    sf = Objective::Filters::StringFilter.new(:s, allow_control_characters: false)
-    result = sf.feed("Hello,\tWorld !\r\nNew Line")
-    assert_equal "Hello,\tWorld !\r\nNew Line", result.inputs
-    assert_nil result.errors
   end
 end
