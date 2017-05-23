@@ -2,6 +2,22 @@
 module Objective
   module Filters
     class StringFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        empty: Objective::DENY,
+        allow_control_characters: false,
+        strip: true,
+        min: nil,
+        max: nil,
+        in: nil,
+        matches: nil,
+        decimal_format: 'F',
+        coercable_classes: [Symbol, TrueClass, FalseClass, Integer, Float, BigDecimal].freeze
+      )
+
       def coerce(raw)
         return raw unless raw.is_a?(String) || coercable?(raw)
         tmp = raw.is_a?(BigDecimal) ? raw.to_s(options.decimal_format) : raw.to_s

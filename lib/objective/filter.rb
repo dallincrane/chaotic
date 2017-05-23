@@ -29,11 +29,7 @@ module Objective
     end
 
     def options
-      @options ||= OpenStruct.new(type_specific_options_hash.merge(@given_options))
-    end
-
-    def type_specific_options_hash
-      Objective::Filters::Config[self.class.filter_name].to_h
+      @options ||= OpenStruct.new(self.class.const_get('Options').to_h.merge(@given_options))
     end
 
     def sub_filters_hash

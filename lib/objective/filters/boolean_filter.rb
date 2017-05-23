@@ -2,6 +2,19 @@
 module Objective
   module Filters
     class BooleanFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        coercion_map: {
+          'true' => true,
+          'false' => false,
+          '1' => true,
+          '0' => false
+        }.freeze
+      )
+
       private
 
       def coerce(raw)

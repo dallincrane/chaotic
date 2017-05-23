@@ -2,6 +2,16 @@
 module Objective
   module Filters
     class DateFilter < Objective::Filter
+      Options = OpenStruct.new(
+        none: Objective::DENY,
+        nils: Objective::DENY,
+        invalid: Objective::DENY,
+        strict: false,
+        format: nil,
+        after: nil,
+        before: nil
+      )
+
       private
 
       def coerce(raw)

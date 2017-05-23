@@ -2,6 +2,8 @@
 module Objective
   module Filters
     class RootFilter < Objective::Filter
+      Options = OpenStruct.new
+
       def filter(&block)
         instance_eval(&block)
       end
