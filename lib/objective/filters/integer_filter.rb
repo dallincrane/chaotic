@@ -21,6 +21,7 @@ module Objective
 
         datum_str = raw_to_string(datum)
         return datum unless datum_str
+        return datum if datum_str.include?('.') && options.decimal_mark != '.' && !options.delimiter.include?('.')
 
         clean_str = datum_str.tr(options.delimiter, '').tr(options.decimal_mark, '.')
         return datum unless clean_str =~ /\A[-+]?\d*\.?0*\z/

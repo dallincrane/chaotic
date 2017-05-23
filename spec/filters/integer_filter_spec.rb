@@ -71,6 +71,23 @@ describe 'Objective::Filters::IntegerFilter' do
     end
   end
 
+  it 'allows alternative number formats' do
+    f = Objective::Filters::IntegerFilter.new(:x, delimiter: '.', decimal_mark: ',')
+    result = f.feed('123.456,000')
+
+    assert result.inputs.is_a?(Integer)
+    assert_equal 123_456, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'considers periods invalid when provided an alternative number format without a period' do
+    f = Objective::Filters::IntegerFilter.new(:x, decimal_mark: '|')
+    result = f.feed('3.00')
+
+    assert_equal '3.00', result.inputs
+    assert_equal :integer, result.errors
+  end
+
   it 'considers nil to be invalid' do
     f = Objective::Filters::IntegerFilter.new(:i)
     result = f.feed(nil)

@@ -23,6 +23,7 @@ module Objective
         return datum.to_d if datum.is_a?(Integer) || datum.is_a?(Float)
 
         return datum unless datum.is_a?(String)
+        return datum if options.decimal_mark != '.' && !options.delimiter.include?('.') && datum.include?('.')
 
         clean_str = datum.tr(options.delimiter, '').tr(options.decimal_mark, '.')
         return datum unless clean_str =~ /\A[-+]?\d*\.?\d*\z/

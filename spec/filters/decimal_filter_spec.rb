@@ -125,13 +125,21 @@ describe 'Objective::Filters::DecimalFilter' do
     assert_equal :decimal, result.errors
   end
 
-  it 'can allow alternative number formats' do
+  it 'allows alternative number formats' do
     f = Objective::Filters::DecimalFilter.new(:x, delimiter: '.', decimal_mark: ',')
     result = f.feed('123.456,789')
 
     assert result.inputs.is_a?(BigDecimal)
     assert_equal 123_456.789, result.inputs
     assert_nil result.errors
+  end
+
+  it 'considers periods invalid when provided an alternative number format without a period' do
+    f = Objective::Filters::DecimalFilter.new(:x, decimal_mark: '|')
+    result = f.feed('3.14')
+
+    assert_equal '3.14', result.inputs
+    assert_equal :decimal, result.errors
   end
 
   it 'considers numbers with less decimal points than the scale value to be valid' do

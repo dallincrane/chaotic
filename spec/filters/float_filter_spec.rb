@@ -82,6 +82,23 @@ describe 'Objective::Filters::FloatFilter' do
     end
   end
 
+  it 'allows alternative number formats' do
+    f = Objective::Filters::FloatFilter.new(:x, delimiter: '.', decimal_mark: ',')
+    result = f.feed('123.456,789')
+
+    assert result.inputs.is_a?(Float)
+    assert_equal 123_456.789, result.inputs
+    assert_nil result.errors
+  end
+
+  it 'considers periods invalid when provided an alternative number format without a period' do
+    f = Objective::Filters::FloatFilter.new(:x, decimal_mark: '|')
+    result = f.feed('3.14')
+
+    assert_equal '3.14', result.inputs
+    assert_equal :float, result.errors
+  end
+
   it 'considers nil to be invalid' do
     f = Objective::Filters::FloatFilter.new(:x)
     result = f.feed(nil)
