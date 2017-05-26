@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'test_helper'
 
 describe 'Objective::Filters::FloatFilter' do
   it 'allows floats' do

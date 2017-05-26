@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'test_helper'
 
 describe 'Objective::Filters::DuckFilter' do
   it 'allows objects that respond to a single specified method' do

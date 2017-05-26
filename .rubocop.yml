@@ -16,7 +16,7 @@ Metrics/MethodLength:
 Metrics/BlockLength:
   Max: 27
   Exclude:
-    - 'spec/**/*'
+    - 'test/**/*'
 
 Metrics/AbcSize:
   Max: 26
