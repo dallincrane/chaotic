@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SimpleUnit
   include Objective::Unit
 
@@ -9,7 +10,7 @@ class SimpleUnit
   end
 
   def validate
-    return if email&.include?('@')
+    return if email.include?('@')
     add_error(:email, :invalid, 'Email must contain @')
   end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'stringio'
 
@@ -132,7 +133,9 @@ describe 'Objective::Filters::ArrayFilter' do
     end
 
     result = f.feed([{ foo: 'f', bar: 3, baz: true }, { foo: 'f', bar: 3 }, { foo: 'f' }])
-    assert_equal [{ 'foo' => 'f', 'bar' => 3, 'baz' => true }, { 'foo' => 'f', 'bar' => 3 }, { 'foo' => 'f' }], result.inputs
+    expected_result = [{ 'foo' => 'f', 'bar' => 3, 'baz' => true }, { 'foo' => 'f', 'bar' => 3 }, { 'foo' => 'f' }]
+
+    assert_equal expected_result, result.inputs
     assert_nil result.errors[0]
     assert_nil result.errors[1]
     assert_equal ({ 'bar' => :required }), result.errors[2].codes
@@ -145,8 +148,8 @@ describe 'Objective::Filters::ArrayFilter' do
       end
     end
 
-    result = f.feed([%w(h e), ['l'], [], ['lo']])
-    assert_equal [%w(h e), ['l'], [], ['lo']], result.inputs
+    result = f.feed([%w[h e], ['l'], [], ['lo']])
+    assert_equal [%w[h e], ['l'], [], ['lo']], result.inputs
     assert_nil result.errors
   end
 
@@ -158,9 +161,12 @@ describe 'Objective::Filters::ArrayFilter' do
     end
 
     result = f.feed([['h', 'e', {}], ['l'], [], ['']])
+    err_message_empty = '1st Item cannot be empty'
+    err_message_string = '3rd Item must be a string'
+
     assert_equal [[nil, nil, :string], nil, nil, [:empty]], result.errors.codes
-    assert_equal [[nil, nil, '3rd Item must be a string'], nil, nil, ['1st Item cannot be empty']], result.errors.message
-    assert_equal ['3rd Item must be a string', '1st Item cannot be empty'], result.errors.message_list
+    assert_equal [[nil, nil, err_message_string], nil, nil, [err_message_empty]], result.errors.message
+    assert_equal [err_message_string, err_message_empty], result.errors.message_list
   end
 
   it 'can discard invalid elements' do
@@ -190,6 +196,6 @@ describe 'Objective::Filters::ArrayFilter' do
 
     result = f.feed(['', 1, '2', '', '', '4', 5, ''])
     assert_nil result.errors
-    assert_equal %w(1 2 4 5), result.inputs
+    assert_equal %w[1 2 4 5], result.inputs
   end
 end

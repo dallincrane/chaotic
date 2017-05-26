@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'Objective::Filters::BooleanFilter' do
@@ -57,7 +58,7 @@ describe 'Objective::Filters::BooleanFilter' do
 
   it 'considers other string to be invalid' do
     f = Objective::Filters::BooleanFilter.new
-    %w(truely 2).each do |str|
+    %w[truely 2].each do |str|
       result = f.feed(str)
       assert_equal str, result.inputs
       assert_equal :boolean, result.errors

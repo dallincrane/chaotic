@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Objective
   module Errors
     class ErrorMessageCreator
@@ -36,7 +37,8 @@ module Objective
       end
 
       def index_ordinal(index)
-        index&.+(1)&.ordinalize
+        return if index.nil?
+        (index + 1).ordinalize
       end
     end
   end
