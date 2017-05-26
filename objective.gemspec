@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors       = ['Dallin Crane']
   s.homepage      = 'https://github.com/dallincrane/objective'
   s.files         = Dir['lib/**/*'].keep_if { |file| File.file?(file) }
-  s.test_files    = Dir['spec/**/*']
+  s.test_files    = Dir['test/**/*']
   s.require_paths = ['lib']
   s.license       = 'MIT'
 

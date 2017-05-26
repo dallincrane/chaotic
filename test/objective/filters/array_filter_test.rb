@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'test_helper'
 require 'stringio'
 
 describe 'Objective::Filters::ArrayFilter' do

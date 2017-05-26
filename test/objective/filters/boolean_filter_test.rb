@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'test_helper'
 
 describe 'Objective::Filters::BooleanFilter' do
   it 'allows booleans' do

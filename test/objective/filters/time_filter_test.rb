@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'test_helper'
 
 describe 'Objective::Filters::TimeFilter' do
   it 'takes a Time object' do
