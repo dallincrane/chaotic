@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Objective
   class Filter
     def self.inherited(child_class)
@@ -12,7 +13,8 @@ module Objective
     end
 
     def self.filter_name(klass = self)
-      filter_name = klass.name.match(/\AObjective::Filters::(.*)Filter\z/)&.[](1)&.underscore
+      filter_match = klass.name.match(/\AObjective::Filters::(.*)Filter\z/)
+      filter_name = filter_match ? filter_match[1].try(:underscore) : nil
       raise 'filename error in filters folder' unless filter_name
       filter_name
     end
@@ -100,7 +102,7 @@ module Objective
     def feed_invalid(errors, raw, coerced)
       case options.invalid
       when Objective::DENY
-        # nothing
+        nil
       when Objective::DISCARD
         return Objective::DISCARD
       else

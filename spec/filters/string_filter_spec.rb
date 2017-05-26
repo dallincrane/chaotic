@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'Objective::Filters::StringFilter' do
@@ -137,14 +138,14 @@ describe 'Objective::Filters::StringFilter' do
   end
 
   it 'considers non-inclusion to be invalid' do
-    sf = Objective::Filters::StringFilter.new(:s, in: %w(red blue green))
+    sf = Objective::Filters::StringFilter.new(:s, in: %w[red blue green])
     result = sf.feed('orange')
     assert_equal 'orange', result.inputs
     assert_equal :in, result.errors
   end
 
   it 'considers inclusion to be valid' do
-    sf = Objective::Filters::StringFilter.new(:s, in: %w(red blue green))
+    sf = Objective::Filters::StringFilter.new(:s, in: %w[red blue green])
     result = sf.feed('red')
     assert_equal 'red', result.inputs
     assert_nil result.errors

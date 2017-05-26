@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Objective
   module Filters
     class RootFilter < Objective::Filter

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'Objective - errors' do
@@ -6,7 +7,7 @@ describe 'Objective - errors' do
     include Objective::Unit
     filter do
       string :str1
-      string :str2, in: %w(opt1 opt2 opt3)
+      string :str2, in: %w[opt1 opt2 opt3]
       integer :int1, none: ALLOW
 
       hash :hash1, none: ALLOW do

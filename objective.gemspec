@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Gem::Specification.new do |s|
   s.name          = 'objective'
   s.version       = '0.2.1'

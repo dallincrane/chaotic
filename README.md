@@ -166,7 +166,7 @@ Here, we pass two hashes to CreateComment. Even if the params[:comment] hash has
   ```ruby
   filter do
     string :name, max: 10
-    string :state, in: %w(AL AK AR ... WY)
+    string :state, in: %w[AL AK AR ... WY]
     integer :age
     boolean :is_special, none: true
     model :account

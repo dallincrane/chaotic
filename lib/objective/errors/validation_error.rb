@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Objective
   class ValidationError < StandardError
     attr_accessor :errors

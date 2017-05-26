@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Objective
   module Filters
     class IntegerFilter < Objective::Filter

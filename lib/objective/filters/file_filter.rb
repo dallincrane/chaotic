@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Objective
   module Filters
     class FileFilter < Objective::Filter
@@ -18,8 +19,8 @@ module Objective
       end
 
       def respond_to_all?(coerced)
-        methods = %i(read size)
-        methods.concat(%i(original_filename content_type)) if options.upload
+        methods = %i[read size]
+        methods.concat(%i[original_filename content_type]) if options.upload
         methods.map { |method| coerced.respond_to?(method) }.all?
       end
 
