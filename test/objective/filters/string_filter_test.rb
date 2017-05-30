@@ -175,7 +175,7 @@ describe 'Objective::Filters::StringFilter' do
   it 'converts bigdecimals to scientific notation strings' do
     sf = Objective::Filters::StringFilter.new(:s, decimal_format: 'E')
     result = sf.feed(BigDecimal.new('0.00000123'))
-    assert_equal '0.123e-5', result.inputs
+    assert_match(/\A0\.123(e|E)-5\z/, result.inputs)
     assert_nil result.errors
   end
 
