@@ -1,4 +1,5 @@
 # Objective
+[![Build Status](https://travis-ci.org/dallincrane/objective.svg)](https://travis-ci.org/dallincrane/objective)
 
 Write safe and maintainable code by creating modular units of business logic where all inputs are sanitized and validated.
 
