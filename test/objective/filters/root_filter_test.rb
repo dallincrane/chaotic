@@ -13,7 +13,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar')
-      assert_equal OpenStruct.new(foo: 'bar'), result.inputs
+      assert_equal({ 'foo' => 'bar' }, result.inputs)
       assert_nil result.errors
     end
 
@@ -26,7 +26,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: nil)
-      assert_equal OpenStruct.new(foo: 'bar'), result.inputs
+      assert_equal({ 'foo' => 'bar' }, result.inputs)
       assert_nil result.errors
     end
 
@@ -39,7 +39,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: nil)
-      assert_equal OpenStruct.new(foo: 'bar', bar: nil), result.inputs
+      assert_equal({ 'foo' => 'bar', 'bar' => nil }, result.inputs)
       assert_nil result.errors
     end
   end
@@ -54,7 +54,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: '')
-      assert_equal OpenStruct.new(foo: 'bar'), result.inputs
+      assert_equal({ 'foo' => 'bar' }, result.inputs)
       assert_nil result.errors
     end
 
@@ -67,7 +67,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: ' ')
-      assert_equal OpenStruct.new(foo: 'bar'), result.inputs
+      assert_equal({ 'foo' => 'bar' }, result.inputs)
       assert_nil result.errors
     end
 
@@ -80,7 +80,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: ' ')
-      assert_equal OpenStruct.new(foo: 'bar', bar: ' '), result.inputs
+      assert_equal({ 'foo' => 'bar', 'bar' => ' ' }, result.inputs)
       assert_nil result.errors
     end
 
@@ -107,7 +107,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = hf.feed(foo: 'bar', bar: 'baz')
-      assert_equal OpenStruct.new(foo: 'bar'), result.inputs
+      assert_equal({ 'foo' => 'bar' }, result.inputs)
       assert_nil result.errors
     end
   end

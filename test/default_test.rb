@@ -11,20 +11,20 @@ describe 'Objective - defaults' do
     end
 
     def execute
-      inputs.to_h
+      inputs
     end
   end
 
   it 'should have a default if no value is passed' do
     outcome = DefaultUnit.run
-    assert_equal({ name: 'Bob Jones' }, outcome.result)
+    assert_equal({ 'name' => 'Bob Jones' }, outcome.result)
     assert_equal true, outcome.success
   end
 
   it 'should have the passed value if a value is passed' do
     outcome = DefaultUnit.run(name: 'Fred')
     assert_equal true, outcome.success
-    assert_equal({ name: 'Fred' }, outcome.result)
+    assert_equal({ 'name' => 'Fred' }, outcome.result)
   end
 
   it 'should be an error if nil is passed on a required field with a default' do

@@ -18,7 +18,7 @@ module Objective
         result.raw = raw
         result.coerced = coerce(raw)
 
-        inputs = OpenStruct.new
+        inputs = HashWithIndifferentAccess.new
         errors = Objective::Errors::ErrorHash.new
 
         data = result.coerced

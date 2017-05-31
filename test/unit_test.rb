@@ -9,7 +9,7 @@ describe 'Unit' do
       outcome = SimpleUnit.run(name: 'John', email: 'john@gmail.com', amount: 5)
 
       assert outcome.success
-      assert_equal OpenStruct.new(name: 'John', email: 'john@gmail.com', amount: 5), outcome.inputs
+      assert_equal({ 'name' => 'John', 'email' => 'john@gmail.com', 'amount' => 5 }, outcome.inputs)
       assert_nil outcome.errors
     end
 
@@ -17,7 +17,7 @@ describe 'Unit' do
       outcome = SimpleUnit.run(name: 'John', email: 'john@gmail.com', amount: 5, buggers: true)
 
       assert outcome.success
-      assert_equal OpenStruct.new(name: 'John', email: 'john@gmail.com', amount: 5), outcome.inputs
+      assert_equal({ 'name' => 'John', 'email' => 'john@gmail.com', 'amount' => 5 }, outcome.inputs)
       assert_nil outcome.errors
     end
 
@@ -77,14 +77,14 @@ describe 'Unit' do
       outcome = SimpleUnit.run({ name: 'John', email: 'john@gmail.com' }, email: 'bob@jones.com', amount: 5)
 
       assert outcome.success
-      assert_equal OpenStruct.new(name: 'John', email: 'bob@jones.com', amount: 5), outcome.inputs
+      assert_equal({ 'name' => 'John', 'email' => 'bob@jones.com', 'amount' => 5 }, outcome.inputs)
     end
 
     it 'should merge hashes indifferently' do
       outcome = SimpleUnit.run({ name: 'John', email: 'john@gmail.com' }, 'email' => 'bob@jones.com', 'amount' => 5)
 
       assert outcome.success
-      assert_equal OpenStruct.new(name: 'John', email: 'bob@jones.com', amount: 5), outcome.inputs
+      assert_equal({ 'name' => 'John', 'email' => 'bob@jones.com', 'amount' => 5 }, outcome.inputs)
     end
 
     it 'shouldn\'t accept non-hashes' do
@@ -107,7 +107,7 @@ describe 'Unit' do
 
     it 'should return the filtered inputs in the outcome' do
       outcome = SimpleUnit.run(name: ' John ', email: 'john@gmail.com', amount: '5')
-      assert_equal(OpenStruct.new(name: 'John', email: 'john@gmail.com', amount: 5), outcome.inputs)
+      assert_equal({ 'name' => 'John', 'email' => 'john@gmail.com', 'amount' => 5 }, outcome.inputs)
     end
   end
 
@@ -139,8 +139,8 @@ describe 'Unit' do
       end
 
       def execute
-        inputs.name = 'bob'
-        inputs.email = 'bob@jones.com'
+        inputs[:name] = 'bob'
+        inputs[:email] = 'bob@jones.com'
         { name: inputs[:name], email: inputs[:email] }
       end
     end
