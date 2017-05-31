@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name          = 'objective'
-  s.version       = '0.2.1'
+  s.version       = '0.2.2'
   s.summary       = 'Business Logic Units'
   s.description   = 'functional classes with param validations for cautious developers'
   s.authors       = ['Dallin Crane']
