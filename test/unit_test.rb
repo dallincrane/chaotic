@@ -116,7 +116,7 @@ describe 'Unit' do
       include Objective::Unit
       filter do
         string :name
-        string :email, none: ALLOW
+        string :email, nils: ALLOW
       end
 
       def execute
@@ -135,7 +135,7 @@ describe 'Unit' do
       include Objective::Unit
       filter do
         string :name
-        string :email, none: ALLOW
+        string :email, nils: ALLOW
       end
 
       def execute
@@ -156,7 +156,7 @@ describe 'Unit' do
       include Objective::Unit
       filter do
         string :name
-        string :email, none: ALLOW
+        string :email, nils: ALLOW
       end
 
       def execute
@@ -179,7 +179,7 @@ describe 'Unit' do
       include Objective::Unit
       filter do
         string :name
-        string :email, none: ALLOW
+        string :email, nils: ALLOW
       end
 
       def execute
@@ -202,7 +202,7 @@ describe 'Unit' do
       include Objective::Unit
       filter do
         string :name
-        string :email, none: ALLOW
+        string :email, nils: ALLOW
       end
 
       def execute

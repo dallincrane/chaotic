@@ -29,8 +29,8 @@ class CreateUser
     string :name
     date :birthday, nils: ALLOW
     hash :settings do
-      string :home_page, nils: DISCARD
-      integer :version, none: 2
+      string :home_page
+      integer :version, nils: 2
     end
   end
 
@@ -169,12 +169,12 @@ Here, we pass two hashes to CreateComment. Even if the params[:comment] hash has
     string :name, max: 10
     string :state, in: %w[AL AK AR ... WY]
     integer :age
-    boolean :is_special, none: true
+    boolean :is_special, nils: true
     model :account
-    array :tags, none: ALLOW do
+    array :tags, nils: ALLOW do
       string
     end
-    hash :prefs, none: ALLOW do
+    hash :prefs, nils: ALLOW do
       boolean :smoking
       boolean :view
     end
@@ -246,9 +246,9 @@ If things don't pan out, you'll get back an Objective::Errors::ErrorHash object 
 outcome = CreateUser.run(name: "Bob", newsletter_subscribe: "Wat")
 
 unless outcome.success?
-  outcome.errors.symbolic # => {email: :required, newsletter_subscribe: :boolean}
-  outcome.errors.message # => {email: "Email is required", newsletter_subscribe: "Newsletter Subscription isn't a boolean"}
-  outcome.errors.message_list # => ["Email is required", "Newsletter Subscription isn't a boolean"]
+  outcome.errors.symbolic # => {email: :nils, newsletter_subscribe: :boolean}
+  outcome.errors.message # => {email: "Email cannot be nil", newsletter_subscribe: "Newsletter Subscription isn't a boolean"}
+  outcome.errors.message_list # => ["Email cannot be nil", "Newsletter Subscription isn't a boolean"]
 end
 ```
 

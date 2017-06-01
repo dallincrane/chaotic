@@ -4,7 +4,6 @@ module Objective
   module Filters
     class HashFilter < Objective::Filter
       Options = OpenStruct.new(
-        none: Objective::DENY,
         nils: Objective::DENY,
         invalid: Objective::DENY,
         strict: false
@@ -12,16 +11,15 @@ module Objective
 
       def feed(raw)
         result = super(raw)
-        return result if result == Objective::DISCARD || result.errors || result.inputs.nil?
+        return result if result.errors || result.inputs.nil?
 
         errors = Objective::Errors::ErrorHash.new
         inputs = HashWithIndifferentAccess.new
 
         data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
-          datum = data.key?(key) ? data[key] : Objective::NONE
+          datum = data[key]
           key_filter_result = key_filter.feed(datum)
-          next if key_filter_result == Objective::DISCARD
 
           sub_data = key_filter_result.inputs
           sub_error = key_filter_result.errors

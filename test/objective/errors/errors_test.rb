@@ -8,14 +8,14 @@ describe 'Objective - errors' do
     filter do
       string :str1
       string :str2, in: %w[opt1 opt2 opt3]
-      integer :int1, none: ALLOW
+      integer :int1, nils: ALLOW
 
-      hash :hash1, none: ALLOW do
+      hash :hash1, nils: ALLOW do
         boolean :bool1
         boolean :bool2
       end
 
-      array :arr1, none: ALLOW do
+      array :arr1, nils: ALLOW do
         integer
       end
     end
@@ -74,7 +74,7 @@ describe 'Objective - errors' do
         'str1' => :empty,
         'str2' => :in,
         'int1' => :integer,
-        'hash1' => { 'bool1' => :boolean, 'bool2' => :required },
+        'hash1' => { 'bool1' => :boolean, 'bool2' => :nils },
         'arr1' => [:integer, nil, :integer]
       }
 
@@ -88,7 +88,7 @@ describe 'Objective - errors' do
         'int1' => 'Int1 must be an integer',
         'hash1' => {
           'bool1' => 'Bool1 must be a boolean',
-          'bool2' => 'Bool2 is required'
+          'bool2' => 'Bool2 cannot be nil'
         },
         'arr1' => ['1st Arr1 must be an integer', nil, '3rd Arr1 must be an integer']
       }
@@ -102,7 +102,7 @@ describe 'Objective - errors' do
         'Str2 is not an available option',
         'Int1 must be an integer',
         'Bool1 must be a boolean',
-        'Bool2 is required',
+        'Bool2 cannot be nil',
         '1st Arr1 must be an integer',
         '3rd Arr1 must be an integer'
       ]
@@ -113,24 +113,5 @@ describe 'Objective - errors' do
       assert_equal expected.size, @outcome.errors.message_list.size
       expected.each { |e| assert @outcome.errors.message_list.include?(e) }
     end
-  end
-
-  class WithShrinkingArray
-    include Objective::Unit
-    filter do
-      array :arr_one do
-        integer nils: DISCARD
-      end
-    end
-  end
-
-  it 'returns an ErrorArray for errors in arrays' do
-    o = WithShrinkingArray.run(arr_one: [nil, 1, 'sally'])
-
-    assert !o.success
-    assert o.errors.is_a?(Objective::Errors::ErrorHash)
-    assert o.errors[:arr_one].is_a?(Objective::Errors::ErrorArray)
-    assert_nil o.errors[:arr_one][0]
-    assert o.errors[:arr_one][1].is_a?(Objective::Errors::ErrorAtom)
   end
 end

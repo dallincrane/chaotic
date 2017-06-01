@@ -6,7 +6,6 @@ module Objective
       MESSAGES = Hash.new('is invalid').tap do |h|
         h.merge!(
           nils: 'cannot be nil',
-          required: 'is required',
 
           string: 'must be a string',
           integer: 'must be an integer',

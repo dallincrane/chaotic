@@ -128,17 +128,27 @@ describe 'Objective::Filters::ArrayFilter' do
       hash do
         string :foo
         integer :bar
-        boolean :baz, none: Objective::ALLOW
+        boolean :baz, nils: Objective::ALLOW
       end
     end
 
-    result = f.feed([{ foo: 'f', bar: 3, baz: true }, { foo: 'f', bar: 3 }, { foo: 'f' }])
-    expected_result = [{ 'foo' => 'f', 'bar' => 3, 'baz' => true }, { 'foo' => 'f', 'bar' => 3 }, { 'foo' => 'f' }]
+    result = f.feed(
+      [
+        { foo: 'f', bar: 3, baz: true },
+        { foo: 'f', bar: 3 },
+        { foo: 'f' }
+      ]
+    )
+    expected_result = [
+      { 'foo' => 'f', 'bar' => 3, 'baz' => true },
+      { 'foo' => 'f', 'bar' => 3, 'baz' => nil },
+      { 'foo' => 'f', 'baz' => nil }
+    ]
 
     assert_equal expected_result, result.inputs
     assert_nil result.errors[0]
     assert_nil result.errors[1]
-    assert_equal ({ 'bar' => :required }), result.errors[2].codes
+    assert_equal ({ 'bar' => :nils }), result.errors[2].codes
   end
 
   it 'lets you pass arrays of arrays' do
@@ -169,33 +179,33 @@ describe 'Objective::Filters::ArrayFilter' do
     assert_equal [err_message_string, err_message_empty], result.errors.message_list
   end
 
-  it 'can discard invalid elements' do
+  it 'can make invalid elements nil' do
     f = Objective::Filters::ArrayFilter.new(:arr) do
-      integer invalid: Objective::DISCARD
+      integer invalid: nil
     end
 
     result = f.feed([1, '2', 'three', '4', 5, [6]])
     assert_nil result.errors
-    assert_equal [1, 2, 4, 5], result.inputs
+    assert_equal [1, 2, nil, 4, 5, nil], result.inputs
   end
 
-  it 'can discard nil elements' do
+  it 'can allow nil elements' do
     f = Objective::Filters::ArrayFilter.new(:arr) do
-      integer nils: Objective::DISCARD
+      integer nils: Objective::ALLOW
     end
 
     result = f.feed([nil, 1, '2', nil, nil, '4', 5, nil])
     assert_nil result.errors
-    assert_equal [1, 2, 4, 5], result.inputs
+    assert_equal [nil, 1, 2, nil, nil, 4, 5, nil], result.inputs
   end
 
-  it 'can discard empty elements' do
+  it 'can allow empty elements' do
     f = Objective::Filters::ArrayFilter.new(:arr) do
-      string empty: Objective::DISCARD
+      string empty: Objective::ALLOW
     end
 
-    result = f.feed(['', 1, '2', '', '', '4', 5, ''])
+    result = f.feed(['', 'foo', '', '', 'bar', ''])
     assert_nil result.errors
-    assert_equal %w[1 2 4 5], result.inputs
+    assert_equal ['', 'foo', '', '', 'bar', ''], result.inputs
   end
 end
