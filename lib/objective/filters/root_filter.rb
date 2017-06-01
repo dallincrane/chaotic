@@ -18,14 +18,13 @@ module Objective
         result.raw = raw
         result.coerced = coerce(raw)
 
-        inputs = OpenStruct.new
+        inputs = HashWithIndifferentAccess.new
         errors = Objective::Errors::ErrorHash.new
 
         data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
-          datum = data.to_h.key?(key) ? data[key] : Objective::NONE
+          datum = data.to_h[key]
           key_filter_result = key_filter.feed(datum)
-          next if key_filter_result == Objective::DISCARD
 
           sub_data = key_filter_result.inputs
           sub_error = key_filter_result.errors

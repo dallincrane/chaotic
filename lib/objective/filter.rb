@@ -53,7 +53,6 @@ module Objective
     end
 
     def feed(raw)
-      return feed_none if raw == Objective::NONE
       return feed_nil if raw.nil?
 
       coerced = options.strict == true ? raw : coerce(raw)
@@ -66,33 +65,16 @@ module Objective
       feed_result(errors, raw, coerced)
     end
 
-    def feed_none
-      case options.none
-      when Objective::ALLOW
-        return Objective::DISCARD
-      when Objective::DENY
-        coerced = Objective::NONE
-        errors = :required
-      when Objective::DISCARD
-        raise 'the none option cannot be discarded — did you mean to use allow instead?'
-      else
-        coerced = options.none
-      end
-
-      feed_result(errors, Objective::NONE, coerced)
-    end
-
     def feed_nil
       case options.nils
       when Objective::ALLOW
-        coerced = nil
         errors = nil
-      when Objective::DENY
         coerced = nil
+      when Objective::DENY
         errors = :nils
-      when Objective::DISCARD
-        return Objective::DISCARD
+        coerced = nil
       else
+        errors = nil
         coerced = options.nils
       end
 
@@ -101,11 +83,12 @@ module Objective
 
     def feed_invalid(errors, raw, coerced)
       case options.invalid
+      when Objective::ALLOW
+        errors = nil
       when Objective::DENY
         nil
-      when Objective::DISCARD
-        return Objective::DISCARD
       else
+        errors = nil
         coerced = options.invalid
       end
 
@@ -118,8 +101,6 @@ module Objective
         errors = nil
       when Objective::DENY
         errors = :empty
-      when Objective::DISCARD
-        return Objective::DISCARD
       else
         coerced = options.empty
       end

@@ -4,7 +4,6 @@ module Objective
   module Filters
     class ArrayFilter < Objective::Filter
       Options = OpenStruct.new(
-        none: Objective::DENY,
         nils: Objective::DENY,
         invalid: Objective::DENY,
         strict: false,
@@ -13,7 +12,7 @@ module Objective
 
       def feed(raw)
         result = super(raw)
-        return result if result == Objective::DISCARD || result.errors || result.inputs.nil?
+        return result if result.errors || result.inputs.nil?
 
         inputs = []
         errors = Objective::Errors::ErrorArray.new
@@ -25,11 +24,6 @@ module Objective
         data = result.coerced
         data.each_with_index do |sub_data, index|
           sub_result = sub_filter.feed(sub_data)
-          if sub_result == Objective::DISCARD
-            index_shift += 1
-            next
-          end
-
           sub_data = sub_result.inputs
           sub_error = sub_result.errors
 

@@ -19,8 +19,6 @@ require 'active_support/core_ext/integer/inflections'
 
 require 'objective/allow'
 require 'objective/deny'
-require 'objective/discard'
-require 'objective/none'
 
 require 'objective/errors/error_atom'
 require 'objective/errors/error_hash'
