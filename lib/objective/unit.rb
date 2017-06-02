@@ -21,8 +21,11 @@ module Objective
 
       def root_filter
         @root_filter ||=
-          superclass.try(:root_filter).try(:dup) ||
-          Objective::Filters::RootFilter.new
+          if superclass.respond_to?(:root_filter)
+            superclass.root_filter.dup
+          else
+            Objective::Filters::RootFilter.new
+          end
       end
 
       def run(*args)
@@ -43,8 +46,8 @@ module Objective
       @raw_inputs = filter_result.coerced
       @inputs = filter_result.inputs
       @errors = filter_result.errors
-      try('validate') if valid?
-      result = valid? ? try('execute') : nil
+      validate if respond_to?(:validate) && valid?
+      result = valid? && respond_to?(:execute) ? execute : nil
 
       Objective::Outcome.new(
         success: valid?,

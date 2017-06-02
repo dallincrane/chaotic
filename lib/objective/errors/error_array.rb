@@ -4,7 +4,10 @@ module Objective
   module Errors
     class ErrorArray < Array
       def codes
-        map { |e| e.try(:codes) }
+        map do |e|
+          next unless e.respond_to?(:codes)
+          e.codes
+        end
       end
 
       def message(parent_key = nil, _index = nil)

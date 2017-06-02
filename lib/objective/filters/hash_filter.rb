@@ -37,7 +37,8 @@ module Objective
       end
 
       def coerce(raw)
-        raw.try(:with_indifferent_access)
+        return unless raw.respond_to?(:with_indifferent_access)
+        raw.with_indifferent_access
       end
 
       def coerce_error(coerced)
