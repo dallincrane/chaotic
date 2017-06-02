@@ -40,18 +40,18 @@ describe 'Unit' do
     end
 
     it 'should do standalone validation' do
-      outcome = SimpleUnit.build(name: 'JohnLong', email: 'john@gmail.com')
+      outcome = SimpleUnit.run(name: 'JohnLong', email: 'john@gmail.com')
       assert outcome.success
       assert_nil outcome.errors
 
-      outcome = SimpleUnit.build(name: 'JohnTooLong', email: 'john@gmail.com')
+      outcome = SimpleUnit.run(name: 'JohnTooLong', email: 'john@gmail.com')
       assert !outcome.success
       assert_nil outcome.result
       assert_equal :max, outcome.errors.codes[:name]
     end
 
     it 'should execute a custom validate method' do
-      outcome = SimpleUnit.build(name: 'JohnLong', email: 'xxxx')
+      outcome = SimpleUnit.run(name: 'JohnLong', email: 'xxxx')
 
       assert !outcome.success
       assert_equal :invalid, outcome.errors.codes[:email]
@@ -66,7 +66,7 @@ describe 'Unit' do
     end
 
     it 'should execute custom validate method only if regular validations succeed' do
-      outcome = SimpleUnit.build(name: 'JohnTooLong', email: 'xxxx')
+      outcome = SimpleUnit.run(name: 'JohnTooLong', email: 'xxxx')
 
       assert !outcome.success
       assert_equal :max, outcome.errors.codes[:name]

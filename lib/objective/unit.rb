@@ -5,7 +5,7 @@ module Objective
     def self.included(base)
       base.extend ClassMethods
       base.class_eval do
-        attr_reader :inputs, :raw_inputs, :built
+        attr_reader :inputs, :raw_inputs
         const_set('ALLOW', Objective::ALLOW)
         const_set('DENY', Objective::DENY)
       end
@@ -25,16 +25,6 @@ module Objective
           Objective::Filters::RootFilter.new
       end
 
-      def build(*args)
-        new.build(*args)
-      end
-
-      def build!(*args)
-        outcome = build(*args)
-        return outcome.result if outcome.success
-        raise Objective::ValidationError, outcome.errors
-      end
-
       def run(*args)
         new.run(*args)
       end
@@ -48,33 +38,24 @@ module Objective
 
     # INSTANCE METHODS
 
-    def build(*args)
+    def run(*args)
       filter_result = self.class.root_filter.feed(*args)
       @raw_inputs = filter_result.coerced
       @inputs = filter_result.inputs
       @errors = filter_result.errors
-      @built = true
       try('validate') if valid?
-      outcome
-    end
-
-    def run(*args)
-      build(*args) unless built
       result = valid? ? try('execute') : nil
-      outcome(result)
-    end
 
-    def valid?
-      @errors.nil?
-    end
-
-    def outcome(result = nil)
       Objective::Outcome.new(
         success: valid?,
         result: result,
         errors: @errors,
         inputs: inputs
       )
+    end
+
+    def valid?
+      @errors.nil?
     end
 
     protected
