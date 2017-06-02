@@ -2,15 +2,16 @@
 
 module Objective
   module Unit
-    extend ActiveSupport::Concern
-
-    included do
-      attr_reader :inputs, :raw_inputs, :built
-      const_set('ALLOW', Objective::ALLOW)
-      const_set('DENY', Objective::DENY)
+    def self.included(base)
+      base.extend ClassMethods
+      base.class_eval do
+        attr_reader :inputs, :raw_inputs, :built
+        const_set('ALLOW', Objective::ALLOW)
+        const_set('DENY', Objective::DENY)
+      end
     end
 
-    class_methods do
+    module ClassMethods
       def filter(&block)
         root_filter.filter(&block)
         root_filter.keys.each do |key|
