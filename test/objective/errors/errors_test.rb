@@ -57,11 +57,6 @@ describe 'Objective - errors' do
     assert o.errors[:arr1][2].is_a?(Objective::Errors::ErrorAtom)
   end
 
-  it 'titleizes keys' do
-    atom = Objective::Errors::ErrorAtom.new(:newsletter_subscription, :boolean)
-    assert_equal 'Newsletter Subscription must be a boolean', atom.message
-  end
-
   describe 'Bunch o errors' do
     before do
       @outcome = GivesErrors.run(
@@ -71,11 +66,11 @@ describe 'Objective - errors' do
 
     it 'gives coded errors' do
       expected = {
-        'str1' => :empty,
-        'str2' => :in,
-        'int1' => :integer,
-        'hash1' => { 'bool1' => :boolean, 'bool2' => :nils },
-        'arr1' => [:integer, nil, :integer]
+        str1: :empty,
+        str2: :in,
+        int1: :integer,
+        hash1: { bool1: :boolean, bool2: :nils },
+        arr1: [:integer, nil, :integer]
       }
 
       assert_equal expected, @outcome.errors.codes
@@ -83,14 +78,14 @@ describe 'Objective - errors' do
 
     it 'gives messages' do
       expected = {
-        'str1' => 'Str1 cannot be empty',
-        'str2' => 'Str2 is not an available option',
-        'int1' => 'Int1 must be an integer',
-        'hash1' => {
-          'bool1' => 'Bool1 must be a boolean',
-          'bool2' => 'Bool2 cannot be nil'
+        str1: 'str1 cannot be empty',
+        str2: 'str2 is not an available option',
+        int1: 'int1 must be an integer',
+        hash1: {
+          bool1: 'bool1 must be a boolean',
+          bool2: 'bool2 cannot be nil'
         },
-        'arr1' => ['1st Arr1 must be an integer', nil, '3rd Arr1 must be an integer']
+        arr1: ['1st arr1 must be an integer', nil, '3rd arr1 must be an integer']
       }
 
       assert_equal expected, @outcome.errors.message
@@ -98,13 +93,13 @@ describe 'Objective - errors' do
 
     it 'can flatten those messages' do
       expected = [
-        'Str1 cannot be empty',
-        'Str2 is not an available option',
-        'Int1 must be an integer',
-        'Bool1 must be a boolean',
-        'Bool2 cannot be nil',
-        '1st Arr1 must be an integer',
-        '3rd Arr1 must be an integer'
+        'str1 cannot be empty',
+        'str2 is not an available option',
+        'int1 must be an integer',
+        'bool1 must be a boolean',
+        'bool2 cannot be nil',
+        '1st arr1 must be an integer',
+        '3rd arr1 must be an integer'
       ]
 
       assert_equal expected, @outcome.errors.message_list

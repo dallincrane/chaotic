@@ -5,7 +5,7 @@ module Objective
     def self.inherited(child_class)
       filter_match = child_class.name.match(/\AObjective::Filters::(.*)Filter\z/)
       raise "invalid class name for filter: #{child_class.name}" unless filter_match
-      filter_name = filter_match[1].underscore
+      filter_name = filter_match[1].gsub(/(.)([A-Z])/, '\1_\2').downcase
 
       define_method(filter_name) do |*args, &block|
         args.unshift(nil) if args[0].is_a?(Hash)

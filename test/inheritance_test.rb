@@ -16,22 +16,22 @@ describe 'Objective - inheritance' do
   it 'should filter with inherited unit' do
     outcome = SimpleInherited.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
     assert outcome.success
-    assert_equal({ 'name' => 'bob', 'email' => 'jon@jones.com', 'age' => 10, 'amount' => 22 }, outcome.inputs)
+    assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
   end
 
   it 'should filter with original unit' do
     outcome = SimpleUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
     assert outcome.success
-    assert_equal({ 'name' => 'bob', 'email' => 'jon@jones.com', 'amount' => 22 }, outcome.inputs)
+    assert_equal({ name: 'bob', email: 'jon@jones.com', amount: 22 }, outcome.inputs)
   end
 
   it 'shouldnt collide' do
     outcome = SimpleInherited.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
     assert outcome.success
-    assert_equal({ 'name' => 'bob', 'email' => 'jon@jones.com', 'age' => 10, 'amount' => 22 }, outcome.inputs)
+    assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
 
     outcome = SimpleUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
     assert outcome.success
-    assert_equal({ 'name' => 'bob', 'email' => 'jon@jones.com', 'amount' => 22 }, outcome.inputs)
+    assert_equal({ name: 'bob', email: 'jon@jones.com', amount: 22 }, outcome.inputs)
   end
 end

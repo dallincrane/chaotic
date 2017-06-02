@@ -18,7 +18,7 @@ module Objective
         result.raw = raw
         result.coerced = coerce(raw)
 
-        inputs = HashWithIndifferentAccess.new
+        inputs = {}
         errors = Objective::Errors::ErrorHash.new
 
         data = result.coerced
@@ -37,7 +37,7 @@ module Objective
         end
 
         result.inputs = inputs
-        result.errors = errors.present? ? errors : nil
+        result.errors = errors.empty? ? nil : errors
         result
       end
 

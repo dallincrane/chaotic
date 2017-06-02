@@ -68,7 +68,7 @@ module Objective
 
       @errors ||= Objective::Errors::ErrorHash.new
       @errors.tap do |root_error_hash|
-        path = key.to_s.split('.')
+        path = Objective::Helpers.wrap(key)
         last = path.pop
 
         inner = path.inject(root_error_hash) do |current_error_hash, path_key|

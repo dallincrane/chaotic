@@ -51,7 +51,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = f.feed(foo: 'oof', bar: nil)
-      assert_equal({ 'foo' => 'oof', 'bar' => nil }, result.inputs)
+      assert_equal({ foo: 'oof', bar: nil }, result.inputs)
       assert_nil result.errors
     end
 
@@ -64,7 +64,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = f.feed(foo: 'oof')
-      assert_equal({ 'foo' => 'oof', 'bar' => nil }, result.inputs)
+      assert_equal({ foo: 'oof', bar: nil }, result.inputs)
       assert_nil result.errors
     end
   end
@@ -79,7 +79,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = f.feed(foo: 'bar', bar: '')
-      assert_equal({ 'foo' => 'bar', 'bar' => '' }, result.inputs)
+      assert_equal({ foo: 'bar', bar: '' }, result.inputs)
       assert_nil result.errors
     end
 
@@ -92,7 +92,7 @@ describe 'Objective::Filters::RootFilter' do
       end
 
       result = f.feed(foo: 'bar', bar: '')
-      assert_equal({ 'foo' => 'bar', 'bar' => '' }, result.inputs)
+      assert_equal({ foo: 'bar', bar: '' }, result.inputs)
       assert_nil result.errors
     end
   end

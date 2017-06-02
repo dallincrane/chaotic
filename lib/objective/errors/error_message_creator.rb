@@ -28,7 +28,7 @@ module Objective
       def message(atom, parent_key, index)
         [
           index_ordinal(index),
-          (atom.key || parent_key || 'item').to_s.titleize,
+          (atom.key || parent_key || 'item').to_s,
           MESSAGES[atom.codes]
         ]
           .compact
@@ -37,7 +37,25 @@ module Objective
 
       def index_ordinal(index)
         return if index.nil?
-        (index + 1).ordinalize
+        ordinalize_index(index)
+      end
+
+      def ordinalize_index(index)
+        number = index + 1
+
+        ordinal =
+          if (11..13).cover?(number % 100)
+            'th'
+          else
+            case number % 10
+            when 1 then 'st'
+            when 2 then 'nd'
+            when 3 then 'rd'
+            else 'th'
+            end
+          end
+
+        "#{number}#{ordinal}"
       end
     end
   end

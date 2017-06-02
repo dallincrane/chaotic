@@ -22,10 +22,10 @@ module Objective
       end
 
       def class_constant
-        klass = options[:class]
-        return key.to_s.camelize.constantize if klass.nil?
-        return klass if klass.instance_of? Class
-        klass.to_s.constantize
+        class_name = options[:class] || key.to_s.split('_').collect(&:capitalize).join
+
+        return class_name if class_name.instance_of? Class
+        Objective::Helpers.constantize(class_name.to_s)
       end
     end
   end

@@ -24,6 +24,14 @@ describe 'Objective::Filters::ModelFilter' do
     assert_nil result.errors
   end
 
+  it 'allows class option' do
+    f = Objective::Filters::ModelFilter.new(:my_model, class: 'SimpleModel')
+    m = SimpleModel.new
+    result = f.feed(m)
+    assert_equal m, result.inputs
+    assert_nil result.errors
+  end
+
   it 'raises an exception during filtering if constantization fails' do
     f = Objective::Filters::ModelFilter.new(:non_existent_class)
 

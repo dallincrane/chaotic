@@ -6,16 +6,10 @@ require 'time'
 require 'bigdecimal'
 require 'bigdecimal/util'
 
-require 'active_support/core_ext/module/attribute_accessors'
-require 'active_support/core_ext/object/blank'
-require 'active_support/core_ext/hash/indifferent_access'
-require 'active_support/core_ext/array/wrap'
-require 'active_support/core_ext/string/filters'
-require 'active_support/core_ext/string/inflections'
-require 'active_support/core_ext/integer/inflections'
-
 require 'objective/allow'
 require 'objective/deny'
+
+require 'objective/helpers'
 
 require 'objective/errors/error_atom'
 require 'objective/errors/error_hash'
@@ -43,6 +37,13 @@ require 'objective/unit'
 require 'objective/outcome'
 
 module Objective
-  mattr_accessor :error_message_creator
+  def self.error_message_creator
+    @@error_message_creator
+  end
+
+  def self.error_message_creator=(obj)
+    @@error_message_creator = obj
+  end
+
   self.error_message_creator = Errors::ErrorMessageCreator.new
 end

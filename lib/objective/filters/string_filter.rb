@@ -20,7 +20,7 @@ module Objective
       def coerce(raw)
         return raw unless raw.is_a?(String) || coercable?(raw)
         tmp = raw.is_a?(BigDecimal) ? raw.to_s(options.decimal_format) : raw.to_s
-        tmp = tmp.squish if options.squish
+        tmp = tmp.gsub(/[[:space:]]+/, ' ').strip if options.squish
         tmp
       end
 
