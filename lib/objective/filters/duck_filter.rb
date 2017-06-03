@@ -17,7 +17,7 @@ module Objective
       end
 
       def respond_to_all?(coerced)
-        Array.wrap(options[:methods]).map do |method|
+        Objective::Helpers.wrap(options[:methods]).map do |method|
           coerced.respond_to?(method)
         end.all?
       end

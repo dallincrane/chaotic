@@ -140,15 +140,15 @@ describe 'Objective::Filters::ArrayFilter' do
       ]
     )
     expected_result = [
-      { 'foo' => 'f', 'bar' => 3, 'baz' => true },
-      { 'foo' => 'f', 'bar' => 3, 'baz' => nil },
-      { 'foo' => 'f', 'baz' => nil }
+      { foo: 'f', bar: 3, baz: true },
+      { foo: 'f', bar: 3, baz: nil },
+      { foo: 'f', baz: nil }
     ]
 
     assert_equal expected_result, result.inputs
     assert_nil result.errors[0]
     assert_nil result.errors[1]
-    assert_equal ({ 'bar' => :nils }), result.errors[2].codes
+    assert_equal({ bar: :nils }, result.errors[2].codes)
   end
 
   it 'lets you pass arrays of arrays' do
@@ -171,8 +171,8 @@ describe 'Objective::Filters::ArrayFilter' do
     end
 
     result = f.feed([['h', 'e', {}], ['l'], [], ['']])
-    err_message_empty = '1st Item cannot be empty'
-    err_message_string = '3rd Item must be a string'
+    err_message_empty = '1st item cannot be empty'
+    err_message_string = '3rd item must be a string'
 
     assert_equal [[nil, nil, :string], nil, nil, [:empty]], result.errors.codes
     assert_equal [[nil, nil, err_message_string], nil, nil, [err_message_empty]], result.errors.message

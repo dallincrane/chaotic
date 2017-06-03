@@ -2,7 +2,7 @@
 
 module Objective
   module Errors
-    class ErrorHash < HashWithIndifferentAccess
+    class ErrorHash < Hash
       # objective.errors is an ErrorHash instance like this:
       # {
       #   email: ErrorAtom(:matches),
@@ -13,7 +13,7 @@ module Objective
       #   }
       # }
 
-      # Returns a nested HashWithIndifferentAccess where the values are symbols.  Eg:
+      # Returns a nested Hash where the values are symbols.  Eg:
       # {
       #   email: :matches,
       #   name: :too_weird,
@@ -23,14 +23,14 @@ module Objective
       #   }
       # }
       def codes
-        HashWithIndifferentAccess.new.tap do |hash|
+        {}.tap do |hash|
           each do |k, v|
             hash[k] = v.codes
           end
         end
       end
 
-      # Returns a nested HashWithIndifferentAccess where the values are messages. Eg:
+      # Returns a nested Hash where the values are messages. Eg:
       # {
       #   email: "isn't in the right format",
       #   name: "is too weird",
@@ -40,7 +40,7 @@ module Objective
       #   }
       # }
       def message(_parent_key = nil, _index = nil)
-        HashWithIndifferentAccess.new.tap do |hash|
+        {}.tap do |hash|
           each do |k, v|
             hash[k] = v.message(k)
           end

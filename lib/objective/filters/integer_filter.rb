@@ -17,7 +17,10 @@ module Objective
       private
 
       def coerce(datum)
-        return datum if datum.blank?
+        if datum.is_a?(String)
+          datum = datum.strip
+          return datum if datum.empty?
+        end
 
         datum_str = raw_to_string(datum)
         return datum unless datum_str

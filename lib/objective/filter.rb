@@ -3,20 +3,15 @@
 module Objective
   class Filter
     def self.inherited(child_class)
-      method_name = filter_name(child_class)
+      filter_match = child_class.name.match(/\AObjective::Filters::(.*)Filter\z/)
+      raise "invalid class name for filter: #{child_class.name}" unless filter_match
+      filter_name = filter_match[1].gsub(/(.)([A-Z])/, '\1_\2').downcase
 
-      define_method(method_name) do |*args, &block|
+      define_method(filter_name) do |*args, &block|
         args.unshift(nil) if args[0].is_a?(Hash)
         new_filter = child_class.new(*args, &block)
         sub_filters.push(new_filter)
       end
-    end
-
-    def self.filter_name(klass = self)
-      filter_match = klass.name.match(/\AObjective::Filters::(.*)Filter\z/)
-      filter_name = filter_match ? filter_match[1].try(:underscore) : nil
-      raise 'filename error in filters folder' unless filter_name
-      filter_name
     end
 
     attr_reader :key

@@ -21,7 +21,7 @@ module Objective
       end
 
       def message_list(parent_key = nil, index = nil)
-        Array.wrap(message(parent_key, index))
+        Objective::Helpers.wrap(message(parent_key, index))
       end
     end
   end

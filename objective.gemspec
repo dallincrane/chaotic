@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.license       = 'MIT'
 
-  s.add_runtime_dependency 'activesupport', ['>= 4.1.0', '< 6.0']
+  s.required_ruby_version = '~> 2.0'
 
   s.add_development_dependency 'byebug', '~> 9.0'
   s.add_development_dependency 'minitest', '~> 5.10'

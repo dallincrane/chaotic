@@ -16,13 +16,16 @@ module Objective
 
       private
 
-      # TODO: the Rational class should be coerced - it requires a precision argument
       def coerce(datum)
-        return datum if datum.blank?
+        if datum.is_a?(String)
+          datum = datum.strip
+          return datum if datum.empty?
+        end
 
         return datum.to_d if datum.is_a?(Integer) || datum.is_a?(Float)
 
         return datum unless datum.is_a?(String)
+        datum = datum.strip
         return datum if options.decimal_mark != '.' && !options.delimiter.include?('.') && datum.include?('.')
 
         clean_str = datum.tr(options.delimiter, '').tr(options.decimal_mark, '.')

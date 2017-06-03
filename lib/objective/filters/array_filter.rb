@@ -35,12 +35,12 @@ module Objective
         end
 
         result.inputs = inputs
-        result.errors = errors.present? ? errors : nil
+        result.errors = errors.empty? ? nil : errors
         result
       end
 
       def coerce(raw)
-        return Array.wrap(raw) if options.wrap
+        return Objective::Helpers.wrap(raw) if options.wrap
         raw
       end
 

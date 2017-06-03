@@ -2,15 +2,16 @@
 
 module Objective
   module Unit
-    extend ActiveSupport::Concern
-
-    included do
-      attr_reader :inputs, :raw_inputs, :built
-      const_set('ALLOW', Objective::ALLOW)
-      const_set('DENY', Objective::DENY)
+    def self.included(base)
+      base.extend ClassMethods
+      base.class_eval do
+        attr_reader :inputs, :raw_inputs
+        const_set('ALLOW', Objective::ALLOW)
+        const_set('DENY', Objective::DENY)
+      end
     end
 
-    class_methods do
+    module ClassMethods
       def filter(&block)
         root_filter.filter(&block)
         root_filter.keys.each do |key|
@@ -20,18 +21,11 @@ module Objective
 
       def root_filter
         @root_filter ||=
-          superclass.try(:root_filter).try(:dup) ||
-          Objective::Filters::RootFilter.new
-      end
-
-      def build(*args)
-        new.build(*args)
-      end
-
-      def build!(*args)
-        outcome = build(*args)
-        return outcome.result if outcome.success
-        raise Objective::ValidationError, outcome.errors
+          if superclass.respond_to?(:root_filter)
+            superclass.root_filter.dup
+          else
+            Objective::Filters::RootFilter.new
+          end
       end
 
       def run(*args)
@@ -47,33 +41,24 @@ module Objective
 
     # INSTANCE METHODS
 
-    def build(*args)
+    def run(*args)
       filter_result = self.class.root_filter.feed(*args)
       @raw_inputs = filter_result.coerced
       @inputs = filter_result.inputs
       @errors = filter_result.errors
-      @built = true
-      try('validate') if valid?
-      outcome
-    end
+      validate if respond_to?(:validate) && valid?
+      result = valid? && respond_to?(:execute) ? execute : nil
 
-    def run(*args)
-      build(*args) unless built
-      result = valid? ? try('execute') : nil
-      outcome(result)
-    end
-
-    def valid?
-      @errors.nil?
-    end
-
-    def outcome(result = nil)
       Objective::Outcome.new(
         success: valid?,
         result: result,
         errors: @errors,
         inputs: inputs
       )
+    end
+
+    def valid?
+      @errors.nil?
     end
 
     protected
@@ -83,7 +68,7 @@ module Objective
 
       @errors ||= Objective::Errors::ErrorHash.new
       @errors.tap do |root_error_hash|
-        path = key.to_s.split('.')
+        path = Objective::Helpers.wrap(key)
         last = path.pop
 
         inner = path.inject(root_error_hash) do |current_error_hash, path_key|

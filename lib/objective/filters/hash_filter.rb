@@ -14,7 +14,7 @@ module Objective
         return result if result.errors || result.inputs.nil?
 
         errors = Objective::Errors::ErrorHash.new
-        inputs = HashWithIndifferentAccess.new
+        inputs = {}
 
         data = result.coerced
         sub_filters_hash.each_pair do |key, key_filter|
@@ -32,12 +32,8 @@ module Objective
         end
 
         result.inputs = inputs
-        result.errors = errors.present? ? errors : nil
+        result.errors = errors.empty? ? nil : errors
         result
-      end
-
-      def coerce(raw)
-        raw.try(:with_indifferent_access)
       end
 
       def coerce_error(coerced)

@@ -9,7 +9,7 @@ describe 'Unit' do
       outcome = SimpleUnit.run(name: 'John', email: 'john@gmail.com', amount: 5)
 
       assert outcome.success
-      assert_equal({ 'name' => 'John', 'email' => 'john@gmail.com', 'amount' => 5 }, outcome.inputs)
+      assert_equal({ name: 'John', email: 'john@gmail.com', amount: 5 }, outcome.inputs)
       assert_nil outcome.errors
     end
 
@@ -17,7 +17,7 @@ describe 'Unit' do
       outcome = SimpleUnit.run(name: 'John', email: 'john@gmail.com', amount: 5, buggers: true)
 
       assert outcome.success
-      assert_equal({ 'name' => 'John', 'email' => 'john@gmail.com', 'amount' => 5 }, outcome.inputs)
+      assert_equal({ name: 'John', email: 'john@gmail.com', amount: 5 }, outcome.inputs)
       assert_nil outcome.errors
     end
 
@@ -40,18 +40,18 @@ describe 'Unit' do
     end
 
     it 'should do standalone validation' do
-      outcome = SimpleUnit.build(name: 'JohnLong', email: 'john@gmail.com')
+      outcome = SimpleUnit.run(name: 'JohnLong', email: 'john@gmail.com')
       assert outcome.success
       assert_nil outcome.errors
 
-      outcome = SimpleUnit.build(name: 'JohnTooLong', email: 'john@gmail.com')
+      outcome = SimpleUnit.run(name: 'JohnTooLong', email: 'john@gmail.com')
       assert !outcome.success
       assert_nil outcome.result
       assert_equal :max, outcome.errors.codes[:name]
     end
 
     it 'should execute a custom validate method' do
-      outcome = SimpleUnit.build(name: 'JohnLong', email: 'xxxx')
+      outcome = SimpleUnit.run(name: 'JohnLong', email: 'xxxx')
 
       assert !outcome.success
       assert_equal :invalid, outcome.errors.codes[:email]
@@ -66,7 +66,7 @@ describe 'Unit' do
     end
 
     it 'should execute custom validate method only if regular validations succeed' do
-      outcome = SimpleUnit.build(name: 'JohnTooLong', email: 'xxxx')
+      outcome = SimpleUnit.run(name: 'JohnTooLong', email: 'xxxx')
 
       assert !outcome.success
       assert_equal :max, outcome.errors.codes[:name]
@@ -77,14 +77,7 @@ describe 'Unit' do
       outcome = SimpleUnit.run({ name: 'John', email: 'john@gmail.com' }, email: 'bob@jones.com', amount: 5)
 
       assert outcome.success
-      assert_equal({ 'name' => 'John', 'email' => 'bob@jones.com', 'amount' => 5 }, outcome.inputs)
-    end
-
-    it 'should merge hashes indifferently' do
-      outcome = SimpleUnit.run({ name: 'John', email: 'john@gmail.com' }, 'email' => 'bob@jones.com', 'amount' => 5)
-
-      assert outcome.success
-      assert_equal({ 'name' => 'John', 'email' => 'bob@jones.com', 'amount' => 5 }, outcome.inputs)
+      assert_equal({ name: 'John', email: 'bob@jones.com', amount: 5 }, outcome.inputs)
     end
 
     it 'shouldn\'t accept non-hashes' do
@@ -107,7 +100,7 @@ describe 'Unit' do
 
     it 'should return the filtered inputs in the outcome' do
       outcome = SimpleUnit.run(name: ' John ', email: 'john@gmail.com', amount: '5')
-      assert_equal({ 'name' => 'John', 'email' => 'john@gmail.com', 'amount' => 5 }, outcome.inputs)
+      assert_equal({ name: 'John', email: 'john@gmail.com', amount: 5 }, outcome.inputs)
     end
   end
 
@@ -183,7 +176,7 @@ describe 'Unit' do
       end
 
       def execute
-        add_error('people.bob', :is_a_bob)
+        add_error([:people, 'bob'], :is_a_bob)
         1
       end
     end
@@ -193,7 +186,7 @@ describe 'Unit' do
 
       assert !outcome.success
       assert 1, outcome.result
-      assert :is_a_bob, outcome.errors[:people].codes[:bob]
+      assert :is_a_bob, outcome.errors[:people].codes['bob']
     end
   end
 
@@ -238,7 +231,7 @@ describe 'Unit' do
     end
 
     it 'should return the raw input data' do
-      input = { 'name' => 'Hello World', 'other' => 'Foo Bar Baz' }
+      input = { name: 'Hello World', other: 'Foo Bar Baz' }
       assert_equal OpenStruct.new(input), RawInputsUnit.run!(input)
     end
   end
