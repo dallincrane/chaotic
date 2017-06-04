@@ -5,17 +5,18 @@ require 'test_helper'
 describe 'Objective - errors' do
   class GivesErrors
     include Objective::Unit
+
     filter do
       string :str1
       string :str2, in: %w[opt1 opt2 opt3]
-      integer :int1, nils: ALLOW
+      integer :int1, nils: allow
 
-      hash :hash1, nils: ALLOW do
+      hash :hash1, nils: allow do
         boolean :bool1
         boolean :bool2
       end
 
-      array :arr1, nils: ALLOW do
+      array :arr1, nils: allow do
         integer
       end
     end

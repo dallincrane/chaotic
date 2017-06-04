@@ -29,6 +29,14 @@ module Objective
       @options ||= OpenStruct.new(self.class.const_get('Options').to_h.merge(@given_options))
     end
 
+    def allow
+      Objective::ALLOW
+    end
+
+    def deny
+      Objective::DENY
+    end
+
     def sub_filters_hash
       sub_filters.each_with_object({}) { |sf, result| result[sf.key] = sf }
     end
@@ -37,14 +45,6 @@ module Objective
       dupped = self.class.new
       sub_filters.each { |sf| dupped.sub_filters.push(sf) }
       dupped
-    end
-
-    def default?
-      options.to_h.key?(:default)
-    end
-
-    def default
-      options.default
     end
 
     def feed(raw)
@@ -62,10 +62,10 @@ module Objective
 
     def feed_nil
       case options.nils
-      when Objective::ALLOW
+      when allow
         errors = nil
         coerced = nil
-      when Objective::DENY
+      when deny
         errors = :nils
         coerced = nil
       else
@@ -78,9 +78,9 @@ module Objective
 
     def feed_invalid(errors, raw, coerced)
       case options.invalid
-      when Objective::ALLOW
+      when allow
         errors = nil
-      when Objective::DENY
+      when deny
         nil
       else
         errors = nil
@@ -92,9 +92,9 @@ module Objective
 
     def feed_empty(raw, coerced)
       case options.empty
-      when Objective::ALLOW
+      when allow
         errors = nil
-      when Objective::DENY
+      when deny
         errors = :empty
       else
         coerced = options.empty

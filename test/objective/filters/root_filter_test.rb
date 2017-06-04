@@ -46,7 +46,7 @@ describe 'Objective::Filters::RootFilter' do
       f = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, nils: Objective::ALLOW
+          string :bar, nils: allow
         end
       end
 
@@ -59,7 +59,7 @@ describe 'Objective::Filters::RootFilter' do
       f = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, nils: Objective::ALLOW
+          string :bar, nils: allow
         end
       end
 
@@ -74,7 +74,7 @@ describe 'Objective::Filters::RootFilter' do
       f = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, empty: Objective::ALLOW
+          string :bar, empty: allow
         end
       end
 
@@ -87,7 +87,7 @@ describe 'Objective::Filters::RootFilter' do
       f = Objective::Filters::RootFilter.new do
         filter do
           string :foo
-          string :bar, empty: Objective::ALLOW, nils: ''
+          string :bar, empty: allow, nils: ''
         end
       end
 

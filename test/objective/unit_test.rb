@@ -8,7 +8,7 @@ class SimpleUnit
   filter do
     string :name, max: 10
     string :email
-    integer :amount, nils: ALLOW
+    integer :amount, nils: allow
   end
 
   def validate
@@ -168,9 +168,10 @@ describe 'Unit' do
   describe 'EigenUnit' do
     class EigenUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -187,9 +188,10 @@ describe 'Unit' do
   describe 'MutatatedUnit' do
     class MutatatedUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -208,9 +210,10 @@ describe 'Unit' do
   describe 'ErrorfulUnit' do
     class ErrorfulUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -231,9 +234,10 @@ describe 'Unit' do
   describe 'NestingErrorfulUnit' do
     class NestingErrorfulUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -254,9 +258,10 @@ describe 'Unit' do
   describe 'MultiErrorUnit' do
     class MultiErrorUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -282,6 +287,7 @@ describe 'Unit' do
   describe 'RawInputsUnit' do
     class RawInputsUnit
       include Objective::Unit
+
       filter do
         string :name
       end
