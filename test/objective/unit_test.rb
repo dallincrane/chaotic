@@ -15,12 +15,9 @@ class SimpleUnit
     return if email.include?('@')
     add_error(:email, :invalid, 'Email must contain @')
   end
-
-  def execute
-  end
 end
 
-describe 'Unit' do
+describe 'Objective::Unit' do
   describe 'SimpleUnit' do
     it 'should allow valid input' do
       outcome = SimpleUnit.run(name: 'John', email: 'john@gmail.com', amount: 5)
@@ -303,13 +300,79 @@ describe 'Unit' do
     end
   end
 
-  describe 'SimpleInheritedUnit' do
+  # NOTE: this is particularly relevant for unit inheritance and unit mixins
+  describe 'multiple filter calls' do
+    class MultiFilter
+      include Objective::Unit
+
+      filter do
+        string :name, max: 10
+        integer :age, min: 18, nils: allow
+        string :friend, nils: allow
+        hash :pets, nils: allow do
+          string :cat
+        end
+      end
+
+      filter do
+        string :email
+        integer :age, min: 13
+        integer :friend, nils: allow
+        hash :pets, nils: allow do
+          string :dog
+        end
+      end
+    end
+
+    it 'should merge top level filters' do
+      outcome = MultiFilter.run(name: 'jerry', email: 'jerry@sanchez.com', age: 42)
+      assert outcome.success
+      assert_equal({ name: 'jerry', email: 'jerry@sanchez.com', age: 42, friend: nil, pets: nil }, outcome.inputs)
+    end
+
+    it 'should not merge top level filter options' do
+      outcome = MultiFilter.run(name: 'butterbot', email: 'butterbot@sanchez.com', age: nil)
+      assert_equal false, outcome.success
+      assert_equal :nils, outcome.errors[:age].codes
+    end
+
+    it 'should overwrite top level filter options' do
+      outcome = MultiFilter.run(name: 'morty', email: 'morty@sanchez.com', age: 14)
+      assert outcome.success
+      assert_equal({ name: 'morty', email: 'morty@sanchez.com', age: 14, friend: nil, pets: nil }, outcome.inputs)
+    end
+
+    it 'should overwrite top level filter types' do
+      outcome = MultiFilter.run(name: 'morty', email: 'morty@sanchez.com', age: 14, friend: 0)
+      assert outcome.success
+      assert_equal({ name: 'morty', email: 'morty@sanchez.com', age: 14, friend: 0, pets: nil }, outcome.inputs)
+    end
+
+    it 'should not merge nested filters' do
+      outcome = MultiFilter.run(
+        name: 'jerry',
+        email: 'jerry@sanchez.com',
+        age: 42,
+        pets: { dog: 'Snuffles', cat: 'none' }
+      )
+
+      expected_inputs = {
+        name: 'jerry',
+        email: 'jerry@sanchez.com',
+        age: 42,
+        friend: nil,
+        pets: { dog: 'Snuffles' }
+      }
+
+      assert outcome.success
+      assert_equal expected_inputs, outcome.inputs
+    end
+  end
+
+  describe 'inherited unit' do
     class SimpleInheritedUnit < SimpleUnit
       filter do
         integer :age
-      end
-
-      def execute
       end
     end
 
@@ -336,15 +399,16 @@ describe 'Unit' do
     end
   end
 
-  # NOTE: Previously, ALLOW and DENY constants were set to any class that included Objective::Unit.
-  #       This describes the scenario where those constants would cause an error
-  describe 'UnitIncludeModuleFilter' do
-    module NonUnitWithFilter
+  describe 'mixin unit' do
+    module UnitModule
       def self.included(base)
-        base.filter do
-          string :name, max: 10
-          string :email
-          integer :amount, nils: allow
+        base.class_eval do
+          include Objective::Unit
+          filter do
+            string :name, max: 10
+            string :email
+            integer :amount, nils: allow
+          end
         end
       end
 
@@ -354,9 +418,8 @@ describe 'Unit' do
       end
     end
 
-    class UnitIncludeModuleFilter
-      include Objective::Unit
-      include NonUnitWithFilter
+    class SecondHandUnit
+      include UnitModule
 
       filter do
         integer :age
@@ -368,10 +431,57 @@ describe 'Unit' do
     end
 
     it 'should filter with included filter' do
-      outcome = UnitIncludeModuleFilter.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      outcome = SecondHandUnit.run(name: 'bob', email: 'jon@jones.com', age: 10)
       assert outcome.success
-      assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
+      assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: nil }, outcome.inputs)
       assert_equal 'szechuan sauce', outcome.result
+    end
+
+    it 'should run with included validation' do
+      outcome = SecondHandUnit.run(name: 'bob', email: 'woops', age: 10)
+      assert_equal false, outcome.success
+      assert_equal :invalid, outcome.errors[:email].codes
+    end
+  end
+
+  describe 'mixin filter' do
+    # NOTE: Previously, ALLOW and DENY constants were set to any class that included Objective::Unit.
+    #       This describes a scenario where those constants would cause an error
+    describe 'UnitIncludeModuleFilter' do
+      module NonUnitWithFilter
+        def self.included(base)
+          base.filter do
+            string :name, max: 10
+            string :email
+            integer :amount, nils: allow
+          end
+        end
+
+        def validate
+          return if email.include?('@')
+          add_error(:email, :invalid, 'Email must contain @')
+        end
+      end
+
+      class UnitIncludeModuleFilter
+        include Objective::Unit
+        include NonUnitWithFilter
+
+        filter do
+          integer :age
+        end
+
+        def execute
+          'szechuan sauce'
+        end
+      end
+
+      it 'should filter with included filter' do
+        outcome = UnitIncludeModuleFilter.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+        assert outcome.success
+        assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
+        assert_equal 'szechuan sauce', outcome.result
+      end
     end
   end
 end

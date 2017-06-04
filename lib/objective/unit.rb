@@ -13,7 +13,7 @@ module Objective
       def filter(&block)
         root_filter.filter(&block)
         root_filter.keys.each do |key|
-          define_method(key) { inputs[key] }
+          define_method(key) { inputs[key] } unless method_defined?(key.to_sym)
         end
       end
 
