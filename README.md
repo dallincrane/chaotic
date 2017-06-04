@@ -27,7 +27,7 @@ class CreateUser
   # input filtering, coercion, and basic validations are defined here
   filter do
     string :name
-    date :birthday, nils: ALLOW
+    date :birthday, nils: allow
     hash :settings do
       string :home_page
       integer :version, nils: 2
@@ -171,10 +171,10 @@ Here, we pass two hashes to CreateComment. Even if the params[:comment] hash has
     integer :age
     boolean :is_special, nils: true
     model :account
-    array :tags, nils: ALLOW do
+    array :tags, nils: allow do
       string
     end
-    hash :prefs, nils: ALLOW do
+    hash :prefs, nils: allow do
       boolean :smoking
       boolean :view
     end

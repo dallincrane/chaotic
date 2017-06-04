@@ -6,8 +6,6 @@ module Objective
       base.extend ClassMethods
       base.class_eval do
         attr_reader :inputs, :raw_inputs
-        const_set('ALLOW', Objective::ALLOW)
-        const_set('DENY', Objective::DENY)
       end
     end
 

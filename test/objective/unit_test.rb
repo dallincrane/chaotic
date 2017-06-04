@@ -8,7 +8,7 @@ class SimpleUnit
   filter do
     string :name, max: 10
     string :email
-    integer :amount, nils: ALLOW
+    integer :amount, nils: allow
   end
 
   def validate
@@ -168,9 +168,10 @@ describe 'Unit' do
   describe 'EigenUnit' do
     class EigenUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -187,9 +188,10 @@ describe 'Unit' do
   describe 'MutatatedUnit' do
     class MutatatedUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -208,9 +210,10 @@ describe 'Unit' do
   describe 'ErrorfulUnit' do
     class ErrorfulUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -231,9 +234,10 @@ describe 'Unit' do
   describe 'NestingErrorfulUnit' do
     class NestingErrorfulUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -254,9 +258,10 @@ describe 'Unit' do
   describe 'MultiErrorUnit' do
     class MultiErrorUnit
       include Objective::Unit
+
       filter do
         string :name
-        string :email, nils: ALLOW
+        string :email, nils: allow
       end
 
       def execute
@@ -282,6 +287,7 @@ describe 'Unit' do
   describe 'RawInputsUnit' do
     class RawInputsUnit
       include Objective::Unit
+
       filter do
         string :name
       end
@@ -327,6 +333,45 @@ describe 'Unit' do
       outcome = SimpleUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
       assert outcome.success
       assert_equal({ name: 'bob', email: 'jon@jones.com', amount: 22 }, outcome.inputs)
+    end
+  end
+
+  # NOTE: Previously, ALLOW and DENY constants were set to any class that included Objective::Unit.
+  #       This describes the scenario where those constants would cause an error
+  describe 'UnitIncludeModuleFilter' do
+    module NonUnitWithFilter
+      def self.included(base)
+        base.filter do
+          string :name, max: 10
+          string :email
+          integer :amount, nils: allow
+        end
+      end
+
+      def validate
+        return if email.include?('@')
+        add_error(:email, :invalid, 'Email must contain @')
+      end
+    end
+
+    class UnitIncludeModuleFilter
+      include Objective::Unit
+      include NonUnitWithFilter
+
+      filter do
+        integer :age
+      end
+
+      def execute
+        'szechuan sauce'
+      end
+    end
+
+    it 'should filter with included filter' do
+      outcome = UnitIncludeModuleFilter.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      assert outcome.success
+      assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
+      assert_equal 'szechuan sauce', outcome.result
     end
   end
 end
