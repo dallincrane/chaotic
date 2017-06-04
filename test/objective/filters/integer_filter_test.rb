@@ -55,6 +55,15 @@ describe 'Objective::Filters::IntegerFilter' do
     assert_nil result.errors
   end
 
+  it 'allows strings that need to be squished' do
+    f = Objective::Filters::IntegerFilter.new
+    result = f.feed(" \n 3 \r\n ")
+
+    assert result.inputs.is_a?(Integer)
+    assert_equal 3, result.inputs
+    assert_nil result.errors
+  end
+
   it 'allows negative strings' do
     f = Objective::Filters::IntegerFilter.new
     result = f.feed('-3')
