@@ -335,4 +335,43 @@ describe 'Unit' do
       assert_equal({ name: 'bob', email: 'jon@jones.com', amount: 22 }, outcome.inputs)
     end
   end
+
+  # NOTE: Previously, ALLOW and DENY constants were set to any class that included Objective::Unit.
+  #       This describes the scenario where those constants would cause an error
+  describe 'UnitIncludeModuleFilter' do
+    module NonUnitWithFilter
+      def self.included(base)
+        base.filter do
+          string :name, max: 10
+          string :email
+          integer :amount, nils: allow
+        end
+      end
+
+      def validate
+        return if email.include?('@')
+        add_error(:email, :invalid, 'Email must contain @')
+      end
+    end
+
+    class UnitIncludeModuleFilter
+      include Objective::Unit
+      include NonUnitWithFilter
+
+      filter do
+        integer :age
+      end
+
+      def execute
+        'szechuan sauce'
+      end
+    end
+
+    it 'should filter with included filter' do
+      outcome = UnitIncludeModuleFilter.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      assert outcome.success
+      assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
+      assert_equal 'szechuan sauce', outcome.result
+    end
+  end
 end
