@@ -6,7 +6,7 @@ describe 'Objective::Filters::AnyFilter' do
   it 'Allows anything' do
     f = Objective::Filters::AnyFilter.new
 
-    [true, 'hi', 1, [1, 2, 3], { one: 1 }, 1..3, nil].each do |v|
+    [true, '', 'hi', 1, [1, 2, 3], { one: 1 }, 1..3, nil].each do |v|
       result = f.feed(v)
       if v.nil?
         assert_nil result.inputs

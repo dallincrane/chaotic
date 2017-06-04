@@ -1,7 +1,24 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'simple_unit'
+
+class SimpleUnit
+  include Objective::Unit
+
+  filter do
+    string :name, max: 10
+    string :email
+    integer :amount, nils: ALLOW
+  end
+
+  def validate
+    return if email.include?('@')
+    add_error(:email, :invalid, 'Email must contain @')
+  end
+
+  def execute
+  end
+end
 
 describe 'Unit' do
   describe 'SimpleUnit' do
@@ -101,6 +118,50 @@ describe 'Unit' do
     it 'should return the filtered inputs in the outcome' do
       outcome = SimpleUnit.run(name: ' John ', email: 'john@gmail.com', amount: '5')
       assert_equal({ name: 'John', email: 'john@gmail.com', amount: 5 }, outcome.inputs)
+    end
+  end
+
+  describe 'DefaultUnit' do
+    class DefaultUnit
+      include Objective::Unit
+
+      filter do
+        string :name, nils: '-nils-', invalid: '-invalid-', empty: '-empty-'
+      end
+
+      def execute
+        inputs
+      end
+    end
+
+    it 'should use a valid value passed to it' do
+      outcome = DefaultUnit.run(name: 'Fred')
+      assert_equal true, outcome.success
+      assert_equal({ name: 'Fred' }, outcome.result)
+    end
+
+    it 'should use a nils option default value if no value is passed' do
+      outcome = DefaultUnit.run
+      assert_equal({ name: '-nils-' }, outcome.result)
+      assert_equal true, outcome.success
+    end
+
+    it 'should use a nils option default value if nil is passed' do
+      outcome = DefaultUnit.run(name: nil)
+      assert_equal({ name: '-nils-' }, outcome.result)
+      assert_equal true, outcome.success
+    end
+
+    it 'should use the invalid option default if an invalid value is passed' do
+      outcome = DefaultUnit.run(name: /regex/)
+      assert_equal({ name: '-invalid-' }, outcome.result)
+      assert_equal true, outcome.success
+    end
+
+    it 'should use the empty option default if an empty value is passed' do
+      outcome = DefaultUnit.run(name: ' ')
+      assert_equal({ name: '-empty-' }, outcome.result)
+      assert_equal true, outcome.success
     end
   end
 
@@ -233,6 +294,39 @@ describe 'Unit' do
     it 'should return the raw input data' do
       input = { name: 'Hello World', other: 'Foo Bar Baz' }
       assert_equal OpenStruct.new(input), RawInputsUnit.run!(input)
+    end
+  end
+
+  describe 'SimpleInheritedUnit' do
+    class SimpleInheritedUnit < SimpleUnit
+      filter do
+        integer :age
+      end
+
+      def execute
+      end
+    end
+
+    it 'should filter with inherited unit' do
+      outcome = SimpleInheritedUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      assert outcome.success
+      assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
+    end
+
+    it 'should filter with original unit' do
+      outcome = SimpleUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      assert outcome.success
+      assert_equal({ name: 'bob', email: 'jon@jones.com', amount: 22 }, outcome.inputs)
+    end
+
+    it 'shouldnt collide' do
+      outcome = SimpleInheritedUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      assert outcome.success
+      assert_equal({ name: 'bob', email: 'jon@jones.com', age: 10, amount: 22 }, outcome.inputs)
+
+      outcome = SimpleUnit.run(name: 'bob', email: 'jon@jones.com', age: 10, amount: 22)
+      assert outcome.success
+      assert_equal({ name: 'bob', email: 'jon@jones.com', amount: 22 }, outcome.inputs)
     end
   end
 end
