@@ -48,6 +48,15 @@ describe 'Objective::Filters::DecimalFilter' do
     assert_nil result.errors
   end
 
+  it 'allows strings that need to be squished' do
+    f = Objective::Filters::DecimalFilter.new
+    result = f.feed(" \n 3.14 \r\n ")
+
+    assert result.inputs.is_a?(BigDecimal)
+    assert_equal 3.14, result.inputs
+    assert_nil result.errors
+  end
+
   it 'allows string representation of float without a number before dot' do
     f = Objective::Filters::DecimalFilter.new
     result = f.feed('.14')
