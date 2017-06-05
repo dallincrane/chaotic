@@ -135,6 +135,22 @@ describe 'Objective::Filters::DecimalFilter' do
     assert_equal :decimal, result.errors
   end
 
+  it 'can consider empty strings to be nil' do
+    f = Objective::Filters::DecimalFilter.new(:i, empty: nil)
+    result = f.feed('')
+
+    assert_nil result.inputs
+    assert_nil result.errors
+  end
+
+  it 'can consider empty strings to be another value' do
+    f = Objective::Filters::DecimalFilter.new(:i, empty: :wubba)
+    result = f.feed('')
+
+    assert_equal :wubba, result.inputs
+    assert_nil result.errors
+  end
+
   it 'allows alternative number formats' do
     f = Objective::Filters::DecimalFilter.new(:x, delimiter: '.', decimal_mark: ',')
     result = f.feed('123.456,789')

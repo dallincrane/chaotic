@@ -52,11 +52,11 @@ module Objective
 
       coerced = options.strict == true ? raw : coerce(raw)
       errors = coerce_error(coerced)
+
+      return feed_empty(raw, coerced) if errors == :empty
       return feed_invalid(errors, raw, raw) if errors
 
       errors = validate(coerced)
-      return feed_empty(raw, coerced) if errors == :empty
-
       feed_result(errors, raw, coerced)
     end
 

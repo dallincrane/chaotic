@@ -6,8 +6,8 @@ module Objective
       Options = OpenStruct.new(
         nils: Objective::DENY,
         invalid: Objective::DENY,
-        strict: false,
         empty: Objective::DENY,
+        strict: false,
         squish: true,
         min: nil,
         max: nil,
@@ -29,11 +29,11 @@ module Objective
       end
 
       def coerce_error(coerced)
+        return :empty if coerced == '' && options.empty != Objective::ALLOW
         return :string unless coerced.is_a?(String)
       end
 
       def validate(coerced)
-        return :empty if coerced.empty?
         return :min if options.min && coerced.length < options.min
         return :max if options.max && coerced.length > options.max
         return :in if options.in && !options.in.include?(coerced)

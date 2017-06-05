@@ -6,6 +6,7 @@ module Objective
       Options = OpenStruct.new(
         nils: Objective::DENY,
         invalid: Objective::DENY,
+        empty: Objective::ALLOW,
         strict: false,
         delimiter: ', ',
         decimal_mark: '.',
@@ -42,6 +43,7 @@ module Objective
       end
 
       def coerce_error(coerced)
+        return :empty if coerced == '' && options.empty != Objective::ALLOW
         return :integer unless coerced.is_a?(Integer)
       end
 
