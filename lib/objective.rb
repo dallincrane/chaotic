@@ -31,6 +31,7 @@ require 'objective/filters/integer_filter'
 require 'objective/filters/model_filter'
 require 'objective/filters/root_filter'
 require 'objective/filters/string_filter'
+require 'objective/filters/symbol_filter'
 require 'objective/filters/time_filter'
 
 require 'objective/unit'
