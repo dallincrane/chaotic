@@ -114,11 +114,27 @@ describe 'Objective::Filters::IntegerFilter' do
     assert_nil result.errors
   end
 
-  it 'considers empty strings to be empty' do
+  it 'considers empty strings to be invalid' do
     f = Objective::Filters::IntegerFilter.new
     result = f.feed('')
 
     assert_equal :integer, result.errors
+  end
+
+  it 'can consider empty strings to be nil' do
+    f = Objective::Filters::IntegerFilter.new(:i, empty: nil)
+    result = f.feed('')
+
+    assert_nil result.inputs
+    assert_nil result.errors
+  end
+
+  it 'can consider empty strings to be another value' do
+    f = Objective::Filters::IntegerFilter.new(:i, empty: :wubba)
+    result = f.feed('')
+
+    assert_equal :wubba, result.inputs
+    assert_nil result.errors
   end
 
   it 'considers low numbers invalid' do
